@@ -1,0 +1,9 @@
+{
+  "name": "infra-tool",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@azure/identity": "4.5.0",
+    "@azure/arm-compute": "22.1.0"
+  }
+}

@@ -1,0 +1,163 @@
+name: ci
+
+# Every push and pull request. Three jobs:
+#
+#   selftest  both editions' tests/selftest.py on Ubuntu, Windows and macOS x Python 3.9 and 3.13.
+#             The skill promises Windows, macOS and Linux and Python 3.9+, and this is the only
+#             place macOS is exercised at all: the maintainer develops on Windows. Each job prints
+#             the selftest summary line into the job summary, so a reader sees "184/184" per cell.
+#   eval      the offline eval suite (eval/run_eval.py) and the figure check that reads its result.
+#   checks    the release and documentation gates: edition parity, plugin manifests, icon, version
+#             sync, package preflight, figures, diagrams.
+#
+# openpyxl is installed for the selftest because the skill's Excel report needs it and the selftest
+# runs those checks only when it is present: without it the count drops by one and every cell
+# would disagree with the published figure. Pinned to the version the published figure used.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Least privilege, declared rather than inherited: nothing here writes.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  selftest:
+    name: selftest (${{ matrix.os }}, py ${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.9", "3.13"]
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install openpyxl (Excel report checks)
+        run: python -m pip install --disable-pip-version-check "openpyxl==3.1.5"
+
+      # bash on every OS (Git Bash on Windows), so one script serves the whole matrix. The summary
+      # line is asserted, not just printed: a selftest that crashes before its last line exits
+      # non-zero, but one that prints "0/0" must not pass either.
+      - name: Selftest - English and Japanese editions
+        shell: bash
+        run: |
+          set -o pipefail
+          status=0
+          for ed in security-audit editions/ja/security-audit; do
+            python -B "$ed/tests/selftest.py" > selftest.log 2>&1 || status=1
+            grep '^FAIL' selftest.log || true
+            line=$(grep -E '^[0-9]+/[0-9]+ checks passed' selftest.log || echo "no summary line")
+            echo "$ed: $line"
+            echo "- \`$ed\` on ${{ matrix.os }}, Python ${{ matrix.python }}: $line" >> "$GITHUB_STEP_SUMMARY"
+            n=$(echo "$line" | sed -nE 's#^([0-9]+)/([0-9]+).*#\1 \2#p')
+            set -- $n
+            if [ -z "${1:-}" ] || [ "$1" != "$2" ] || [ "$1" = "0" ]; then status=1; fi
+          done
+          exit $status
+
+  eval:
+    name: offline eval
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.13"
+
+      - name: Install openpyxl (Excel report checks)
+        run: python -m pip install --disable-pip-version-check "openpyxl==3.1.5"
+
+      - name: Offline eval (selftests, parity, linter, detection, platform, threat intel)
+        run: |
+          set -o pipefail
+          python -B eval/run_eval.py 2>&1 | tee eval.log
+          tail -n 1 eval.log >> "$GITHUB_STEP_SUMMARY"
+
+      # Runs AFTER the eval so the README is checked against the result of THIS commit, not the
+      # committed eval/results/latest.json.
+      - name: Figures in the README and docs match the code and the eval
+        run: python -B scripts/check_numbers.py
+
+      - name: The committed eval result is current
+        run: |
+          if ! git diff --quiet -- eval/results/latest.json; then
+            echo "::error::eval/results/latest.json differs from this run - run eval/run_eval.py and commit it"
+            git diff --stat -- eval/results/latest.json
+            exit 1
+          fi
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: eval-results
+          path: |
+            eval/results/latest.json
+            eval.log
+
+  checks:
+    name: release and docs gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.13"
+
+      # The Japanese edition must audit exactly like the English one: same code once strings are
+      # masked, same files, same versions, same agent and eval metadata.
+      - name: Editions are in parity
+        run: python -B scripts/check_editions.py
+
+      # Versions in sync across both SKILL.md files, both CHANGELOGs and the plugin manifests;
+      # licence; no em-dash or CRLF; the skill linter. Without a version argument here; the
+      # release workflow runs it with the tag's version.
+      - name: Versions, CHANGELOGs, style and skill linter
+        run: python -B scripts/validate_release.py
+
+      - name: Plugin manifests match the skill
+        run: python -B scripts/build_plugins.py --check
+
+      - name: Plugin icon is present and square
+        run: python -B scripts/make_icons.py --check
+
+      - name: Package preflight for the current version
+        run: |
+          V=$(python -B -c "import sys; sys.path.insert(0, 'scripts'); from package import skill_md_version; print(skill_md_version(__import__('pathlib').Path('security-audit/SKILL.md')))")
+          python -B scripts/package.py --version "$V" --check
+
+      # A figure fails silently: a blank box, an external font that never loads, a box no arrow
+      # reaches. See the docstring of check_svg.py.
+      - name: Figures are self-contained and connected
+        run: python -B scripts/check_svg.py
+
+      # GitHub shows "Unable to render rich display" on a broken mermaid block, naming neither file
+      # nor line. Render every block with the same engine. puppeteer is pointed at the runner's
+      # Chrome so it does not download a second copy.
+      - name: Set up Chrome for the mermaid renderer
+        uses: browser-actions/setup-chrome@48ad923757ca74d66703209fe939badbdf80f2f4 # v2.2.0
+        id: chrome
+        with:
+          chrome-version: stable
+
+      - name: Every mermaid diagram renders
+        env:
+          PUPPETEER_EXECUTABLE_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          PUPPETEER_SKIP_DOWNLOAD: "true"
+        run: python -B scripts/check_mermaid.py

@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Build output (scripts/package.py)
+dist/
+notes.md
+
+# Benchmark: cloned fixture repositories (benchmark/bench.py fetch) and per-run audit folders.
+# Only the curated results under benchmark/results/ are committed.
+benchmark/fixtures/
+benchmark/runs/
+
+# Offline eval: scratch space. eval/results/latest.json IS committed - it is the record the
+# README badge is checked against.
+eval/results/tmp/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Local secrets. Scoped to the repository root on purpose: eval/fixtures/ carries a deliberate
+# webroot .env (non-secret placeholder values) that the platform eval must be able to see.
+/.env
+/.env.*

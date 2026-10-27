@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Agent Security Audit">
+  <defs>
+    <!-- The shield: the audit's boundary. Deep navy, darkening toward the point. -->
+    <linearGradient id="sa-body" gradientUnits="userSpaceOnUse" x1="128" y1="16" x2="128" y2="242">
+      <stop offset="0" stop-color="#1E4470"/>
+      <stop offset="0.5" stop-color="#16365C"/>
+      <stop offset="1" stop-color="#0B1F33"/>
+    </linearGradient>
+    <linearGradient id="sa-rim" gradientUnits="userSpaceOnUse" x1="128" y1="16" x2="128" y2="242">
+      <stop offset="0" stop-color="#5EEAD4"/>
+      <stop offset="1" stop-color="#0F766E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Shield -->
+  <path d="M128 16 L212 46 L212 120 C212 178 176 220 128 242 C80 220 44 178 44 120 L44 46 Z"
+        fill="url(#sa-body)" stroke="url(#sa-rim)" stroke-width="7" stroke-linejoin="round"/>
+
+  <!-- The lens: reading the code, never writing it. Glass first, then the code lines it reads. -->
+  <circle cx="116" cy="118" r="44" fill="#EAF6F8"/>
+  <g stroke-linecap="round" stroke-width="8" fill="none">
+    <path d="M92 102 L140 102" stroke="#16365C"/>
+    <!-- the finding: one line lit in amber -->
+    <path d="M92 118 L128 118" stroke="#F59E0B"/>
+    <path d="M92 134 L134 134" stroke="#16365C"/>
+  </g>
+  <circle cx="116" cy="118" r="44" fill="none" stroke="#2DD4BF" stroke-width="11"/>
+  <path d="M149 151 L174 176" stroke="#2DD4BF" stroke-width="17" stroke-linecap="round"/>
+
+  <!-- The live signal: advisories fetched at audit time. -->
+  <circle cx="176" cy="68" r="7" fill="#F59E0B"/>
+  <g stroke="#F59E0B" stroke-width="5" stroke-linecap="round" fill="none">
+    <path d="M186 58 A14 14 0 0 1 186 78"/>
+    <path d="M194 50 A25 25 0 0 1 194 86"/>
+  </g>
+</svg>

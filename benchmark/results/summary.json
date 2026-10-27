@@ -1,0 +1,31 @@
+{
+ "metrics": {
+  "v113": {
+   "recall": 88,
+   "cost": 2.27,
+   "minutes": 11,
+   "minutes_exact": 10.724072222222222,
+   "findings": 20.4,
+   "eol": 4,
+   "eol_n": 6,
+   "intel": 0,
+   "n": 9,
+   "valid": 9
+  },
+  "v115": {
+   "recall": 97,
+   "cost": 2.36,
+   "minutes": 7,
+   "minutes_exact": 7.496294444444445,
+   "findings": 22.3,
+   "eol": 6,
+   "eol_n": 6,
+   "intel": 9,
+   "n": 9,
+   "valid": 9
+  }
+ },
+ "total_cost": 41.708678,
+ "runs": 18,
+ "claude_code": "2.1.310 (v1.13.0) and 2.1.311 (v1.15.0)"
+}

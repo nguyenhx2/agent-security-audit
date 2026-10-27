@@ -1,0 +1,98 @@
+<!-- Narrative guide. The authoritative structure is what scripts/build_report.py generates;
+     use this file for the intent of each {{...}} placeholder. -->
+# Security audit report - {{project / system name}}
+
+| | |
+|---|---|
+| Date | {{YYYY-MM-DD}} |
+| Repos in scope | {{repo-a, repo-b}} |
+| Depth | {{quick / standard / deep}} |
+| Auditor | {{agent/person}} via security-audit skill v{{x.y.z}} - read-only on product source |
+| Scanner mode | {{docker / native / none}} |
+| Audited commit | {{repo @ `abc123def456` (uncommitted changes present)}} |
+
+## 1. Executive summary
+{{3-5 sentences: overall posture, the worst findings in plain language, the single most important
+first action. State P0 count first. No hedging, no filler.}}
+
+| Severity | Count |
+|----------|-------|
+| P0 / Blocker | {{n}} |
+| P1 / Major | {{n}} |
+| P2 / Minor | {{n}} |
+| Info | {{n}} |
+
+## 2. Scope and coverage gaps
+| Repo | Scanners run (tool@digest) | Mount files | Secret history | Gaps (stated, not clean) |
+|------|----------------------------|-------------|----------------|--------------------------|
+| {{repo}} | {{generated}} | {{n}} | {{full / gap}} | {{gaps_<repo>: e.g. Dart not covered by Semgrep; runtime config unseen; sweep types not searched}} |
+
+{{lanes: lanes per repo, inline or subagents (and which model)}}
+- Coverage checklist classes not examined: {{list, or "none"}}.
+
+### AI and agent inventory
+{{generated from work/<repo>/agent-config.json: surface, items, items with risk labels, examples - or the
+negative result "no AI components found". Confirmed risks are findings in section 3.}}
+
+## 3. Findings
+Deduplicated by root cause. Full detail in `findings/<lang>/<repo>/<id lowercase>.md`.
+
+### P0 / Blocker
+| id | repo | title | confidence | standard + version + req | location |
+|----|------|-------|-----------|--------------------------|----------|
+| {{id}} | {{repo}} | {{title}} | {{confirmed}} | {{PCI DSS v4.0.1 Req 3.3.1}} | `{{path:line}}` |
+
+### P1 / Major
+{{same table}}
+
+### P2 / Minor
+{{same table}}
+
+### Info
+{{same table, or "none"}}
+
+### Refuted / false positives
+{{One line each: candidate (tool:rule or lane hypothesis) - why it does not hold, with file:line.
+Shows the reader what was checked and dismissed.}}
+
+## 4. Sensitive data at rest (mandatory - present even if nothing was found)
+- **Searched:** {{files/globs}} with sensitive_sweep patterns {{+ project terms}} on {{date}}
+  ({{n}} files, {{n}} migrations, {{n}} schema files).
+- **SAD never-store (CVV / track / PIN):** {{findings or "none found"}}
+- **PAN must-be-unreadable:** {{findings or "none found"; hashed PAN = weak control}}
+- **Credentials / secrets at rest, national ID, health, biometric, contact PII:** {{findings or "none found"}}
+- **Spill surfaces checked:** logs, caches, analytics/exports, client stores, provider-response
+  persistence - {{result}}
+- No card number, secret value, or personal data is reproduced in this report.
+
+## 5. Cross-repo findings
+{{Defects spanning repos (secret sourced from another repo, pipeline/IaC drift), or "none".}}
+
+## 6. Performance and code quality
+{{Only items with a measurement or structural argument (N+1, unbounded fan-out, complexity), or
+"no findings meeting the bar".}}
+
+## 7. What the user must do (ordered, with sequencing)
+1. {{action}} - {{finding ids}} - {{why first / dependency}}
+2. {{Rotate <secret> at <console> before purging history; consumers to redeploy: ...}}
+3. ...
+
+Findings close only when a re-scan with the same image digests + ruleset (or a re-read for manual
+findings) no longer reproduces them.
+
+## 8. Method and limitations (mandatory)
+- **Type:** static audit of source, schema, configuration, IaC, and git history with pinned
+  scanners plus manual review. **No** runtime testing, exploitation, or production data access.
+- **Standards baseline** (verified: {{YYYY-MM-DD}}):
+
+  | Standard | Version | Modules applied |
+  |----------|---------|-----------------|
+  | {{OWASP Top 10}} | {{2025}} | {{owasp-web}} |
+
+- **Scanners:** {{tool, image tag, digest}} - rulesets/DBs drift independently of tags.
+- **What a reader should NOT conclude:**
+  - NOT "the system is secure" - absence of a finding is not proof of absence.
+  - NOT "these are exploitable in production" - severity is by consequence, not demonstrated exploit.
+  - NOT "uncovered surfaces are clean" - section 2 gaps are unknown, not safe.
+  - NOT "a closed finding means the fix is correct in general" - only that the same check no longer
+    reproduces it.

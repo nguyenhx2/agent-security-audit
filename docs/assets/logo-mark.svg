@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Agent Security Audit mark">
+  <defs>
+    <linearGradient id="sam-body" gradientUnits="userSpaceOnUse" x1="128" y1="14" x2="128" y2="244">
+      <stop offset="0" stop-color="#1E4470"/>
+      <stop offset="0.5" stop-color="#16365C"/>
+      <stop offset="1" stop-color="#0B1F33"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Small-size mark: shield, lens and the live dot. Fewer, heavier elements. -->
+  <path d="M128 14 L216 45 L216 122 C216 181 179 223 128 244 C77 223 40 181 40 122 L40 45 Z"
+        fill="url(#sam-body)" stroke="#2DD4BF" stroke-width="9" stroke-linejoin="round"/>
+  <circle cx="114" cy="118" r="48" fill="#EAF6F8" stroke="#2DD4BF" stroke-width="15"/>
+  <path d="M93 118 L135 118" stroke="#F59E0B" stroke-width="12" stroke-linecap="round"/>
+  <path d="M151 155 L178 182" stroke="#2DD4BF" stroke-width="22" stroke-linecap="round"/>
+  <circle cx="180" cy="66" r="11" fill="#F59E0B"/>
+</svg>

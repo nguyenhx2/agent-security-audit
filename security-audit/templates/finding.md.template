@@ -1,0 +1,50 @@
+---
+id: {{FIND-<REPO>-NNN}}             # stable, unique within the audit
+repo: {{repo-name}}                 # or "cross-repo"
+severity: {{P0|P1|P2|Info}}         # by consequence + overrides (reference/method/triage.md)
+confidence: {{confirmed|likely|needs-runtime-check}}
+kind: {{security|sensitive-data-at-rest|secret|supply-chain|configuration|privacy|performance|quality}}
+standard: {{e.g. OWASP Top 10 | OWASP ASVS | PCI DSS | OWASP API Security Top 10}}
+standard_version: {{e.g. 2025 | 5.0.0 | v4.0.1 | 2023; laws: official id, e.g. 2016/679, 91/2025/QH15}}  # NEVER omit
+requirement_id: {{e.g. A01 | V8.2.1 | Req 3.3.1 | API1}}   # cited WITH the version above
+also_maps_to: {{optional, e.g. "OWASP ASVS 5.0.0 V8.2; CWE-639"}}
+cwe: {{CWE-NNN or n/a}}
+shares_anchor_with: {{optional - other finding ids citing the same line for a DIFFERENT root cause; delete if unused}}
+confirmed_by: {{scanner+rule | manual review | both}}       # e.g. "semgrep eval-detected + manual review"
+status: open                        # open|in-progress|closed|accepted-risk|false-positive; closes ONLY on clean re-scan
+found: {{YYYY-MM-DD}}
+verified: n/a                       # date a re-scan confirmed the fix (Phase 8)
+---
+<!-- Write every heading and all prose in the audit language. Headings - en: Location / What it is /
+     Why it matters / Evidence / Remedy / Verification; ja: 該当箇所 / 内容 / 影響 / 根拠 / 是正策 / 検証. Frontmatter values stay English codes. -->
+
+# {{id}} - {{short imperative title naming the defect, e.g. "Profile lookup lacks owner check (BOLA)"}}
+
+## Location
+- `{{path/to/file.ext}}:{{line}}` - {{role: source | sink | missing control | column}}
+- {{additional anchors; for data at rest: COLUMN name + migration file:line. Never the data.}}
+
+## What it is
+{{Root cause in 2-4 sentences. One root-cause defect per file. If many call sites share it, list them
+here, not as separate findings.}}
+
+## Why it matters
+{{Concrete consequence if exploited, who can exploit it (unauthenticated / any user / admin), and
+what data or action is reached. This sets the severity. Perf findings: the measurement or structural
+argument.}}
+
+## Evidence
+{{Trace: entry point -> ... -> sink, with file:line. Scanner witnesses (tool:rule, cid). For
+`likely` / `needs-runtime-check`: the unproven link. Inline suppressions in source do not change this.}}
+
+## Remedy (the user applies it - the auditor does not patch)
+{{Specific fix, with the safe API/pattern for this stack. Class-specific rules:
+ - SAD (CVV/track/PIN): delete column + purge logs/caches/backups; "encrypt it" is not a remedy.
+ - PAN: tokenize / keyed-hash / encrypt with managed keys / truncate; justify retention.
+ - Committed secret: ROTATE at <console>; what breaks at rotation; history-only?; client artifact?
+ - Dependency: upgrade <direct dep> to >= <version>; note transitive path.
+ - Dead control: make it enforce + add a test that fails if it no-ops.}}
+
+## Verification (how this closes)
+{{Re-run <tool> with the same image digest + ruleset (scanners.json), or re-read <file:line> for
+manual findings. Closes only when it no longer reproduces; confirm the catching rule still exists.}}

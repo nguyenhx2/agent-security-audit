@@ -1,0 +1,2358 @@
+{
+ "generated": "2026-10-27",
+ "fixtures": {
+  "DVWA": {
+   "url": "https://github.com/digininja/DVWA",
+   "commit": "a1978a2fed195acd093010af6395f86a281537ca"
+  },
+  "NodeGoat": {
+   "url": "https://github.com/OWASP/NodeGoat",
+   "commit": "c5cb68a7084e4ae7dcc60e6a98768720a81841e8"
+  },
+  "juice-shop": {
+   "url": "https://github.com/juice-shop/juice-shop",
+   "commit": "717f5efa886b0417eeecb52378b03cf10567b7e2"
+  }
+ },
+ "groups": [
+  {
+   "skill": "sa-v113",
+   "fixture": "DVWA",
+   "runs": 3,
+   "cost_usd": {
+    "mean": 2.706,
+    "sd": 0.222,
+    "min": 2.4838860000000005,
+    "max": 2.9280378,
+    "n": 3
+   },
+   "wall_s": {
+    "mean": 818.667,
+    "sd": 643.386,
+    "min": 406,
+    "max": 1560,
+    "n": 3
+   },
+   "turns": {
+    "mean": 29.667,
+    "sd": 17.039,
+    "min": 10,
+    "max": 40,
+    "n": 3
+   },
+   "findings": {
+    "mean": 21.333,
+    "sd": 4.726,
+    "min": 16,
+    "max": 25,
+    "n": 3
+   },
+   "recall": {
+    "mean": 0.867,
+    "sd": 0.115,
+    "min": 0.8,
+    "max": 1.0,
+    "n": 3
+   },
+   "validate_ok": 3,
+   "intel_section": 0,
+   "truth_hit_counts": {
+    "SQL injection": 3,
+    "OS command injection": 3,
+    "XSS": 3,
+    "unrestricted upload": 3,
+    "CSRF": 2,
+    "file inclusion / traversal": 3,
+    "brute force / weak login": 2,
+    "default or hard-coded credentials": 3,
+    "weak session id": 3,
+    "outdated / EOL runtime or image": 1
+   }
+  },
+  {
+   "skill": "sa-v115",
+   "fixture": "DVWA",
+   "runs": 3,
+   "cost_usd": {
+    "mean": 2.341,
+    "sd": 0.391,
+    "min": 1.9032944000000003,
+    "max": 2.6558373999999993,
+    "n": 3
+   },
+   "wall_s": {
+    "mean": 407,
+    "sd": 17.059,
+    "min": 388,
+    "max": 421,
+    "n": 3
+   },
+   "turns": {
+    "mean": 39.667,
+    "sd": 6.11,
+    "min": 33,
+    "max": 45,
+    "n": 3
+   },
+   "findings": {
+    "mean": 19.667,
+    "sd": 3.055,
+    "min": 17,
+    "max": 23,
+    "n": 3
+   },
+   "recall": {
+    "mean": 0.967,
+    "sd": 0.058,
+    "min": 0.9,
+    "max": 1.0,
+    "n": 3
+   },
+   "validate_ok": 3,
+   "intel_section": 3,
+   "truth_hit_counts": {
+    "SQL injection": 3,
+    "OS command injection": 3,
+    "XSS": 3,
+    "unrestricted upload": 3,
+    "CSRF": 3,
+    "file inclusion / traversal": 3,
+    "brute force / weak login": 2,
+    "default or hard-coded credentials": 3,
+    "weak session id": 3,
+    "outdated / EOL runtime or image": 3
+   }
+  },
+  {
+   "skill": "sa-v113",
+   "fixture": "NodeGoat",
+   "runs": 3,
+   "cost_usd": {
+    "mean": 2.003,
+    "sd": 0.468,
+    "min": 1.7049155999999999,
+    "max": 2.5422069999999994,
+    "n": 3
+   },
+   "wall_s": {
+    "mean": 560.333,
+    "sd": 473.555,
+    "min": 276,
+    "max": 1107,
+    "n": 3
+   },
+   "turns": {
+    "mean": 19,
+    "sd": 7.0,
+    "min": 11,
+    "max": 24,
+    "n": 3
+   },
+   "findings": {
+    "mean": 23,
+    "sd": 3.606,
+    "min": 20,
+    "max": 27,
+    "n": 3
+   },
+   "recall": {
+    "mean": 1.0,
+    "sd": 0.0,
+    "min": 1.0,
+    "max": 1.0,
+    "n": 3
+   },
+   "validate_ok": 3,
+   "intel_section": 0,
+   "truth_hit_counts": {
+    "server-side JS injection (eval)": 3,
+    "NoSQL injection": 3,
+    "XSS": 3,
+    "SSRF": 3,
+    "open redirect": 3,
+    "IDOR / missing authz": 3,
+    "CSRF": 3,
+    "ReDoS": 3,
+    "weak password storage": 3,
+    "outdated / EOL runtime or image": 3
+   }
+  },
+  {
+   "skill": "sa-v115",
+   "fixture": "NodeGoat",
+   "runs": 3,
+   "cost_usd": {
+    "mean": 1.888,
+    "sd": 0.153,
+    "min": 1.7872781999999998,
+    "max": 2.0636666,
+    "n": 3
+   },
+   "wall_s": {
+    "mean": 358,
+    "sd": 41.581,
+    "min": 313,
+    "max": 395,
+    "n": 3
+   },
+   "turns": {
+    "mean": 28.333,
+    "sd": 0.577,
+    "min": 28,
+    "max": 29,
+    "n": 3
+   },
+   "findings": {
+    "mean": 23.667,
+    "sd": 3.786,
+    "min": 21,
+    "max": 28,
+    "n": 3
+   },
+   "recall": {
+    "mean": 1.0,
+    "sd": 0.0,
+    "min": 1.0,
+    "max": 1.0,
+    "n": 3
+   },
+   "validate_ok": 3,
+   "intel_section": 3,
+   "truth_hit_counts": {
+    "server-side JS injection (eval)": 3,
+    "NoSQL injection": 3,
+    "XSS": 3,
+    "SSRF": 3,
+    "open redirect": 3,
+    "IDOR / missing authz": 3,
+    "CSRF": 3,
+    "ReDoS": 3,
+    "weak password storage": 3,
+    "outdated / EOL runtime or image": 3
+   }
+  },
+  {
+   "skill": "sa-v113",
+   "fixture": "juice-shop",
+   "runs": 3,
+   "cost_usd": {
+    "mean": 2.099,
+    "sd": 0.549,
+    "min": 1.6293292000000001,
+    "max": 2.7025314000000003,
+    "n": 3
+   },
+   "wall_s": {
+    "mean": 551.333,
+    "sd": 114.605,
+    "min": 419,
+    "max": 618,
+    "n": 3
+   },
+   "turns": {
+    "mean": 28.667,
+    "sd": 15.948,
+    "min": 11,
+    "max": 42,
+    "n": 3
+   },
+   "findings": {
+    "mean": 17,
+    "sd": 7.81,
+    "min": 12,
+    "max": 26,
+    "n": 3
+   },
+   "recall": {
+    "mean": 0.767,
+    "sd": 0.115,
+    "min": 0.7,
+    "max": 0.9,
+    "n": 3
+   },
+   "validate_ok": 3,
+   "intel_section": 0,
+   "truth_hit_counts": {
+    "SQL injection": 3,
+    "XSS": 0,
+    "NoSQL injection": 2,
+    "hard-coded secret / key": 3,
+    "XXE": 2,
+    "path traversal": 2,
+    "SSRF": 2,
+    "broken access control": 3,
+    "weak password hashing": 3,
+    "open redirect": 3
+   }
+  },
+  {
+   "skill": "sa-v115",
+   "fixture": "juice-shop",
+   "runs": 3,
+   "cost_usd": {
+    "mean": 2.865,
+    "sd": 0.205,
+    "min": 2.6548054000000008,
+    "max": 3.0651554000000005,
+    "n": 3
+   },
+   "wall_s": {
+    "mean": 584.333,
+    "sd": 40.004,
+    "min": 544,
+    "max": 624,
+    "n": 3
+   },
+   "turns": {
+    "mean": 37,
+    "sd": 21.932,
+    "min": 12,
+    "max": 53,
+    "n": 3
+   },
+   "findings": {
+    "mean": 23.667,
+    "sd": 5.132,
+    "min": 18,
+    "max": 28,
+    "n": 3
+   },
+   "recall": {
+    "mean": 0.933,
+    "sd": 0.058,
+    "min": 0.9,
+    "max": 1.0,
+    "n": 3
+   },
+   "validate_ok": 3,
+   "intel_section": 3,
+   "truth_hit_counts": {
+    "SQL injection": 3,
+    "XSS": 1,
+    "NoSQL injection": 3,
+    "hard-coded secret / key": 3,
+    "XXE": 3,
+    "path traversal": 3,
+    "SSRF": 3,
+    "broken access control": 3,
+    "weak password hashing": 3,
+    "open redirect": 3
+   }
+  }
+ ],
+ "runs": [
+  {
+   "run": "sa-v113_DVWA_1",
+   "skill": "sa-v113",
+   "fixture": "DVWA",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 1560,
+   "cost_usd": 2.9280378,
+   "turns": 10,
+   "duration_ms": 120051,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 16915,
+    "cache_read_input_tokens": 1428679,
+    "output_tokens": 9395,
+    "output_tokens_details": {
+     "thinking_tokens": 892
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 16915,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1271,
+      "cache_read_input_tokens": 149933,
+      "cache_creation_input_tokens": 1178,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1178
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 102,
+     "outputTokens": 36030,
+     "cacheReadInputTokens": 5566989,
+     "cacheCreationInputTokens": 136704,
+     "webSearchRequests": 0,
+     "costUSD": 2.9280378,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 6587,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v113_DVWA_1/dvwa-security-audit/2026-10-26_1821",
+   "findings": 16,
+   "severity": {
+    "P0": 5,
+    "P1": 6,
+    "P2": 5
+   },
+   "titles": [
+    "FIND-DVWA-001 - Security level is taken from a client-controlled cookie, so any visitor can switch every control off",
+    "FIND-DVWA-002 - OS command injection: the ping form passes user input to `shell_exec` (low, medium, high)",
+    "FIND-DVWA-003 - SQL injection in the SQLi, blind SQLi, brute-force, stored XSS and auth-bypass modules",
+    "FIND-DVWA-004 - Auth-bypass JSON endpoints have no login check: anyone can list users and rewrite their names",
+    "FIND-DVWA-005 - Unrestricted upload into the web root plus a file-inclusion sink give remote code execution",
+    "FIND-DVWA-006 - Help and source viewers read files from unvalidated `id`/`security`/`locale` parameters at every level, and `view_help.php` evaluates them",
+    "FIND-DVWA-007 - Default and hardcoded credentials: seeded accounts, fallback database password, compose passwords, API client secret and token keys",
+    "FIND-DVWA-008 - Cross-site scripting: reflected, stored and DOM XSS with blocklist filters",
+    "FIND-DVWA-009 - Session management: fixation allowed, cookie never `Secure`, `HttpOnly`/`SameSite` off below `impossible`, predictable tokens",
+    "FIND-DVWA-010 - User passwords stored as unsalted MD5",
+    "FIND-DVWA-011 - No brute-force protection on the main login and the brute-force module below `impossible`",
+    "FIND-DVWA-012 - Debug surfaces: `phpinfo()` page, raw SQL errors and an unauthenticated setup page",
+    "FIND-DVWA-013 - Open redirect: `redirect` parameter passed to the `Location` header",
+    "FIND-DVWA-014 - `vulnerable.yml` workflow prints every repository secret, base64-encoded, to the Actions log on each push to `master`",
+    "FIND-DVWA-015 - GitHub Actions hardening: actions pinned by tag, default token permissions, checkout credentials persisted",
+    "FIND-DVWA-016 - Container image: floating base and build-stage tags, unpinned packages, no non-root user or healthcheck"
+   ],
+   "truth_hits": {
+    "SQL injection": true,
+    "OS command injection": true,
+    "XSS": true,
+    "unrestricted upload": true,
+    "CSRF": false,
+    "file inclusion / traversal": true,
+    "brute force / weak login": true,
+    "default or hard-coded credentials": true,
+    "weak session id": true,
+    "outdated / EOL runtime or image": false
+   },
+   "recall": 0.8,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": false,
+   "platform_json": false,
+   "intel_json": false
+  },
+  {
+   "run": "sa-v113_DVWA_2",
+   "skill": "sa-v113",
+   "fixture": "DVWA",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 406,
+   "cost_usd": 2.4838860000000005,
+   "turns": 40,
+   "duration_ms": 399564,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 74,
+    "cache_creation_input_tokens": 129398,
+    "cache_read_input_tokens": 3792930,
+    "output_tokens": 34491,
+    "output_tokens_details": {
+     "thinking_tokens": 6307
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 129398,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1384,
+      "cache_read_input_tokens": 143389,
+      "cache_creation_input_tokens": 416,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 416
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 74,
+     "outputTokens": 34491,
+     "cacheReadInputTokens": 3792930,
+     "cacheCreationInputTokens": 129398,
+     "webSearchRequests": 0,
+     "costUSD": 2.4838860000000005,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 6307,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v113_DVWA_2/dvwa-security-audit/2026-10-26_1846",
+   "findings": 23,
+   "severity": {
+    "P0": 7,
+    "P1": 7,
+    "P2": 9
+   },
+   "titles": [
+    "FIND-DVWA-001 - Security level is read from a client-controlled cookie, so any visitor can switch on every vulnerable code path",
+    "FIND-DVWA-002 - Unauthenticated REST endpoint `POST /api/v2/health/connectivity` passes the JSON `target` field to `exec()`",
+    "FIND-DVWA-003 - Command Injection module builds the `ping` command from the `ip` parameter",
+    "FIND-DVWA-004 - SQL queries are built by string concatenation of request parameters",
+    "FIND-DVWA-005 - File Inclusion page passes the `page` parameter to `include()` and PHP allows remote includes",
+    "FIND-DVWA-006 - File upload stores any file type, including `.php`, in the web-served `hackable/uploads/` folder",
+    "FIND-DVWA-007 - Authorisation Bypass endpoints read and modify every user record without requiring login, and the update is SQL-injectable",
+    "FIND-DVWA-008 - Reflected and stored XSS: request and guestbook values are written to HTML without encoding",
+    "FIND-DVWA-009 - Password change is a GET request with no CSRF token and no current-password check",
+    "FIND-DVWA-010 - `setup.php` is reachable without login and drops and recreates the database",
+    "FIND-DVWA-011 - Session ID is kept across login (session fixation) and the session cookie lacks `Secure` and `HttpOnly`",
+    "FIND-DVWA-012 - User passwords are stored as unsalted MD5 hashes",
+    "FIND-DVWA-013 - Five accounts, including `admin`, are seeded with published default passwords and login has no rate limit",
+    "FIND-DVWA-014 - `Vulnerable Action` workflow loads all repository secrets and prints them base64-encoded to the job log on every push to master",
+    "FIND-DVWA-015 - Help viewer `eval`s a file whose path is built from the `id` and `locale` query parameters",
+    "FIND-DVWA-016 - REST API has no authentication on user management and allows any origin via CORS",
+    "FIND-DVWA-017 - Open redirect: `redirect` parameter sent unchanged in the `Location` header",
+    "FIND-DVWA-018 - Weak Session IDs module issues a sequential integer as the `dvwaSession` cookie",
+    "FIND-DVWA-019 - Cryptography module uses repeating-key XOR with a key hard-coded in source",
+    "FIND-DVWA-020 - JSONP endpoint reflects an arbitrary `callback` name, bypassing the CSP lesson's script policy",
+    "FIND-DVWA-021 - `phpinfo.php` exposes full PHP and server configuration to any logged-in user",
+    "FIND-DVWA-022 - GitHub Actions use mutable tags and run with default token permissions",
+    "FIND-DVWA-023 - Container runs Apache as root and builds from unpinned `php:8-apache` and `composer:latest` images"
+   ],
+   "truth_hits": {
+    "SQL injection": true,
+    "OS command injection": true,
+    "XSS": true,
+    "unrestricted upload": true,
+    "CSRF": true,
+    "file inclusion / traversal": true,
+    "brute force / weak login": false,
+    "default or hard-coded credentials": true,
+    "weak session id": true,
+    "outdated / EOL runtime or image": false
+   },
+   "recall": 0.8,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": false,
+   "platform_json": false,
+   "intel_json": false
+  },
+  {
+   "run": "sa-v113_DVWA_3",
+   "skill": "sa-v113",
+   "fixture": "DVWA",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 490,
+   "cost_usd": 2.7073891999999993,
+   "turns": 39,
+   "duration_ms": 482242,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 74,
+    "cache_creation_input_tokens": 142635,
+    "cache_read_input_tokens": 4032166,
+    "output_tokens": 37979,
+    "output_tokens_details": {
+     "thinking_tokens": 7354
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 142635,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1161,
+      "cache_read_input_tokens": 156290,
+      "cache_creation_input_tokens": 752,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 752
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 74,
+     "outputTokens": 37979,
+     "cacheReadInputTokens": 4032166,
+     "cacheCreationInputTokens": 142635,
+     "webSearchRequests": 0,
+     "costUSD": 2.7073891999999993,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 7354,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v113_DVWA_3/dvwa-security-audit/2026-10-26_1944",
+   "findings": 25,
+   "severity": {
+    "P0": 6,
+    "P1": 11,
+    "P2": 8
+   },
+   "titles": [
+    "FIND-DVWA-001 - Unauthenticated OS command injection in the API health `connectivity` endpoint",
+    "FIND-DVWA-002 - Unauthenticated SQL injection in `authbypass/change_user_details.php` UPDATE",
+    "FIND-DVWA-003 - Authentication missing on `authbypass` data endpoints and API user/order routes",
+    "FIND-DVWA-004 - Security level (which code path runs) is chosen by a client-controlled cookie",
+    "FIND-DVWA-005 - OS command injection in the Command Injection module (low, medium, high)",
+    "FIND-DVWA-006 - Local/remote file inclusion: `include($_GET['page'])` in the File Inclusion module",
+    "FIND-DVWA-007 - Unrestricted file upload into the web-served `hackable/uploads/` folder",
+    "FIND-DVWA-008 - SQL injection across the SQLi, Blind SQLi, Brute Force and Broken Access Control modules",
+    "FIND-DVWA-009 - Reflected, stored and DOM cross-site scripting (output not encoded)",
+    "FIND-DVWA-010 - Password change without current password, over GET, without CSRF token (CSRF and CAPTCHA modules)",
+    "FIND-DVWA-011 - `php.ini` enables `allow_url_include` and `allow_url_fopen`",
+    "FIND-DVWA-012 - User passwords stored as unsalted MD5",
+    "FIND-DVWA-013 - Hard-coded and seeded default credentials (application users, database, API token secrets)",
+    "FIND-DVWA-014 - Workflow dumps every repository secret, base64-encoded, into public Actions logs",
+    "FIND-DVWA-015 - Unauthenticated `setup.php` drops and recreates the database",
+    "FIND-DVWA-016 - Session fixation: session id is not regenerated at login",
+    "FIND-DVWA-017 - No brute-force protection on the main login and the Brute Force module",
+    "FIND-DVWA-018 - `view_help.php` evaluates a file whose path is built from unvalidated `id` and `locale`",
+    "FIND-DVWA-019 - Predictable session and CSRF tokens (`dvwaSession` counter, `md5(uniqid())`)",
+    "FIND-DVWA-020 - Legacy API v1 still served and returns password hashes; wildcard CORS",
+    "FIND-DVWA-021 - Open redirect in the `open_redirect` module",
+    "FIND-DVWA-022 - `phpinfo.php` exposes full PHP and server configuration to any logged-in user",
+    "FIND-DVWA-023 - Container image runs as root, with floating base images and unpinned packages",
+    "FIND-DVWA-024 - GitHub Actions use mutable action tags and default token permissions",
+    "FIND-DVWA-025 - `symfony/yaml` v8.1.2 in the API lockfile has a published advisory (fixed in 8.1.6)"
+   ],
+   "truth_hits": {
+    "SQL injection": true,
+    "OS command injection": true,
+    "XSS": true,
+    "unrestricted upload": true,
+    "CSRF": true,
+    "file inclusion / traversal": true,
+    "brute force / weak login": true,
+    "default or hard-coded credentials": true,
+    "weak session id": true,
+    "outdated / EOL runtime or image": true
+   },
+   "recall": 1.0,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": false,
+   "platform_json": false,
+   "intel_json": false
+  },
+  {
+   "run": "sa-v113_juice-shop_1",
+   "skill": "sa-v113",
+   "fixture": "juice-shop",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 618,
+   "cost_usd": 2.7025314000000003,
+   "turns": 42,
+   "duration_ms": 610437,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 78,
+    "cache_creation_input_tokens": 142254,
+    "cache_read_input_tokens": 4353937,
+    "output_tokens": 34670,
+    "output_tokens_details": {
+     "thinking_tokens": 6313
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 142254,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1161,
+      "cache_read_input_tokens": 155475,
+      "cache_creation_input_tokens": 1186,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1186
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 78,
+     "outputTokens": 34670,
+     "cacheReadInputTokens": 4353937,
+     "cacheCreationInputTokens": 142254,
+     "webSearchRequests": 0,
+     "costUSD": 2.7025314000000003,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 6313,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v113_juice-shop_1/juice-shop-security-audit/2026-10-26_1837",
+   "findings": 26,
+   "severity": {
+    "P0": 4,
+    "P1": 15,
+    "P2": 7
+   },
+   "titles": [
+    "FIND-JUICE-SHOP-001 - SQL injection in login and product search (raw string-built queries)",
+    "FIND-JUICE-SHOP-002 - JWT signing private key and HMAC key hard-coded in source",
+    "FIND-JUICE-SHOP-003 - Server-side code execution: eval of username, notevil sandbox for B2B orders, YAML in vm",
+    "FIND-JUICE-SHOP-004 - Self-registration accepts a client-supplied role (mass assignment to admin)",
+    "FIND-JUICE-SHOP-005 - XML upload parsed with external entities and DTD loading enabled (XXE)",
+    "FIND-JUICE-SHOP-006 - Zip upload writes entries outside the upload folder (zip slip)",
+    "FIND-JUICE-SHOP-007 - Server-side request forgery in profile image URL upload",
+    "FIND-JUICE-SHOP-008 - Basket retrieval by id without ownership check (BOLA/IDOR)",
+    "FIND-JUICE-SHOP-009 - Product update endpoint has no authorization middleware",
+    "FIND-JUICE-SHOP-010 - NoSQL injection and unbounded updates in reviews and order tracking",
+    "FIND-JUICE-SHOP-011 - Passwords stored as unsalted MD5",
+    "FIND-JUICE-SHOP-012 - Card numbers (PAN) stored in plaintext",
+    "FIND-JUICE-SHOP-013 - Directory listing and download of key, log and backup folders",
+    "FIND-JUICE-SHOP-014 - Local file read through the `layout` field of the data-erasure form",
+    "FIND-JUICE-SHOP-015 - Discount coupons are forgeable: encoded, not signed",
+    "FIND-JUICE-SHOP-016 - Chatbot coupon tool has no server-side limits; policy lives only in the prompt",
+    "FIND-JUICE-SHOP-017 - Obsolete JWT libraries with known signature-bypass flaws (`express-jwt` 0.1.3, `jsonwebtoken` 0.4.0)",
+    "FIND-JUICE-SHOP-018 - Open redirect: allow-list matched with `includes()`",
+    "FIND-JUICE-SHOP-019 - Password-reset rate limit keyed on spoofable `X-Forwarded-For`",
+    "FIND-JUICE-SHOP-020 - TOTP seeds stored in plaintext",
+    "FIND-JUICE-SHOP-021 - Outdated `sanitize-html` 1.4.2 with known sanitiser bypasses",
+    "FIND-JUICE-SHOP-022 - CORS open to every origin",
+    "FIND-JUICE-SHOP-023 - TLS private key committed in Terraform (two copies)",
+    "FIND-JUICE-SHOP-024 - Seeded accounts, including admins, with passwords committed in seed data",
+    "FIND-JUICE-SHOP-025 - GitHub Actions hardening: tag-pinned actions, default token permissions, persisted credentials",
+    "FIND-JUICE-SHOP-026 - Terraform load balancer serves plain HTTP from the internet with open egress"
+   ],
+   "truth_hits": {
+    "SQL injection": true,
+    "XSS": false,
+    "NoSQL injection": true,
+    "hard-coded secret / key": true,
+    "XXE": true,
+    "path traversal": true,
+    "SSRF": true,
+    "broken access control": true,
+    "weak password hashing": true,
+    "open redirect": true
+   },
+   "recall": 0.9,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": false,
+   "platform_json": false,
+   "intel_json": false
+  },
+  {
+   "run": "sa-v113_juice-shop_2",
+   "skill": "sa-v113",
+   "fixture": "juice-shop",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 617,
+   "cost_usd": 1.9655463999999998,
+   "turns": 11,
+   "duration_ms": 85107,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 18,
+    "cache_creation_input_tokens": 15373,
+    "cache_read_input_tokens": 1052391,
+    "output_tokens": 6716,
+    "output_tokens_details": {
+     "thinking_tokens": 434
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 15373,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1269,
+      "cache_read_input_tokens": 124148,
+      "cache_creation_input_tokens": 607,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 607
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 70,
+     "outputTokens": 22493,
+     "cacheReadInputTokens": 3165072,
+     "cacheCreationInputTokens": 110299,
+     "webSearchRequests": 0,
+     "costUSD": 1.9655463999999998,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 2086,
+     "cacheCreationEphemeral5mInputTokens": 0,
+     "cacheCreationEphemeral1hInputTokens": 110299,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v113_juice-shop_2/juice-shop-security-audit/2026-10-27_0656",
+   "findings": 12,
+   "severity": {
+    "P0": 4,
+    "P1": 7,
+    "P2": 1
+   },
+   "titles": [
+    "FIND-JUICE-SHOP-001 - SQL injection in login and product search via string-built raw queries",
+    "FIND-JUICE-SHOP-002 - JWT RSA private signing key, HMAC key and CTF key hard-coded in the repository",
+    "FIND-JUICE-SHOP-003 - Server-side code execution: `eval` of username and sandbox-escapable `vm` for B2B orders",
+    "FIND-JUICE-SHOP-004 - Full card number (PAN) stored in plaintext in the `Cards` table",
+    "FIND-JUICE-SHOP-005 - Missing object-level authorization on baskets, products, user registration roles and feedback",
+    "FIND-JUICE-SHOP-006 - NoSQL `$where` injection in order tracking and product reviews",
+    "FIND-JUICE-SHOP-007 - Chatbot coupon tool trusts the model: discount limit and eligibility enforced only in the prompt",
+    "FIND-JUICE-SHOP-008 - XXE and path traversal in complaint file upload (XML entities, ZIP slip)",
+    "FIND-JUICE-SHOP-009 - User passwords hashed with unsalted MD5",
+    "FIND-JUICE-SHOP-010 - Public directory listing and download of FTP files, key files and access logs",
+    "FIND-JUICE-SHOP-011 - Open redirect: allowlist matched with substring `includes`",
+    "FIND-JUICE-SHOP-012 - Security-critical libraries pinned to decade-old versions: express-jwt 0.1.3, jsonwebtoken 0.4.0, sanitize-html 1.4.2"
+   ],
+   "truth_hits": {
+    "SQL injection": true,
+    "XSS": false,
+    "NoSQL injection": true,
+    "hard-coded secret / key": true,
+    "XXE": true,
+    "path traversal": false,
+    "SSRF": false,
+    "broken access control": true,
+    "weak password hashing": true,
+    "open redirect": true
+   },
+   "recall": 0.7,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": false,
+   "platform_json": false,
+   "intel_json": false
+  },
+  {
+   "run": "sa-v113_juice-shop_3",
+   "skill": "sa-v113",
+   "fixture": "juice-shop",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 419,
+   "cost_usd": 1.6293292000000001,
+   "turns": 33,
+   "duration_ms": 414203,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 62,
+    "cache_creation_input_tokens": 92578,
+    "cache_read_input_tokens": 2569686,
+    "output_tokens": 18726,
+    "output_tokens_details": {
+     "thinking_tokens": 1361
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 92578,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1214,
+      "cache_read_input_tokens": 106702,
+      "cache_creation_input_tokens": 283,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 283
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 62,
+     "outputTokens": 18726,
+     "cacheReadInputTokens": 2569686,
+     "cacheCreationInputTokens": 92578,
+     "webSearchRequests": 0,
+     "costUSD": 1.6293292000000001,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 1361,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v113_juice-shop_3/juice-shop-security-audit/2026-10-26_2007",
+   "findings": 13,
+   "severity": {
+    "P0": 4,
+    "P1": 7,
+    "P2": 2
+   },
+   "titles": [
+    "FIND-JUICE-SHOP-001 - SQL injection in login and product search via string-concatenated raw queries",
+    "FIND-JUICE-SHOP-002 - JWT signing private key and HMAC key hard-coded in source",
+    "FIND-JUICE-SHOP-003 - Obsolete JWT libraries (express-jwt 0.1.3, jsonwebtoken 0.4.0) with no algorithm allow-list",
+    "FIND-JUICE-SHOP-004 - Server-side evaluation of request data: B2B order lines (`vm` + `notevil`) and username `eval`",
+    "FIND-JUICE-SHOP-005 - Basket IDOR: any authenticated user can read another user's basket",
+    "FIND-JUICE-SHOP-006 - Chatbot coupon tool trusts the LLM to enforce the discount limit; client supplies the full message history",
+    "FIND-JUICE-SHOP-007 - SSRF in profile image upload by URL",
+    "FIND-JUICE-SHOP-008 - Zip Slip path traversal in complaint file upload",
+    "FIND-JUICE-SHOP-009 - Passwords hashed with unsalted MD5",
+    "FIND-JUICE-SHOP-010 - Full card numbers (PAN) stored in plaintext in the `Cards` table",
+    "FIND-JUICE-SHOP-011 - Open redirect: allow-list check uses substring `includes`",
+    "FIND-JUICE-SHOP-012 - Local file read through `layout` parameter on data-erasure form",
+    "FIND-JUICE-SHOP-013 - TLS private key committed inline in Terraform (`aws_iam_server_certificate`)"
+   ],
+   "truth_hits": {
+    "SQL injection": true,
+    "XSS": false,
+    "NoSQL injection": false,
+    "hard-coded secret / key": true,
+    "XXE": false,
+    "path traversal": true,
+    "SSRF": true,
+    "broken access control": true,
+    "weak password hashing": true,
+    "open redirect": true
+   },
+   "recall": 0.7,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": false,
+   "platform_json": false,
+   "intel_json": false
+  },
+  {
+   "run": "sa-v113_NodeGoat_1",
+   "skill": "sa-v113",
+   "fixture": "NodeGoat",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 1107,
+   "cost_usd": 2.5422069999999994,
+   "turns": 11,
+   "duration_ms": 199657,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 22,
+    "cache_creation_input_tokens": 29920,
+    "cache_read_input_tokens": 1461907,
+    "output_tokens": 20287,
+    "output_tokens_details": {
+     "thinking_tokens": 1923
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 29920,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1287,
+      "cache_read_input_tokens": 146073,
+      "cache_creation_input_tokens": 412,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 412
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 68,
+     "outputTokens": 39800,
+     "cacheReadInputTokens": 3446555,
+     "cacheCreationInputTokens": 132078,
+     "webSearchRequests": 0,
+     "costUSD": 2.5422069999999994,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 5356,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v113_NodeGoat_1/nodegoat-security-audit/2026-10-26_1821",
+   "findings": 27,
+   "severity": {
+    "P0": 2,
+    "P1": 11,
+    "P2": 14
+   },
+   "titles": [
+    "FIND-NODEGOAT-001 - Server-side JavaScript injection: contribution form fields are passed to `eval()`",
+    "FIND-NODEGOAT-002 - NoSQL injection: `threshold` query parameter is concatenated into a MongoDB `$where` JavaScript expression",
+    "FIND-NODEGOAT-003 - IDOR: `/allocations/:userId` returns any user's allocations based on the URL parameter",
+    "FIND-NODEGOAT-004 - Missing function-level authorization: any logged-in user can list all users and change their benefit start dates via `/benefits`",
+    "FIND-NODEGOAT-005 - SSRF and reflected content: `/research` fetches a user-supplied URL and writes the body back as HTML",
+    "FIND-NODEGOAT-006 - Stored and reflected XSS: Swig auto-escaping is disabled globally",
+    "FIND-NODEGOAT-007 - User passwords stored and compared in plaintext",
+    "FIND-NODEGOAT-008 - Session management weaknesses: no session ID regeneration on login and cookie without `HttpOnly`/`Secure`/`SameSite`/expiry",
+    "FIND-NODEGOAT-009 - No CSRF protection on state-changing POST routes",
+    "FIND-NODEGOAT-010 - Security headers absent: Helmet, CSP, frame protection and `nosniff` are disabled",
+    "FIND-NODEGOAT-011 - Application served over plain HTTP only",
+    "FIND-NODEGOAT-012 - Session signing secret, encryption key and ZAP API key committed in configuration files",
+    "FIND-NODEGOAT-013 - SSN, date of birth and bank account/routing numbers stored in plaintext in the `users` collection",
+    "FIND-NODEGOAT-014 - Default admin and user accounts with known passwords are re-seeded on every container start",
+    "FIND-NODEGOAT-015 - Open redirect at `/learn?url=`",
+    "FIND-NODEGOAT-016 - ReDoS: catastrophic-backtracking regex validates `bankRouting`",
+    "FIND-NODEGOAT-017 - Weak authentication controls: 1-character passwords accepted, user enumeration via login errors, no brute-force throttling",
+    "FIND-NODEGOAT-018 - Secrets and raw user input written to logs: full config dump at startup and CRLF-injectable login log",
+    "FIND-NODEGOAT-019 - Known-malicious package advisory: `fsevents@1.2.9` locked (installed on macOS developer machines via `nodemon`)",
+    "FIND-NODEGOAT-020 - Vulnerable `marked@0.3.5` renders user memos - `sanitize: true` is bypassable (XSS)",
+    "FIND-NODEGOAT-021 - Unmaintained template engine `swig@1.4.2` (no fixed release) used for all views",
+    "FIND-NODEGOAT-022 - Outdated Express 4.16.4 stack (`body-parser`, `qs`, `path-to-regexp`, `proxy-addr`) with known DoS and redirect advisories",
+    "FIND-NODEGOAT-023 - End-of-life MongoDB driver `mongodb@2.2.36` with critical `bson@1.0.9` deserialization advisories",
+    "FIND-NODEGOAT-024 - Build and test toolchain locked to vulnerable versions (`grunt`, `mocha`, `cypress@3`, `forever`, `underscore` -> `lodash`, `minimist`, `tar`, `set-value`, `growl`)",
+    "FIND-NODEGOAT-025 - TLS private key committed to the repository",
+    "FIND-NODEGOAT-026 - End-of-life runtime images (`node:12-alpine`, `mongo:4.4`) and MongoDB without authentication",
+    "FIND-NODEGOAT-027 - GitHub Actions use mutable tags and default token permissions"
+   ],
+   "truth_hits": {
+    "server-side JS injection (eval)": true,
+    "NoSQL injection": true,
+    "XSS": true,
+    "SSRF": true,
+    "open redirect": true,
+    "IDOR / missing authz": true,
+    "CSRF": true,
+    "ReDoS": true,
+    "weak password storage": true,
+    "outdated / EOL runtime or image": true
+   },
+   "recall": 1.0,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": false,
+   "platform_json": false,
+   "intel_json": false
+  },
+  {
+   "run": "sa-v113_NodeGoat_2",
+   "skill": "sa-v113",
+   "fixture": "NodeGoat",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 298,
+   "cost_usd": 1.7049155999999999,
+   "turns": 22,
+   "duration_ms": 290207,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 40,
+    "cache_creation_input_tokens": 106663,
+    "cache_read_input_tokens": 1731958,
+    "output_tokens": 25253,
+    "output_tokens_details": {
+     "thinking_tokens": 3154
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 106663,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1108,
+      "cache_read_input_tokens": 120117,
+      "cache_creation_input_tokens": 953,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 953
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 40,
+     "outputTokens": 25253,
+     "cacheReadInputTokens": 1731958,
+     "cacheCreationInputTokens": 106663,
+     "webSearchRequests": 0,
+     "costUSD": 1.7049155999999999,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 3154,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v113_NodeGoat_2/nodegoat-security-audit/2026-10-26_1847",
+   "findings": 20,
+   "severity": {
+    "P0": 2,
+    "P1": 8,
+    "P2": 10
+   },
+   "titles": [
+    "FIND-NODEGOAT-001 - Contribution form values are passed to `eval()` (server-side code execution)",
+    "FIND-NODEGOAT-002 - `threshold` query parameter is concatenated into a MongoDB `$where` JavaScript clause",
+    "FIND-NODEGOAT-003 - Allocations page trusts the `userId` path parameter (IDOR / BOLA)",
+    "FIND-NODEGOAT-004 - Admin-only Benefits page lacks the role check (broken function-level authorization)",
+    "FIND-NODEGOAT-005 - Research page fetches an attacker-supplied URL and returns the body as HTML (SSRF)",
+    "FIND-NODEGOAT-006 - Template auto-escaping is disabled globally (stored XSS in profile, memos and navigation)",
+    "FIND-NODEGOAT-007 - User passwords are stored and compared in plaintext",
+    "FIND-NODEGOAT-008 - SSN, date of birth and bank account/routing numbers stored unencrypted",
+    "FIND-NODEGOAT-009 - Session id not regenerated on login; session cookie lacks `HttpOnly`/`Secure` and expiry",
+    "FIND-NODEGOAT-010 - App served over plain HTTP with security headers (helmet) disabled",
+    "FIND-NODEGOAT-011 - No CSRF protection on state-changing forms",
+    "FIND-NODEGOAT-012 - Lockfile pins `fsevents@1.2.9`, flagged known-malicious (`MAL-2023-462`)",
+    "FIND-NODEGOAT-013 - Reachable runtime dependencies with known exploitable flaws (`marked` 0.3.5, `mongodb` 2.x/`bson` 1.0.9, `swig`, Express 4 chain)",
+    "FIND-NODEGOAT-014 - Dev toolchain is outdated and partly unpinned (`grunt-if` from a GitHub tarball, `grunt-env: latest`)",
+    "FIND-NODEGOAT-015 - Session-signing secret, encryption key, ZAP API key and TLS private key committed; whole config logged at startup",
+    "FIND-NODEGOAT-016 - Login reveals whether a username exists and has no rate limiting or lockout",
+    "FIND-NODEGOAT-017 - `/learn` redirects to any URL from the query string (open redirect)",
+    "FIND-NODEGOAT-018 - Bank routing number validated with a catastrophic-backtracking regex (ReDoS)",
+    "FIND-NODEGOAT-019 - GitHub Actions use mutable tags and default token permissions",
+    "FIND-NODEGOAT-020 - Container built on end-of-life `node:12-alpine`; MongoDB in compose runs without authentication"
+   ],
+   "truth_hits": {
+    "server-side JS injection (eval)": true,
+    "NoSQL injection": true,
+    "XSS": true,
+    "SSRF": true,
+    "open redirect": true,
+    "IDOR / missing authz": true,
+    "CSRF": true,
+    "ReDoS": true,
+    "weak password storage": true,
+    "outdated / EOL runtime or image": true
+   },
+   "recall": 1.0,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": false,
+   "platform_json": false,
+   "intel_json": false
+  },
+  {
+   "run": "sa-v113_NodeGoat_3",
+   "skill": "sa-v113",
+   "fixture": "NodeGoat",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 276,
+   "cost_usd": 1.7616404000000003,
+   "turns": 24,
+   "duration_ms": 270687,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 46,
+    "cache_creation_input_tokens": 106935,
+    "cache_read_input_tokens": 2010982,
+    "output_tokens": 25189,
+    "output_tokens_details": {
+     "thinking_tokens": 3595
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 106935,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1110,
+      "cache_read_input_tokens": 120912,
+      "cache_creation_input_tokens": 430,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 430
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 46,
+     "outputTokens": 25189,
+     "cacheReadInputTokens": 2010982,
+     "cacheCreationInputTokens": 106935,
+     "webSearchRequests": 0,
+     "costUSD": 1.7616404000000003,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 3595,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v113_NodeGoat_3/nodegoat-security-audit/2026-10-26_1956",
+   "findings": 22,
+   "severity": {
+    "P0": 2,
+    "P1": 10,
+    "P2": 10
+   },
+   "titles": [
+    "FIND-NODEGOAT-001 - Server-side JavaScript injection: contribution fields are passed to eval()",
+    "FIND-NODEGOAT-002 - IDOR: any user can read another user's asset allocations via /allocations/:userId",
+    "FIND-NODEGOAT-003 - NoSQL injection: threshold query parameter is concatenated into a MongoDB $where expression",
+    "FIND-NODEGOAT-004 - Missing function-level authorization: any logged-in user can use the admin benefits page",
+    "FIND-NODEGOAT-005 - SSRF: /research fetches an attacker-supplied URL and echoes the response as HTML",
+    "FIND-NODEGOAT-006 - Stored and reflected XSS: template auto-escaping is globally disabled",
+    "FIND-NODEGOAT-007 - User passwords stored and compared in plaintext",
+    "FIND-NODEGOAT-008 - SSN, date of birth and bank account/routing numbers stored in plaintext",
+    "FIND-NODEGOAT-009 - Default administrator account with a known password is seeded on every container start",
+    "FIND-NODEGOAT-010 - Session-signing secret, encryption key and other secrets committed to the repository",
+    "FIND-NODEGOAT-011 - No CSRF protection on state-changing POST routes",
+    "FIND-NODEGOAT-012 - Plain HTTP, session cookie without HttpOnly/Secure, and no security headers",
+    "FIND-NODEGOAT-013 - Weak authentication: session fixation, user enumeration, weak password rule, no brute-force limit",
+    "FIND-NODEGOAT-014 - Open redirect via /learn?url=",
+    "FIND-NODEGOAT-015 - marked 0.3.5 pinned with 7 known XSS/ReDoS advisories, reachable from memos",
+    "FIND-NODEGOAT-016 - Known-malicious package version fsevents 1.2.9 in the lockfile (needs-runtime-check: macOS dev installs only)",
+    "FIND-NODEGOAT-017 - Containers: MongoDB without authentication, EOL Node.js 12 base image, no hardening",
+    "FIND-NODEGOAT-018 - Outdated runtime dependencies: express stack, mongodb 2.x driver (bson), underscore, unmaintained swig and bcrypt-nodejs",
+    "FIND-NODEGOAT-019 - Development toolchain (grunt, cypress 3, nodemon, mocha) pulls ~60 vulnerable transitive packages",
+    "FIND-NODEGOAT-020 - GitHub Actions: third-party actions pinned by tag and default token permissions",
+    "FIND-NODEGOAT-021 - ReDoS: bank routing validation regex with nested quantifier",
+    "FIND-NODEGOAT-022 - Logging: full configuration including secrets printed at start-up; unsanitised user name in logs"
+   ],
+   "truth_hits": {
+    "server-side JS injection (eval)": true,
+    "NoSQL injection": true,
+    "XSS": true,
+    "SSRF": true,
+    "open redirect": true,
+    "IDOR / missing authz": true,
+    "CSRF": true,
+    "ReDoS": true,
+    "weak password storage": true,
+    "outdated / EOL runtime or image": true
+   },
+   "recall": 1.0,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": false,
+   "platform_json": false,
+   "intel_json": false
+  },
+  {
+   "run": "sa-v115_DVWA_1",
+   "skill": "sa-v115",
+   "fixture": "DVWA",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 388,
+   "cost_usd": 2.4646052,
+   "turns": 45,
+   "duration_ms": 381115,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 84,
+    "cache_creation_input_tokens": 128086,
+    "cache_read_input_tokens": 4135106,
+    "output_tokens": 30628,
+    "output_tokens_details": {
+     "thinking_tokens": 6036
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 128086,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1273,
+      "cache_read_input_tokens": 142212,
+      "cache_creation_input_tokens": 330,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 330
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 84,
+     "outputTokens": 30628,
+     "cacheReadInputTokens": 4135106,
+     "cacheCreationInputTokens": 128086,
+     "webSearchRequests": 0,
+     "costUSD": 2.4646052,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 6036,
+     "cacheCreationEphemeral5mInputTokens": 0,
+     "cacheCreationEphemeral1hInputTokens": 128086,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v115_DVWA_1/dvwa-security-audit/2026-10-27_0639",
+   "findings": 17,
+   "severity": {
+    "P0": 5,
+    "P1": 5,
+    "P2": 7
+   },
+   "titles": [
+    "FIND-DVWA-001 - Server-side security level is chosen by a client-controlled cookie, so any user can switch every module to its weakest code path",
+    "FIND-DVWA-002 - OS command injection in the ping feature (web UI)",
+    "FIND-DVWA-003 - Unauthenticated OS command injection in the API health connectivity endpoint",
+    "FIND-DVWA-004 - Local and remote file inclusion through the `page` parameter, enabled by `allow_url_include = on`",
+    "FIND-DVWA-005 - Unrestricted file upload into a web-served, PHP-executing directory",
+    "FIND-DVWA-006 - SQL injection in several modules that build queries from request parameters",
+    "FIND-DVWA-007 - Reflected, stored and DOM-based cross-site scripting",
+    "FIND-DVWA-008 - Unauthenticated database reset in `setup.php` restores seeded accounts with a well-known default password",
+    "FIND-DVWA-009 - PHP runtime image uses floating `php:8-apache` tag while CVE-2026-109618 / CVE-2026-109619 (CISA KEV, 2026-10-26) are being exploited",
+    "FIND-DVWA-010 - CI workflow on every push to master injects all repository secrets and prints them base64-encoded to the public log",
+    "FIND-DVWA-011 - Session fixation and weak session cookie attributes",
+    "FIND-DVWA-012 - User passwords stored as unsalted MD5",
+    "FIND-DVWA-013 - Password change via GET without CSRF token or current password",
+    "FIND-DVWA-014 - API user endpoints allow unauthenticated privilege change and expose password hashes in v1",
+    "FIND-DVWA-015 - Help viewer `eval`s file contents chosen by unvalidated `id` and `locale` parameters",
+    "FIND-DVWA-016 - Hard-coded database passwords in compose, root container and unpinned build inputs",
+    "FIND-DVWA-017 - GitHub Actions use mutable action tags, default token permissions and persisted checkout credentials"
+   ],
+   "truth_hits": {
+    "SQL injection": true,
+    "OS command injection": true,
+    "XSS": true,
+    "unrestricted upload": true,
+    "CSRF": true,
+    "file inclusion / traversal": true,
+    "brute force / weak login": false,
+    "default or hard-coded credentials": true,
+    "weak session id": true,
+    "outdated / EOL runtime or image": true
+   },
+   "recall": 0.9,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": true,
+   "platform_json": true,
+   "intel_json": true
+  },
+  {
+   "run": "sa-v115_DVWA_2",
+   "skill": "sa-v115",
+   "fixture": "DVWA",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 412,
+   "cost_usd": 1.9032944000000003,
+   "turns": 33,
+   "duration_ms": 405480,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 62,
+    "cache_creation_input_tokens": 96974,
+    "cache_read_input_tokens": 2910172,
+    "output_tokens": 27261,
+    "output_tokens_details": {
+     "thinking_tokens": 4135
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 96974,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1163,
+      "cache_read_input_tokens": 127934,
+      "cache_creation_input_tokens": 549,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 549
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 62,
+     "outputTokens": 27261,
+     "cacheReadInputTokens": 2910172,
+     "cacheCreationInputTokens": 96974,
+     "webSearchRequests": 0,
+     "costUSD": 1.9032944000000003,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 4135,
+     "cacheCreationEphemeral5mInputTokens": 0,
+     "cacheCreationEphemeral1hInputTokens": 96974,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v115_DVWA_2/dvwa-security-audit/2026-10-27_0649",
+   "findings": 19,
+   "severity": {
+    "P0": 6,
+    "P1": 7,
+    "P2": 5,
+    "Info": 1
+   },
+   "titles": [
+    "FIND-DVWA-001 - Unauthenticated OS command injection in API health connectivity endpoint",
+    "FIND-DVWA-002 - Security level is selected by a client-controlled cookie, so any user can switch to the vulnerable code paths",
+    "FIND-DVWA-003 - OS command injection in the command execution module (low, medium and high variants)",
+    "FIND-DVWA-004 - SQL injection through string-built queries in the SQLi, blind SQLi, brute force and BAC modules",
+    "FIND-DVWA-005 - File inclusion of a request-supplied path with remote URL inclusion enabled",
+    "FIND-DVWA-006 - Unrestricted file upload into a web-served directory",
+    "FIND-DVWA-007 - REST API has no authentication on user and order management and allows any origin",
+    "FIND-DVWA-008 - Reflected, stored and DOM-based cross-site scripting through unencoded output",
+    "FIND-DVWA-009 - Password change over GET without CSRF token or current password",
+    "FIND-DVWA-010 - Unauthenticated database creation and reset via setup.php",
+    "FIND-DVWA-011 - Passwords stored as unsalted MD5 and seeded accounts with known weak passwords",
+    "FIND-DVWA-012 - Session fixation and weak session cookie flags below the impossible level",
+    "FIND-DVWA-013 - Workflow prints every repository secret base64-encoded into Actions logs",
+    "FIND-DVWA-014 - Floating php:8-apache base image named in KEV-listed PHP advisories, container runs as root",
+    "FIND-DVWA-015 - Help viewer evaluates a file chosen by request parameters",
+    "FIND-DVWA-016 - No rate limiting or lockout on the main login form",
+    "FIND-DVWA-017 - Database root and application passwords hard-coded in compose.yml and config fallback",
+    "FIND-DVWA-018 - GitHub Actions pinned by mutable tags and running with default token permissions",
+    "FIND-DVWA-019 - phpinfo page exposed to every logged-in user"
+   ],
+   "truth_hits": {
+    "SQL injection": true,
+    "OS command injection": true,
+    "XSS": true,
+    "unrestricted upload": true,
+    "CSRF": true,
+    "file inclusion / traversal": true,
+    "brute force / weak login": true,
+    "default or hard-coded credentials": true,
+    "weak session id": true,
+    "outdated / EOL runtime or image": true
+   },
+   "recall": 1.0,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": true,
+   "platform_json": true,
+   "intel_json": true
+  },
+  {
+   "run": "sa-v115_DVWA_3",
+   "skill": "sa-v115",
+   "fixture": "DVWA",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 421,
+   "cost_usd": 2.6558373999999993,
+   "turns": 41,
+   "duration_ms": 413612,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 76,
+    "cache_creation_input_tokens": 141833,
+    "cache_read_input_tokens": 4095347,
+    "output_tokens": 35090,
+    "output_tokens_details": {
+     "thinking_tokens": 6943
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 141833,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1348,
+      "cache_read_input_tokens": 155781,
+      "cache_creation_input_tokens": 508,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 508
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 76,
+     "outputTokens": 35090,
+     "cacheReadInputTokens": 4095347,
+     "cacheCreationInputTokens": 141833,
+     "webSearchRequests": 0,
+     "costUSD": 2.6558373999999993,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 6943,
+     "cacheCreationEphemeral5mInputTokens": 0,
+     "cacheCreationEphemeral1hInputTokens": 141833,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v115_DVWA_3/dvwa-security-audit/2026-10-27_0701",
+   "findings": 23,
+   "severity": {
+    "P0": 4,
+    "P1": 8,
+    "P2": 9,
+    "Info": 2
+   },
+   "titles": [
+    "FIND-DVWA-001 - Unauthenticated OS command injection in the API health connectivity endpoint",
+    "FIND-DVWA-002 - OS command injection in the Command Injection module (low, medium and high levels)",
+    "FIND-DVWA-003 - Local and remote file inclusion through the `page` parameter, amplified by `allow_url_include = on`",
+    "FIND-DVWA-004 - Unrestricted file upload into a web-served, PHP-executable directory",
+    "FIND-DVWA-005 - Security level that selects protected or vulnerable code paths is taken from a client cookie",
+    "FIND-DVWA-006 - Unauthenticated read and modification of all user records in the authorisation-bypass endpoints",
+    "FIND-DVWA-007 - SQL injection from string-built queries across SQLi, blind SQLi, brute-force, access-control and user-update modules",
+    "FIND-DVWA-008 - Database reset in setup.php is reachable without authentication",
+    "FIND-DVWA-009 - Default accounts seeded with publicly documented weak passwords, including the admin account",
+    "FIND-DVWA-010 - Passwords stored as unsalted MD5 hashes",
+    "FIND-DVWA-011 - API access-token secrets and token encryption key are hard-coded short constants",
+    "FIND-DVWA-012 - PHP runtime from floating `php:8-apache` tag; KEV-listed PHP vulnerabilities CVE-2026-109618 / CVE-2026-109619 may be present",
+    "FIND-DVWA-013 - Cross-site scripting: stored, reflected, DOM-based and JSONP callback output without encoding",
+    "FIND-DVWA-014 - Password change via GET without CSRF token or current-password check",
+    "FIND-DVWA-015 - No rate limiting or lockout on the brute-force login form and main login",
+    "FIND-DVWA-016 - Session fixation and weak session cookie flags below the impossible level",
+    "FIND-DVWA-017 - Help viewer evaluates a file whose path is built from request parameters",
+    "FIND-DVWA-018 - Insecure runtime configuration: `phpinfo()` page, dangerous PHP settings, container runs as root",
+    "FIND-DVWA-019 - Database passwords hard-coded in compose file and as configuration fallback",
+    "FIND-DVWA-020 - API user endpoints allow anonymous create, update (including privilege `level`) and delete; CORS open to any origin",
+    "FIND-DVWA-021 - CI workflows expose the whole secrets context, use tag-pinned actions and default token permissions",
+    "FIND-DVWA-022 - Open redirect to any URL from the `redirect` parameter",
+    "FIND-DVWA-023 - `symfony/yaml` v8.1.2 affected by CVE-2026-109413 (fixed in 8.1.6)"
+   ],
+   "truth_hits": {
+    "SQL injection": true,
+    "OS command injection": true,
+    "XSS": true,
+    "unrestricted upload": true,
+    "CSRF": true,
+    "file inclusion / traversal": true,
+    "brute force / weak login": true,
+    "default or hard-coded credentials": true,
+    "weak session id": true,
+    "outdated / EOL runtime or image": true
+   },
+   "recall": 1.0,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": true,
+   "platform_json": true,
+   "intel_json": true
+  },
+  {
+   "run": "sa-v115_juice-shop_1",
+   "skill": "sa-v115",
+   "fixture": "juice-shop",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 624,
+   "cost_usd": 2.6548054000000008,
+   "turns": 46,
+   "duration_ms": 615874,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 88,
+    "cache_creation_input_tokens": 126238,
+    "cache_read_input_tokens": 4773847,
+    "output_tokens": 34489,
+    "output_tokens_details": {
+     "thinking_tokens": 4850
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 126238,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1328,
+      "cache_read_input_tokens": 157454,
+      "cache_creation_input_tokens": 298,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 298
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 88,
+     "outputTokens": 34489,
+     "cacheReadInputTokens": 4773847,
+     "cacheCreationInputTokens": 126238,
+     "webSearchRequests": 0,
+     "costUSD": 2.6548054000000008,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 4850,
+     "cacheCreationEphemeral5mInputTokens": 0,
+     "cacheCreationEphemeral1hInputTokens": 126238,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v115_juice-shop_1/juice-shop-security-audit/2026-10-27_0650",
+   "findings": 25,
+   "severity": {
+    "P0": 4,
+    "P1": 16,
+    "P2": 4,
+    "Info": 1
+   },
+   "titles": [
+    "FIND-JUICE-SHOP-001 - SQL injection in login and product search (string-built raw queries)",
+    "FIND-JUICE-SHOP-002 - JWT signing private key and HMAC key hard-coded in source",
+    "FIND-JUICE-SHOP-003 - Server-side code execution: profile username passed to eval()",
+    "FIND-JUICE-SHOP-004 - Full card number (PAN) stored in plaintext in the Cards table",
+    "FIND-JUICE-SHOP-005 - XML upload parsed with external entities and DTD loading enabled (XXE)",
+    "FIND-JUICE-SHOP-006 - Zip upload extraction allows path traversal (zip slip) into the application directory",
+    "FIND-JUICE-SHOP-007 - Server-side request forgery in profile image URL upload",
+    "FIND-JUICE-SHOP-008 - NoSQL injection through `$where` clauses built from request input",
+    "FIND-JUICE-SHOP-009 - Broken object-level authorization on baskets, coupons and product reviews",
+    "FIND-JUICE-SHOP-010 - Chatbot coupon tool trusts the model-chosen discount (prompt injection mints arbitrary coupons)",
+    "FIND-JUICE-SHOP-011 - B2B order lines evaluated with the unmaintained `notevil` sandbox",
+    "FIND-JUICE-SHOP-012 - Authentication relies on 2015-era `express-jwt` 0.1.3 and `jsonwebtoken` 0.4.0",
+    "FIND-JUICE-SHOP-013 - Password change over GET without requiring the current password",
+    "FIND-JUICE-SHOP-014 - User passwords stored as unsalted MD5",
+    "FIND-JUICE-SHOP-015 - Public directory listings expose key material, access logs and backup files",
+    "FIND-JUICE-SHOP-016 - Wallet top-up credits any client-supplied amount without a payment",
+    "FIND-JUICE-SHOP-017 - TLS private key embedded inline in Terraform",
+    "FIND-JUICE-SHOP-018 - Seeded default accounts, including an administrator, with fixed passwords",
+    "FIND-JUICE-SHOP-019 - MongoDB 4.4.29 in the deployment compose file is end-of-life and affected by a KEV-listed CVE",
+    "FIND-JUICE-SHOP-020 - Redis 7.4.4 image is behind security releases (CVE-2025-49844, EPSS 0.83)",
+    "FIND-JUICE-SHOP-021 - End-of-life Node.js 20.19.2 and nginx 1.28.0 in the infrastructure images",
+    "FIND-JUICE-SHOP-022 - Open redirect: allow-list matched with substring `includes()`",
+    "FIND-JUICE-SHOP-023 - GitHub Actions: template expansion in shell steps and broad default token permissions",
+    "FIND-JUICE-SHOP-024 - No rate limiting or lockout on login and password reset",
+    "FIND-JUICE-SHOP-025 - Repository ships agent instruction files and skills that tell agents to run commands"
+   ],
+   "truth_hits": {
+    "SQL injection": true,
+    "XSS": false,
+    "NoSQL injection": true,
+    "hard-coded secret / key": true,
+    "XXE": true,
+    "path traversal": true,
+    "SSRF": true,
+    "broken access control": true,
+    "weak password hashing": true,
+    "open redirect": true
+   },
+   "recall": 0.9,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": true,
+   "platform_json": true,
+   "intel_json": true
+  },
+  {
+   "run": "sa-v115_juice-shop_2",
+   "skill": "sa-v115",
+   "fixture": "juice-shop",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 585,
+   "cost_usd": 2.876044800000001,
+   "turns": 12,
+   "duration_ms": 122388,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 24,
+    "cache_creation_input_tokens": 18909,
+    "cache_read_input_tokens": 1851608,
+    "output_tokens": 8229,
+    "output_tokens_details": {
+     "thinking_tokens": 815
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 18909,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1455,
+      "cache_read_input_tokens": 162171,
+      "cache_creation_input_tokens": 369,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 369
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 92,
+     "outputTokens": 29925,
+     "cacheReadInputTokens": 5462524,
+     "cacheCreationInputTokens": 148084,
+     "webSearchRequests": 0,
+     "costUSD": 2.876044800000001,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 3463,
+     "cacheCreationEphemeral5mInputTokens": 0,
+     "cacheCreationEphemeral1hInputTokens": 148084,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v115_juice-shop_2/juice-shop-security-audit/2026-10-27_0700",
+   "findings": 18,
+   "severity": {
+    "P0": 4,
+    "P1": 11,
+    "P2": 3
+   },
+   "titles": [
+    "FIND-JUICE-SHOP-001 - SQL injection in login and product search (string-built raw queries)",
+    "FIND-JUICE-SHOP-002 - JWT signing private key and HMAC key hard-coded in source",
+    "FIND-JUICE-SHOP-003 - Server-side code execution through `eval` of user-controlled strings",
+    "FIND-JUICE-SHOP-004 - Full card numbers (PAN) stored in clear in the Cards table",
+    "FIND-JUICE-SHOP-005 - Broken object-level authorization on baskets and auto-generated REST models",
+    "FIND-JUICE-SHOP-006 - Wallet top-up and order totals trust client-supplied amounts and quantities",
+    "FIND-JUICE-SHOP-007 - Chatbot coupon tool enforces its discount policy only in the prompt; chat endpoint is unauthenticated and accepts client-written history",
+    "FIND-JUICE-SHOP-008 - NoSQL injection through `$where` strings and unvalidated update selectors",
+    "FIND-JUICE-SHOP-009 - File upload: zip path traversal and XML external entity expansion",
+    "FIND-JUICE-SHOP-010 - Server-side request forgery in profile image URL upload and substring-based redirect allow-list",
+    "FIND-JUICE-SHOP-011 - Directory listing exposes logs, key files and confidential documents",
+    "FIND-JUICE-SHOP-012 - Passwords stored as unsalted MD5 hashes",
+    "FIND-JUICE-SHOP-013 - Password change via GET does not require the current password",
+    "FIND-JUICE-SHOP-014 - Angular sanitisation bypassed for user-controlled content (XSS)",
+    "FIND-JUICE-SHOP-015 - Deployment compose pins end-of-life MongoDB 4.4.29 affected by a KEV-listed CVE, plus outdated Redis, nginx and Node images",
+    "FIND-JUICE-SHOP-016 - Repository agent instruction files direct coding agents to run commands and auto-load skills",
+    "FIND-JUICE-SHOP-017 - TLS private key committed inline in Terraform",
+    "FIND-JUICE-SHOP-018 - CI workflows: mutable action tag, curl-pipe-shell install, default token permissions and template expansion in run steps"
+   ],
+   "truth_hits": {
+    "SQL injection": true,
+    "XSS": true,
+    "NoSQL injection": true,
+    "hard-coded secret / key": true,
+    "XXE": true,
+    "path traversal": true,
+    "SSRF": true,
+    "broken access control": true,
+    "weak password hashing": true,
+    "open redirect": true
+   },
+   "recall": 1.0,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": true,
+   "platform_json": true,
+   "intel_json": true
+  },
+  {
+   "run": "sa-v115_juice-shop_3",
+   "skill": "sa-v115",
+   "fixture": "juice-shop",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 544,
+   "cost_usd": 3.0651554000000005,
+   "turns": 53,
+   "duration_ms": 538797,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 104,
+    "cache_creation_input_tokens": 145454,
+    "cache_read_input_tokens": 5970537,
+    "output_tokens": 35350,
+    "output_tokens_details": {
+     "thinking_tokens": 5181
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 145454,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1126,
+      "cache_read_input_tokens": 159600,
+      "cache_creation_input_tokens": 310,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 310
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 104,
+     "outputTokens": 35350,
+     "cacheReadInputTokens": 5970537,
+     "cacheCreationInputTokens": 145454,
+     "webSearchRequests": 0,
+     "costUSD": 3.0651554000000005,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 5181,
+     "cacheCreationEphemeral5mInputTokens": 0,
+     "cacheCreationEphemeral1hInputTokens": 145454,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v115_juice-shop_3/juice-shop-security-audit/2026-10-27_0708",
+   "findings": 28,
+   "severity": {
+    "P0": 6,
+    "P1": 15,
+    "P2": 7
+   },
+   "titles": [
+    "FIND-JUICE-SHOP-001 - SQL injection in login and product search (raw queries built from request input)",
+    "FIND-JUICE-SHOP-002 - Server-side code execution: username passed to eval() on the profile page",
+    "FIND-JUICE-SHOP-003 - JWT signing private key, HMAC key and cookie secret hardcoded in source",
+    "FIND-JUICE-SHOP-004 - Full card numbers (PAN) stored in plaintext in the Cards table",
+    "FIND-JUICE-SHOP-005 - XML upload parsed with external entities and DTD loading enabled (XXE)",
+    "FIND-JUICE-SHOP-006 - B2B order lines evaluated as code in a Node vm context",
+    "FIND-JUICE-SHOP-007 - NoSQL `$where` JavaScript queries built from request parameters",
+    "FIND-JUICE-SHOP-008 - Product review update has no ownership check and accepts query operators (multi-update)",
+    "FIND-JUICE-SHOP-009 - Any logged-in user can read any basket by id (IDOR)",
+    "FIND-JUICE-SHOP-010 - Wallet top-up credits any amount without charging the card",
+    "FIND-JUICE-SHOP-011 - Chatbot coupon tool enforces its discount limit only in the prompt",
+    "FIND-JUICE-SHOP-012 - Chatbot trusts the JWT payload without verifying its signature",
+    "FIND-JUICE-SHOP-013 - Server-side request forgery in profile image URL upload",
+    "FIND-JUICE-SHOP-014 - Zip upload extraction allows path traversal (zip slip)",
+    "FIND-JUICE-SHOP-015 - Data erasure form renders a template path taken from the request body",
+    "FIND-JUICE-SHOP-016 - Directory listing exposes key files, access logs and backups",
+    "FIND-JUICE-SHOP-017 - Passwords hashed with unsalted MD5",
+    "FIND-JUICE-SHOP-018 - Obsolete JWT libraries (`jsonwebtoken` 0.4.0, `express-jwt` 0.1.3) guard authentication",
+    "FIND-JUICE-SHOP-019 - Deployment stack pins end-of-life MongoDB 4.4.29 with a KEV-listed vulnerability",
+    "FIND-JUICE-SHOP-020 - Infrastructure images pinned to end-of-life or outdated Node.js, Redis and nginx",
+    "FIND-JUICE-SHOP-021 - Open redirect: allowlist matched with substring `includes`",
+    "FIND-JUICE-SHOP-022 - CORS allows every origin on all routes",
+    "FIND-JUICE-SHOP-023 - Chat endpoint calls the paid LLM without authentication or rate limit",
+    "FIND-JUICE-SHOP-024 - TOTP secrets stored in plaintext; session token kept in localStorage",
+    "FIND-JUICE-SHOP-025 - TLS private key committed inline in Terraform",
+    "FIND-JUICE-SHOP-026 - Seed data creates privileged accounts with fixed passwords and TOTP secrets",
+    "FIND-JUICE-SHOP-027 - CI pipes a remote installer into the shell and lets any commenter trigger a rebase",
+    "FIND-JUICE-SHOP-028 - Load balancer forwards plain HTTP to the application"
+   ],
+   "truth_hits": {
+    "SQL injection": true,
+    "XSS": false,
+    "NoSQL injection": true,
+    "hard-coded secret / key": true,
+    "XXE": true,
+    "path traversal": true,
+    "SSRF": true,
+    "broken access control": true,
+    "weak password hashing": true,
+    "open redirect": true
+   },
+   "recall": 0.9,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": true,
+   "platform_json": true,
+   "intel_json": true
+  },
+  {
+   "run": "sa-v115_NodeGoat_1",
+   "skill": "sa-v115",
+   "fixture": "NodeGoat",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 395,
+   "cost_usd": 1.7872781999999998,
+   "turns": 28,
+   "duration_ms": 389505,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 52,
+    "cache_creation_input_tokens": 81363,
+    "cache_read_input_tokens": 2478931,
+    "output_tokens": 32019,
+    "output_tokens_details": {
+     "thinking_tokens": 5772
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 81363,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1106,
+      "cache_read_input_tokens": 134561,
+      "cache_creation_input_tokens": 975,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 975
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 52,
+     "outputTokens": 32019,
+     "cacheReadInputTokens": 2478931,
+     "cacheCreationInputTokens": 81363,
+     "webSearchRequests": 0,
+     "costUSD": 1.7872781999999998,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 5772,
+     "cacheCreationEphemeral5mInputTokens": 0,
+     "cacheCreationEphemeral1hInputTokens": 81363,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v115_NodeGoat_1/nodegoat-security-audit/2026-10-27_0649",
+   "findings": 28,
+   "severity": {
+    "P0": 2,
+    "P1": 9,
+    "P2": 16,
+    "Info": 1
+   },
+   "titles": [
+    "FIND-NODEGOAT-001 - Server-side JavaScript injection: contribution form fields are passed to eval()",
+    "FIND-NODEGOAT-002 - Known-malicious package version fsevents 1.2.9 is locked (MAL-2023-462)",
+    "FIND-NODEGOAT-003 - NoSQL injection: the threshold query parameter is concatenated into a MongoDB $where JavaScript expression",
+    "FIND-NODEGOAT-004 - Insecure direct object reference: /allocations/:userId shows any user's allocations",
+    "FIND-NODEGOAT-005 - Missing function-level access control: any user can use the admin benefits page",
+    "FIND-NODEGOAT-006 - Server-side request forgery: /research fetches a URL taken from the query string and returns the body",
+    "FIND-NODEGOAT-007 - HTML auto-escaping is disabled globally in the Swig template engine (stored and reflected XSS)",
+    "FIND-NODEGOAT-008 - User passwords are stored and compared in plaintext",
+    "FIND-NODEGOAT-009 - SSN, date of birth and bank account/routing numbers are stored unencrypted",
+    "FIND-NODEGOAT-010 - Admin account with a documented default password is re-seeded on every container start",
+    "FIND-NODEGOAT-011 - marked 0.3.5 has known sanitizer-bypass XSS and ReDoS flaws and renders user memos",
+    "FIND-NODEGOAT-012 - Outdated production dependencies: express 4.16.4 stack, mongodb 2.2.36 / bson 1.0.9, needle 2.2.4, underscore 1.8.3, unmaintained swig",
+    "FIND-NODEGOAT-013 - Development and test toolchain locks many vulnerable packages (grunt, cypress 3, mocha 2, nodemon 1, lodash, minimist, tar)",
+    "FIND-NODEGOAT-014 - Session fixation: the session id is not regenerated at login",
+    "FIND-NODEGOAT-015 - Plain HTTP server and session cookie without Secure, HttpOnly, SameSite or expiry",
+    "FIND-NODEGOAT-016 - No CSRF protection on state-changing forms (profile/bank details, contributions, benefits, memos)",
+    "FIND-NODEGOAT-017 - Session-signing secret, encryption key, TLS private key and ZAP API keys are committed to the repository",
+    "FIND-NODEGOAT-018 - Weak authentication controls: user enumeration, 1-character passwords allowed, no login throttling",
+    "FIND-NODEGOAT-019 - Login and signup pass untyped JSON body values into MongoDB queries (operator injection)",
+    "FIND-NODEGOAT-020 - Open redirect: /learn redirects to any URL from the query string",
+    "FIND-NODEGOAT-021 - Regular-expression denial of service in bank routing number validation",
+    "FIND-NODEGOAT-022 - Log injection: unsanitized user names written to the application log",
+    "FIND-NODEGOAT-023 - Security headers disabled: no CSP, frame protection, HSTS or nosniff; X-Powered-By exposed",
+    "FIND-NODEGOAT-024 - Error handling shows internal error details to users and does not fail closed in the admin check",
+    "FIND-NODEGOAT-025 - Container image is built on end-of-life Node.js 12 with a floating tag",
+    "FIND-NODEGOAT-026 - MongoDB 4.4 (end of life) runs without authentication",
+    "FIND-NODEGOAT-027 - GitHub Actions use mutable action tags and default token permissions",
+    "FIND-NODEGOAT-028 - Container hardening: no no-new-privileges on services and no HEALTHCHECK"
+   ],
+   "truth_hits": {
+    "server-side JS injection (eval)": true,
+    "NoSQL injection": true,
+    "XSS": true,
+    "SSRF": true,
+    "open redirect": true,
+    "IDOR / missing authz": true,
+    "CSRF": true,
+    "ReDoS": true,
+    "weak password storage": true,
+    "outdated / EOL runtime or image": true
+   },
+   "recall": 1.0,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": true,
+   "platform_json": true,
+   "intel_json": true
+  },
+  {
+   "run": "sa-v115_NodeGoat_2",
+   "skill": "sa-v115",
+   "fixture": "NodeGoat",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 313,
+   "cost_usd": 1.8125076000000002,
+   "turns": 29,
+   "duration_ms": 308191,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 54,
+    "cache_creation_input_tokens": 97425,
+    "cache_read_input_tokens": 2427658,
+    "output_tokens": 27368,
+    "output_tokens_details": {
+     "thinking_tokens": 3239
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 97425,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1023,
+      "cache_read_input_tokens": 128047,
+      "cache_creation_input_tokens": 897,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 897
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 54,
+     "outputTokens": 27368,
+     "cacheReadInputTokens": 2427658,
+     "cacheCreationInputTokens": 97425,
+     "webSearchRequests": 0,
+     "costUSD": 1.8125076000000002,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 3239,
+     "cacheCreationEphemeral5mInputTokens": 0,
+     "cacheCreationEphemeral1hInputTokens": 97425,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v115_NodeGoat_2/nodegoat-security-audit/2026-10-27_0655",
+   "findings": 21,
+   "severity": {
+    "P0": 2,
+    "P1": 8,
+    "P2": 10,
+    "Info": 1
+   },
+   "titles": [
+    "FIND-NODEGOAT-001 - Server-side JavaScript injection: contribution form fields are passed to eval()",
+    "FIND-NODEGOAT-002 - NoSQL injection: allocations threshold is concatenated into a MongoDB `$where` JavaScript expression",
+    "FIND-NODEGOAT-003 - Insecure direct object reference: any user can view any employee's allocations by changing the URL id",
+    "FIND-NODEGOAT-004 - Missing function-level access control: admin benefits page is open to every logged-in user",
+    "FIND-NODEGOAT-005 - Server-side request forgery: /research fetches an attacker-chosen URL and returns the body as HTML",
+    "FIND-NODEGOAT-006 - Stored and reflected XSS: template auto-escaping is disabled globally",
+    "FIND-NODEGOAT-007 - User passwords are stored and compared in plaintext",
+    "FIND-NODEGOAT-008 - SSN, date of birth and bank account/routing numbers are stored in plaintext",
+    "FIND-NODEGOAT-009 - Lockfile resolves fsevents 1.2.9, flagged as malicious (OSV MAL-2023-462)",
+    "FIND-NODEGOAT-010 - Session cookie lacks HttpOnly/Secure and the app is served over plain HTTP",
+    "FIND-NODEGOAT-011 - No CSRF protection on any state-changing form",
+    "FIND-NODEGOAT-012 - Session fixation: session id is not regenerated at login",
+    "FIND-NODEGOAT-013 - Login allows username enumeration, has no rate limiting, and accepts 1-character passwords",
+    "FIND-NODEGOAT-014 - Session signing secret, crypto key and a TLS private key are hard-coded in the repository",
+    "FIND-NODEGOAT-015 - Open redirect at /learn to any URL in the query string",
+    "FIND-NODEGOAT-016 - ReDoS: bank routing validation uses a catastrophic-backtracking regex",
+    "FIND-NODEGOAT-017 - Outdated runtime dependencies with known vulnerabilities (marked 0.3.5, mongodb 2.x/bson 1.0.9, express 4.16 chain, swig)",
+    "FIND-NODEGOAT-018 - Development toolchain pulls dozens of vulnerable packages (grunt, cypress 3, mocha 2, nodemon 1, lodash, tar, minimist)",
+    "FIND-NODEGOAT-019 - End-of-life runtime images: Node.js 12 and MongoDB 4.4",
+    "FIND-NODEGOAT-020 - GitHub Actions use mutable action tags and default token permissions",
+    "FIND-NODEGOAT-021 - Security headers disabled (helmet, nosniff, CSP, HSTS commented out)"
+   ],
+   "truth_hits": {
+    "server-side JS injection (eval)": true,
+    "NoSQL injection": true,
+    "XSS": true,
+    "SSRF": true,
+    "open redirect": true,
+    "IDOR / missing authz": true,
+    "CSRF": true,
+    "ReDoS": true,
+    "weak password storage": true,
+    "outdated / EOL runtime or image": true
+   },
+   "recall": 1.0,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": true,
+   "platform_json": true,
+   "intel_json": true
+  },
+  {
+   "run": "sa-v115_NodeGoat_3",
+   "skill": "sa-v115",
+   "fixture": "NodeGoat",
+   "depth": "quick",
+   "rc": 0,
+   "wall_s": 366,
+   "cost_usd": 2.0636666,
+   "turns": 28,
+   "duration_ms": 360547,
+   "is_error": false,
+   "usage": {
+    "input_tokens": 52,
+    "cache_creation_input_tokens": 120217,
+    "cache_read_input_tokens": 2415313,
+    "output_tokens": 30933,
+    "output_tokens_details": {
+     "thinking_tokens": 4262
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 120217,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1245,
+      "cache_read_input_tokens": 133891,
+      "cache_creation_input_tokens": 782,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 782
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "model_usage": {
+    "claude-opus-5-5": {
+     "inputTokens": 52,
+     "outputTokens": 30933,
+     "cacheReadInputTokens": 2415313,
+     "cacheCreationInputTokens": 120217,
+     "webSearchRequests": 0,
+     "costUSD": 2.0636666,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 4262,
+     "cacheCreationEphemeral5mInputTokens": 0,
+     "cacheCreationEphemeral1hInputTokens": 120217,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "audit_dir": "runs/sa-v115_NodeGoat_3/nodegoat-security-audit/2026-10-27_0706",
+   "findings": 22,
+   "severity": {
+    "P0": 2,
+    "P1": 9,
+    "P2": 9,
+    "Info": 2
+   },
+   "titles": [
+    "FIND-NODEGOAT-001 - Contributions form passes request body to eval() (server-side code execution)",
+    "FIND-NODEGOAT-002 - Lockfile pins fsevents 1.2.9, flagged as malicious (MAL-2023-462)",
+    "FIND-NODEGOAT-003 - Admin benefits page and update lack the admin check (function-level access control)",
+    "FIND-NODEGOAT-004 - Allocations page reads the user id from the URL (IDOR)",
+    "FIND-NODEGOAT-005 - Allocations threshold is concatenated into a MongoDB `$where` JavaScript expression",
+    "FIND-NODEGOAT-006 - Research page fetches a user-supplied URL server-side and returns the body as HTML (SSRF)",
+    "FIND-NODEGOAT-007 - Template auto-escaping is disabled globally (stored and reflected XSS)",
+    "FIND-NODEGOAT-008 - User passwords are stored and compared in plaintext",
+    "FIND-NODEGOAT-009 - SSN, date of birth and bank account numbers are stored unencrypted",
+    "FIND-NODEGOAT-010 - Session secret, encryption key, TLS private key and ZAP API keys are committed and logged",
+    "FIND-NODEGOAT-011 - Session id not regenerated at login; cookie lacks HttpOnly/Secure and travels over plain HTTP",
+    "FIND-NODEGOAT-012 - marked 0.3.5 (sanitizer bypass XSS / ReDoS) is pinned and used to render memos",
+    "FIND-NODEGOAT-013 - MongoDB driver 2.2.36 pulls bson 1.0.9 (deserialization advisories) and is end-of-life",
+    "FIND-NODEGOAT-014 - Express 4.16.4 stack (body-parser, qs, path-to-regexp, proxy-addr) has known advisories",
+    "FIND-NODEGOAT-015 - Outdated dev toolchain (grunt, cypress 3, nodemon 1, mocha 2) brings ~60 vulnerable transitive packages",
+    "FIND-NODEGOAT-016 - No CSRF protection on state-changing forms",
+    "FIND-NODEGOAT-017 - Login reveals whether a username exists; weak password policy and no throttling",
+    "FIND-NODEGOAT-018 - `/learn` redirects to any URL from the query string (open redirect)",
+    "FIND-NODEGOAT-019 - Bank routing validation regex is vulnerable to catastrophic backtracking (ReDoS)",
+    "FIND-NODEGOAT-020 - End-of-life runtimes: Node.js 12 image and MongoDB 4.4",
+    "FIND-NODEGOAT-021 - GitHub Actions use mutable tags and default token permissions (hardening)",
+    "FIND-NODEGOAT-022 - Unencoded username written to logs; security headers disabled"
+   ],
+   "truth_hits": {
+    "server-side JS injection (eval)": true,
+    "NoSQL injection": true,
+    "XSS": true,
+    "SSRF": true,
+    "open redirect": true,
+    "IDOR / missing authz": true,
+    "CSRF": true,
+    "ReDoS": true,
+    "weak password storage": true,
+    "outdated / EOL runtime or image": true
+   },
+   "recall": 1.0,
+   "report": true,
+   "validate_rc": 0,
+   "intel_section": true,
+   "platform_json": true,
+   "intel_json": true
+  }
+ ]
+}

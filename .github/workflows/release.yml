@@ -1,0 +1,134 @@
+name: release
+
+# Builds and publishes the release when a vX.Y.Z tag is pushed. workflow_dispatch is a DRY RUN: it
+# runs every gate and builds every artifact, then stops before publishing, so a release can be
+# rehearsed without a tag.
+#
+# The gates run BEFORE anything is built. A release whose skill fails its own selftest, whose
+# Japanese edition drifted from the English one, or whose version disagrees with the tag would ship
+# something that misreports itself; none of that is allowed to reach the release page.
+#
+# Assets: both skill zips (versioned and unversioned alias), SHA256SUMS, the offline eval result of
+# this exact commit (eval-results.json and .md), and the live benchmark summary committed at the tag
+# (benchmark-results.md and .json, when present). The live benchmark is never re-run here: it needs
+# Claude and costs money.
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "semver, no leading v (dry run - builds but does not publish)"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write   # gh release create / upload
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.13"
+
+      - name: Resolve and validate the version
+        id: v
+        # The dispatch input reaches the shell through env, never by template expansion, so a
+        # crafted version string is data, not script. It is then refused unless it is plain semver,
+        # which is what makes it safe to use as steps.v.outputs.version afterwards.
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+        run: |
+          if [ -n "$INPUT_VERSION" ]; then V="${INPUT_VERSION#v}"; else V="${GITHUB_REF_NAME#v}"; fi
+          if ! printf '%s' "$V" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::'$V' is not a semver version (X.Y.Z)"; exit 1
+          fi
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "resolved version: $V"
+
+      - name: Install openpyxl (Excel report checks in the selftest)
+        run: python -m pip install --disable-pip-version-check "openpyxl==3.1.5"
+
+      # --- gates: all must pass before anything is packaged ---
+
+      - name: Gate - versions, CHANGELOGs, plugin manifests, style, skill linter carry this version
+        env:
+          VERSION: ${{ steps.v.outputs.version }}
+        run: python -B scripts/validate_release.py "$VERSION"
+
+      - name: Gate - package preflight (both editions, root CHANGELOG section)
+        env:
+          VERSION: ${{ steps.v.outputs.version }}
+        run: python -B scripts/package.py --version "$VERSION" --check
+
+      - name: Gate - plugin manifests and icon match the skill
+        run: |
+          python -B scripts/build_plugins.py --check
+          python -B scripts/make_icons.py --check
+
+      - name: Gate - offline eval (both selftests, parity, linter, detection, threat intel)
+        run: |
+          set -o pipefail
+          python -B eval/run_eval.py 2>&1 | tee eval.log
+
+      - name: Gate - published figures match this commit
+        run: python -B scripts/check_numbers.py
+
+      # --- build ---
+
+      - name: Build both editions
+        env:
+          VERSION: ${{ steps.v.outputs.version }}
+        run: python -B scripts/package.py --version "$VERSION"
+
+      # package.py wipes dist/ on build, so evidence is added AFTER it. These ship as release
+      # assets beside the zips, so the eval result is provable per version, not just at head.
+      - name: Attach the eval result and the benchmark summary
+        env:
+          VERSION: ${{ steps.v.outputs.version }}
+        run: |
+          cp eval/results/latest.json dist/eval-results.json
+          {
+            echo "# Offline eval - v$VERSION"
+            echo
+            echo '```'
+            cat eval.log
+            echo '```'
+          } > dist/eval-results.md
+          if [ -f benchmark/RESULTS.md ]; then cp benchmark/RESULTS.md dist/benchmark-results.md; fi
+          if [ -f benchmark/results/results.json ]; then cp benchmark/results/results.json dist/benchmark-results.json; fi
+          ls -la dist/
+
+      - name: Generate release notes from the skill CHANGELOG
+        env:
+          VERSION: ${{ steps.v.outputs.version }}
+        run: |
+          python -B scripts/release_notes.py "$VERSION" -o notes.md
+          cat notes.md
+
+      - name: Publish the release with its artifacts
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Idempotent: a maintainer may have created the release by hand before this ran.
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release edit "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file notes.md
+            gh release upload "$GITHUB_REF_NAME" dist/* --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file notes.md dist/*
+          fi
+          echo "attached:"
+          gh release view "$GITHUB_REF_NAME" --json assets -q '.assets[].name'
+
+      - name: Dry run - nothing published
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        run: echo "workflow_dispatch dry run - every gate passed and dist/ was built; nothing was published."

@@ -1,0 +1,21 @@
+{
+ "version": "1.15.0",
+ "selftest_checks": 184,
+ "eval_passed": 75,
+ "eval_total": 75,
+ "detect_precision_pct": 100,
+ "detect_recall_pct": 100,
+ "sectors": 9,
+ "feeds": 8,
+ "standards": 59,
+ "standards_modules": 14,
+ "scanners": 8,
+ "bench_recall_pct": 97,
+ "bench_cost_usd": 2.36,
+ "bench_minutes": 7,
+ "bench_runs": 9,
+ "bench_recall_pct_baseline": 88,
+ "bench_cost_usd_baseline": 2.27,
+ "bench_minutes_baseline": 11,
+ "bench_runs_baseline": 9
+}

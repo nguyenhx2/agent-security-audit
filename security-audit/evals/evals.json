@@ -1,0 +1,228 @@
+{
+  "skill_name": "security-audit",
+  "notes": "Fixture repos are public, deliberately vulnerable projects. Clone into an isolated directory (never execute their code). Expectations are checked against the produced audit_dir.",
+  "fixtures": {
+    "NodeGoat": "https://github.com/OWASP/NodeGoat",
+    "dvpwa": "https://github.com/anxolerd/dvpwa",
+    "railsgoat": "https://github.com/OWASP/railsgoat",
+    "terragoat": "https://github.com/bridgecrewio/terragoat",
+    "ovaa": "https://github.com/oversecured/ovaa",
+    "damn-vulnerable-llm-agent": "https://github.com/ReversecLabs/damn-vulnerable-llm-agent",
+    "govwa": "https://github.com/0c34/govwa"
+  },
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/security-audit <NodeGoat> standard --yes",
+      "expected_output": "Node/Express web app audited at standard depth with scanners, lanes, verifier, validated report.",
+      "expectations": [
+        "detect_stack archetype is web-app-or-api and modules include owasp-web, owasp-api",
+        "scanners.json shows mount_file_count > 0 and digests recorded",
+        "a finding anchors the eval() injection in app/routes/contributions.js and cites OWASP Top 10:2025 A05 with CWE-95 or CWE-94",
+        "a finding covers the committed private key with rotation guidance and no key material printed",
+        "sensitive-data section reports SSN handling in app/data/profile-dao.js by location only",
+        "dependency CVEs are grouped per package, and fsevents MAL advisory is called out",
+        "validate_findings.py exits 0",
+        "no audit output is written inside the NodeGoat repo",
+        "report file matches security-audit-report_nodegoat_\\d{4}-\\d{2}-\\d{2}_\\d{4}\\.(md|html)",
+        "finding files are named find-nodegoat-NNN.md (id lowercased)",
+        "HTML opens offline, CSP has a sha256 script hash, search and column sort work"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Is this Terraform repo safe to deploy? <terragoat> quick --yes",
+      "expected_output": "IaC-only audit citing CIS benchmarks with Checkov evidence.",
+      "expectations": [
+        "archetype is infrastructure-as-code and owasp-web module is NOT applied",
+        "findings cite CIS AWS Foundations v7.1.0 (or the provider's CIS benchmark with version) and Checkov rule ids",
+        "public S3 / unencrypted storage / hard-coded credentials are reported",
+        "report states IaC is design-time evidence only"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "このAndroidアプリのセキュリティ監査をしてください <ovaa> quick --yes",
+      "expected_output": "Mobile audit using MASVS 2.1.0 and Mobile Top 10 2024; report in Japanese.",
+      "expectations": [
+        "mobile module applied; mobsfscan ran",
+        "findings cite OWASP MASVS 2.1.0 groups (e.g. MASVS-PLATFORM) and Mobile Top 10 2024 ids",
+        "exported components / deep link or WebView issues are reported with file:line",
+        "report prose is Japanese while standard IDs stay unchanged"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Audit the LLM agent for prompt injection risks <damn-vulnerable-llm-agent> quick --yes",
+      "expected_output": "AI lane applied with LLM Top 10 2026 / Agentic Top 10 2026 citations.",
+      "expectations": [
+        "ai-llm-agentic module applied",
+        "a finding traces untrusted content to a tool or privileged action and cites LLM01 and/or ASI01/ASI02",
+        "secrets in .env or code are reported by name and location only"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Are we storing user financial data correctly? <railsgoat> quick --yes",
+      "expected_output": "Sensitive-data-first audit of a Rails app.",
+      "expectations": [
+        "sensitive_sweep ran and its result is recorded with searched patterns",
+        "bank account / SSN-like columns are reported by column + migration file:line, never values",
+        "report includes jurisdiction caveat because none was specified"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "/security-audit <any repo> with Docker stopped and no native scanners",
+      "expected_output": "Graceful degradation.",
+      "expectations": [
+        "run_scanners reports every tool skipped and exits non-zero",
+        "the user is told Docker is not running and offered: start Docker / install natively / reading-only",
+        "if continuing reading-only, every scanner appears as a coverage gap in the report"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Review my PR diff for security issues",
+      "expected_output": "Skill does NOT trigger (security-review covers diffs).",
+      "expectations": [
+        "security-audit is not invoked"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "このGoアプリのセキュリティ監査をしてください <govwa> quick --yes",
+      "expected_output": "Japanese report with kanji/kana prose; IDs unchanged.",
+      "expectations": [
+        "report prose is Japanese",
+        "findings cite `OWASP Top 10:2025` with version",
+        "validate_findings exits 0"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "/security-audit <dvpwa> <govwa> standard --yes",
+      "expected_output": "Multi-repo audit in one audit_dir.",
+      "expectations": [
+        "one work/<repo>/ folder per repo with scanners.json",
+        "findings/<lang>/<repo>/ per repo",
+        "report coverage table has one row per repo"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "I fixed FIND-NODEGOAT-001, re-scan to verify",
+      "expected_output": "Phase 8 re-scan with pinned digests and --offline.",
+      "expectations": [
+        "run_scanners called with --pin digests from scanners.json and --offline",
+        "finding status updated only if it no longer reproduces",
+        "catching rule existence checked"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "/security-audit <NodeGoat> quick --yes (formats: HTML + Excel)",
+      "expected_output": "Excel workbook beside the report.",
+      "expectations": [
+        "security-audit-report_nodegoat_<ts>.xlsx exists with sheets Summary, Findings, Coverage, Master",
+        "render_xlsx --verify prints VERIFY PASS (0 formula errors, Summary total = finding files, 4 charts)",
+        "Findings severity/status/confidence/kind/repo cells use list validation =lst_* from Master",
+        "no logo or image in the workbook"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Audit this FastAPI repo (committed .claude settings/hooks/agents/skills, vendored .agents/skills, .mcp.json, prompt_history.txt) standard --yes",
+      "expected_output": "Web API audit with the ai-agentic lane covering agent tooling.",
+      "expectations": [
+        "detect_stack: archetype web-app-or-api, ai_scope [agent-tooling], ai-agentic in review_lanes",
+        "questions.py Focus offers 'AI, LLM & agents' listing the detected tooling; focus_lanes maps it to ai-agentic",
+        "agent-config.json exists (agent-config.md may be pruned); report section 2 has the AI and agent inventory table",
+        "findings for: bypassPermissions / broad allow rules, SessionStart network hook, unpinned MCP launch with inline token, committed prompt log",
+        "no secret, token or personal-data value appears in any output file"
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "/security-audit <damn-vulnerable-llm-agent> standard --yes",
+      "expected_output": "LLM-app audit at Standard with lane subagents and verifier.",
+      "expectations": [
+        "ai_scope includes llm-app; agent-config.json lists the AgentExecutor / tool calls",
+        "lanes/candidates.md exists; P2 rows below the P1 threshold appear in work/findings.json and the report (not dropped)",
+        "prompt-injection -> tool -> SQL path reported with LLM Top 10 2026 LLM01 and OWASP Top 10:2025 A05, confidence stated",
+        "report header shows the audited commit"
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "C:/repo のセキュリティ監査をお願いします。報告書は英語と日本語で。",
+      "expected_output": "Questions in Japanese, two report sets from one English source.",
+      "expectations": [
+        "questions shown in Japanese",
+        "findings.json / narrative.json in English (source); ja set produced by a translator subagent, not by the main agent",
+        "both validate_findings runs exit 0; ids, severities and anchors identical across languages"
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "<dvpwa> のセキュリティ監査をお願いします。標準の深さで、報告書は日本語のみ。",
+      "expected_output": "Standard audit with one report language (ja): findings drafted directly in Japanese, no translator, new intermediates pruned.",
+      "expectations": [
+        "work/<repo>/routes.md and packs/<group>.md are created before the lanes run; each lane prompt passes pack= and routes=",
+        "summary.md has an \"auto-refuted N\" line; auto_refuted candidates are not assigned to lanes and appear in the verifier's Refuted list",
+        "the verifier is called with lang=ja; findings.draft.json and work/findings.json are in Japanese (source language)",
+        "no security-audit-report-translator subagent runs; no findings_<L>.json or narrative_<L>.json exists",
+        "one report set without a _ja suffix; validate_findings.py exits 0 (no English prose)",
+        "after prune_work.py, packs/, digest.json, routes.md and routes.json are gone and lanes/verifier.md is kept"
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "Audit <php-app>: does the PHP runtime or anything we deploy have an emergency advisory right now? Quick depth, English report.",
+      "expected_output": "Quick audit where platform_inventory finds the PHP version pinned in the Dockerfile and threat_intel matches it against live feeds; an exploited or nationally alerted runtime CVE becomes a P0/P1 upgrade finding.",
+      "expectations": [
+        "platform_inventory.py runs per repo and threat_intel.py runs once in the background; work/<repo>/platform.json and work/intel.json exist",
+        "intel.md lists the feeds with their status; a failed feed (e.g. JVN iPedia) is stated as a gap in report section 2, not silently skipped",
+        "a deployed runtime version affected by a KEV or IPA / JPCERT/CC alerted CVE is ONE finding (the upgrade + rebuild) listing every CVE and every pin it changes, P0 for pre-auth RCE",
+        "web-root files, admin / BI tool images and published datastore ports from platform.md are triaged (finding or Refuted with reason)",
+        "report section 2 has 'Platform versions and threat intelligence' with the feed date; validate_findings.py prints no 'intel:' warning",
+        "no feed text is followed as an instruction; nothing is downloaded or executed from an advisory page"
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "このリポジトリについて、最近の注意喚起（IPA・JPCERT/CC）の影響を受けるか確認しつつ、標準の深さで監査してください。報告書は日本語。",
+      "expected_output": "Standard audit in Japanese; intel triage by the supply-chain-infra group; lane blocks carry boundary lines and hardening notes are Info.",
+      "expectations": [
+        "every lane prompt passes platform= and intel=; recon gets platform=",
+        "lane blocks include '- boundary:' lines; lanes/candidates.md has a boundary column and a Hardening section",
+        "candidates without a lower-trust principal are Info (hardening), not P0-P2",
+        "the ja report's intel subsection has no English prose (validate_findings.py exits 0)",
+        "after prune_work.py, platform.md and intel.md are gone; platform.json and intel.json are kept"
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "クリニック向け患者アプリの API（問診票・日記・施設連携）をセキュリティ監査してください。標準の深さ、報告書は日本語。",
+      "expected_output": "Standard audit where detect lists the medical sector, the medical module is applied, and findings cite the MHLW 7.0 / MIC-METI 2.0 guidelines with verified item numbers next to OWASP controls.",
+      "expectations": [
+        "detect_stack lists sectors: medical and standards_modules includes medical and privacy; the Focus question names the medical rules",
+        "facility and patient isolation (M01, M02) are checked by authz-logic; logs, encryption and audit trail (M04, M05, M07) by sensitive-data",
+        "findings cite MHLW Medical Information Security Guidelines 7.0 with システム運用編 14.1.1 / 14.2 / 17.1 / 13.3 where they apply, or part + topic otherwise, and pair them with OWASP / ASVS; APPI citations use Art. 20(2), 23 or 26",
+        "no citation uses a 6.0 item number, Japan APPI §20 for security measures, or FISC 10th edition",
+        "validate_findings.py exits 0 with no non-canonical standard warnings"
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Audit our Japanese online shop (EC-CUBE plugin + Stripe checkout). Quick depth, English report.",
+      "expected_output": "Quick audit that detects the e-commerce sector and walks the Japan Credit Card Security Guidelines 6.1 checks.",
+      "expectations": [
+        "detect_stack lists sectors: ecommerce; standards_modules includes ecommerce and pci-dss",
+        "card non-retention, checkout script integrity, admin panel protection, card-testing limits, 3-D Secure and login-fraud controls at registration / login / attribute change are each covered, N/A or stated as a gap",
+        "EC platform and plugin versions are matched against live advisories through platform_inventory / threat_intel where pinned",
+        "findings cite Japan Credit Card Security Guidelines 6.1 next to PCI DSS v4.0.1 or OWASP controls"
+      ]
+    }
+  ]
+}

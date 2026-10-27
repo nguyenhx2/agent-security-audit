@@ -1,0 +1,228 @@
+{
+  "skill_name": "security-audit",
+  "notes": "フィクスチャのリポジトリは、意図的に脆弱に作られた公開プロジェクトである。隔離したディレクトリにクローンする（そのコードは決して実行しない）。期待結果は生成された audit_dir に対して確認する。",
+  "fixtures": {
+    "NodeGoat": "https://github.com/OWASP/NodeGoat",
+    "dvpwa": "https://github.com/anxolerd/dvpwa",
+    "railsgoat": "https://github.com/OWASP/railsgoat",
+    "terragoat": "https://github.com/bridgecrewio/terragoat",
+    "ovaa": "https://github.com/oversecured/ovaa",
+    "damn-vulnerable-llm-agent": "https://github.com/ReversecLabs/damn-vulnerable-llm-agent",
+    "govwa": "https://github.com/0c34/govwa"
+  },
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/security-audit <NodeGoat> standard --yes",
+      "expected_output": "Node/Express の Web アプリを標準の深さで監査し、スキャナ、レーン、検証エージェント、検証済みの報告書が揃う。",
+      "expectations": [
+        "detect_stack の archetype が web-app-or-api で、modules に owasp-web、owasp-api が含まれる",
+        "scanners.json に mount_file_count > 0 が示され、ダイジェストが記録されている",
+        "ある指摘事項が app/routes/contributions.js の eval() インジェクションをアンカーとし、OWASP Top 10:2025 A05 を CWE-95 または CWE-94 とともに引用している",
+        "ある指摘事項がコミットされた秘密鍵をローテーション手順付きで扱い、鍵の内容は一切出力されていない",
+        "機微情報のセクションが app/data/profile-dao.js の SSN の扱いを場所のみで報告している",
+        "依存関係の CVE がパッケージ単位でまとめられ、fsevents の MAL アドバイザリが明記されている",
+        "validate_findings.py が 0 で終了する",
+        "NodeGoat リポジトリ内に監査の出力が一切書き込まれていない",
+        "報告書ファイルが security-audit-report_nodegoat_\\d{4}-\\d{2}-\\d{2}_\\d{4}\\.(md|html) に一致する",
+        "指摘事項ファイルの名前が find-nodegoat-NNN.md（ID を小文字化）である",
+        "HTML がオフラインで開き、CSP に sha256 のスクリプトハッシュがあり、検索と列ソートが動作する"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "この Terraform リポジトリはデプロイしても安全？ <terragoat> quick --yes",
+      "expected_output": "CIS ベンチマークを Checkov の根拠とともに引用する IaC のみの監査。",
+      "expectations": [
+        "archetype が infrastructure-as-code で、owasp-web モジュールは適用されない",
+        "指摘事項が CIS AWS Foundations v7.1.0（またはプロバイダーの CIS ベンチマークを版付きで）と Checkov のルール ID を引用している",
+        "公開 S3 / 暗号化されていないストレージ / ハードコードされた認証情報が報告されている",
+        "報告書に、IaC は設計時の根拠にすぎないことが記載されている"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "このAndroidアプリのセキュリティ監査をしてください <ovaa> quick --yes",
+      "expected_output": "MASVS 2.1.0 と Mobile Top 10 2024 を用いたモバイル監査。報告書は日本語。",
+      "expectations": [
+        "mobile モジュールが適用され、mobsfscan が実行された",
+        "指摘事項が OWASP MASVS 2.1.0 のグループ（例：MASVS-PLATFORM）と Mobile Top 10 2024 の ID を引用している",
+        "エクスポートされたコンポーネント / ディープリンクまたは WebView の問題が file:line 付きで報告されている",
+        "報告書の本文は日本語で、基準の ID は変更されていない"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "この LLM エージェントのプロンプトインジェクションのリスクを監査して <damn-vulnerable-llm-agent> quick --yes",
+      "expected_output": "AI レーンが適用され、LLM Top 10 2026 / Agentic Top 10 2026 が引用される。",
+      "expectations": [
+        "ai-llm-agentic モジュールが適用されている",
+        "ある指摘事項が信頼できないコンテンツからツールまたは特権操作までを追跡し、LLM01 および／または ASI01/ASI02 を引用している",
+        ".env またはコード内のシークレットが名前と場所のみで報告されている"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "ユーザーの金融データを正しく保存できているか確認して <railsgoat> quick --yes",
+      "expected_output": "Rails アプリに対する、機微データを最優先とした監査。",
+      "expectations": [
+        "sensitive_sweep が実行され、その結果が検索したパターンとともに記録されている",
+        "銀行口座 / SSN に類するカラムがカラム名 + マイグレーションの file:line で報告され、値は決して出力されていない",
+        "適用法域が指定されていないため、報告書に適用法域に関する注意書きが含まれている"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "/security-audit <any repo>（Docker 停止中、ネイティブのスキャナもなし）",
+      "expected_output": "段階的な縮退動作。",
+      "expectations": [
+        "run_scanners がすべてのツールを skipped と報告し、0 以外で終了する",
+        "利用者に Docker が起動していないことが伝えられ、Docker を起動 / ネイティブにインストール / コード読解のみ、の選択肢が提示される",
+        "コード読解のみで続行する場合、すべてのスキャナが報告書にカバレッジの欠落として記載される"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "私の PR の差分をセキュリティの観点でレビューして",
+      "expected_output": "スキルは起動しない（差分は security-review が担当）。",
+      "expectations": [
+        "security-audit が呼び出されない"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "このGoアプリのセキュリティ監査をしてください <govwa> quick --yes",
+      "expected_output": "漢字・かなの本文による日本語の報告書。ID は変更されない。",
+      "expectations": [
+        "報告書の本文が日本語である",
+        "指摘事項が `OWASP Top 10:2025` を版付きで引用している",
+        "validate_findings が 0 で終了する"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "/security-audit <dvpwa> <govwa> standard --yes",
+      "expected_output": "1つの audit_dir での複数リポジトリの監査。",
+      "expectations": [
+        "リポジトリごとに scanners.json を含む work/<repo>/ フォルダが1つずつある",
+        "リポジトリごとに findings/<lang>/<repo>/ がある",
+        "報告書のカバレッジ表にリポジトリごとに1行ずつある"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "FIND-NODEGOAT-001 を修正したので、再スキャンして確認して",
+      "expected_output": "固定したダイジェストと --offline による Phase 8 の再スキャン。",
+      "expectations": [
+        "run_scanners が scanners.json の --pin ダイジェストと --offline を指定して呼び出される",
+        "指摘事項の status は、再現しなくなった場合にのみ更新される",
+        "検出したルールが存在することが確認される"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "/security-audit <NodeGoat> quick --yes (formats: HTML + Excel)",
+      "expected_output": "報告書の隣に Excel ブック。（このプロンプトは英語の報告書の動作を確認するため英語のまま）",
+      "expectations": [
+        "security-audit-report_nodegoat_<ts>.xlsx が存在し、シート Summary、Findings、Coverage、Master を持つ",
+        "render_xlsx --verify が VERIFY PASS を出力する（数式エラー 0、Summary の合計 = 指摘事項ファイル数、グラフ 4つ）",
+        "Findings の severity/status/confidence/kind/repo のセルが Master の =lst_* によるリスト入力規則を使っている",
+        "ブックにロゴや画像が含まれていない"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Audit this FastAPI repo (committed .claude settings/hooks/agents/skills, vendored .agents/skills, .mcp.json, prompt_history.txt) standard --yes",
+      "expected_output": "エージェントのツール設定を対象とする ai-agentic レーン付きの Web API 監査。（このプロンプトは英語の報告書の動作を確認するため英語のまま）",
+      "expectations": [
+        "detect_stack：archetype が web-app-or-api、ai_scope が [agent-tooling]、review_lanes に ai-agentic が含まれる",
+        "questions.py の Focus が、検出されたツール設定を列挙した 'AI, LLM & agents' を提示し、focus_lanes がそれを ai-agentic に対応付ける",
+        "agent-config.json が存在し（agent-config.md は整理されている場合がある）、報告書の第2節に AI and agent inventory の表がある",
+        "次の指摘事項がある：bypassPermissions / 広範な allow ルール、SessionStart のネットワークフック、インラインのトークンを伴うバージョン固定されていない MCP の起動、コミットされたプロンプトログ",
+        "どの出力ファイルにも、シークレット、トークン、個人データの値が含まれていない"
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "/security-audit <damn-vulnerable-llm-agent> standard --yes",
+      "expected_output": "Standard での LLM アプリの監査。レーンのサブエージェントと検証エージェントを使用。",
+      "expectations": [
+        "ai_scope に llm-app が含まれ、agent-config.json に AgentExecutor / ツール呼び出しが列挙されている",
+        "lanes/candidates.md が存在し、P1 の閾値を下回る P2 の行が work/findings.json と報告書に現れている（脱落していない）",
+        "プロンプトインジェクション -> ツール -> SQL の経路が LLM Top 10 2026 LLM01 と OWASP Top 10:2025 A05 で報告され、確度が記載されている",
+        "報告書のヘッダーに監査したコミットが表示されている"
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "C:/repo のセキュリティ監査をお願いします。報告書は英語と日本語で。",
+      "expected_output": "質問は日本語で、1つの英語ソースから2組の報告書を生成。",
+      "expectations": [
+        "質問が日本語で表示される",
+        "findings.json / narrative.json は英語（ソース）。ja のセットはメインエージェントではなく翻訳サブエージェントが生成する",
+        "両方の validate_findings の実行が 0 で終了し、ID、重大度、アンカーが言語間で同一である"
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "<dvpwa> のセキュリティ監査をお願いします。標準の深さで、報告書は日本語のみ。",
+      "expected_output": "報告書の言語が 1 つ（ja）の Standard の監査：指摘事項は直接日本語でドラフトされ、翻訳は実行されず、新しい中間ファイルは整理される。",
+      "expectations": [
+        "work/<repo>/routes.md と packs/<group>.md がレーンの実行前に作成され、各レーンのプロンプトが pack= と routes= を渡している",
+        "summary.md に \"auto-refuted N\" の行があり、auto_refuted の候補はレーンに割り当てられず、検証エージェントの Refuted の一覧に現れる",
+        "検証エージェントが lang=ja で呼び出され、findings.draft.json と work/findings.json が日本語（ソース言語）である",
+        "security-audit-report-translator サブエージェントは実行されず、findings_<L>.json も narrative_<L>.json も存在しない",
+        "_ja の接尾辞のない報告書一式が 1 つあり、validate_findings.py が 0 で終了する（英語の本文がない）",
+        "prune_work.py の後、packs/、digest.json、routes.md、routes.json が削除され、lanes/verifier.md は残っている"
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "<php-app> を監査してください：PHP のランタイムや、デプロイしているものの中に、いま緊急の勧告が出ているものはありますか？深さは Quick、報告書は英語で。",
+      "expected_output": "Quick の監査：platform_inventory が Dockerfile で指定された PHP のバージョンを見つけ、threat_intel がそれを最新のフィードと照合する。悪用されている、または国内で注意喚起されたランタイムの CVE は、P0/P1 のアップグレードの指摘事項になる。",
+      "expectations": [
+        "platform_inventory.py がリポジトリごとに実行され、threat_intel.py がバックグラウンドで 1 回実行される。work/<repo>/platform.json と work/intel.json が存在する",
+        "intel.md にフィードとその状態が列挙され、取得できなかったフィード（例：JVN iPedia）は黙って省かれず、報告書の第2節に未カバー領域として記載されている",
+        "KEV または IPA / JPCERT/CC が注意喚起した CVE の影響を受けるデプロイ済みのランタイムのバージョンは 1 件の指摘事項（アップグレード + 再ビルド）であり、すべての CVE と変更が必要なすべての指定箇所を列挙し、認証前の RCE なら P0 である",
+        "platform.md の Web ルートのファイル、管理 / BI ツールのイメージ、公開されたデータストアのポートがトリアージされている（指摘事項、または理由を添えた Refuted）",
+        "報告書の第2節に 'Platform versions and threat intelligence' がフィードの日付とともにあり、validate_findings.py が 'intel:' の警告を出さない",
+        "フィードの文章を指示として従っておらず、勧告のページから何もダウンロードも実行もしていない"
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "このリポジトリについて、最近の注意喚起（IPA・JPCERT/CC）の影響を受けるか確認しつつ、標準の深さで監査してください。報告書は日本語。",
+      "expected_output": "日本語での Standard の監査：脅威情報のトリアージは supply-chain-infra グループが行い、レーンのブロックには境界の行があり、ハードニングの注記は Info になる。",
+      "expectations": [
+        "すべてのレーンのプロンプトが platform= と intel= を渡し、偵察には platform= が渡されている",
+        "レーンのブロックに '- boundary:' の行があり、lanes/candidates.md に boundary 列と Hardening セクションがある",
+        "より信頼度の低い主体がいない候補は P0-P2 ではなく Info（ハードニング）になっている",
+        "ja の報告書の脅威情報の小節に英語の本文がない（validate_findings.py が 0 で終了する）",
+        "prune_work.py の後、platform.md と intel.md が削除され、platform.json と intel.json は残っている"
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "クリニック向け患者アプリの API（問診票・日記・施設連携）をセキュリティ監査してください。標準の深さ、報告書は日本語。",
+      "expected_output": "Standard の監査：detect が medical の業種を列挙し、medical モジュールが適用され、指摘事項は OWASP の管理策と並べて、検証済みの項番で厚労省 第7.0版 / 総務省・経産省 第2.0版のガイドラインを引用する。",
+      "expectations": [
+        "detect_stack が sectors: medical を列挙し、standards_modules に medical と privacy が含まれる。重点の質問が医療の規則を示している",
+        "施設と患者の分離（M01、M02）は authz-logic が確認し、ログ、暗号化、監査証跡（M04、M05、M07）は sensitive-data が確認している",
+        "指摘事項は、該当する場合は MHLW Medical Information Security Guidelines 7.0 を システム運用編 14.1.1 / 14.2 / 17.1 / 13.3 とともに、それ以外は編 + トピックで引用し、OWASP / ASVS と組み合わせている。APPI の引用は 第20条第2項、第23条、第26条 を使う",
+        "第6.0版の項番、安全管理措置としての Japan APPI §20、FISC 第10版 を使う引用がない",
+        "validate_findings.py が 0 で終了し、正規名ではない基準の警告がない"
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "日本向けのオンラインショップ（EC-CUBE のプラグイン + Stripe の決済）を監査してください。深さは Quick、報告書は英語で。",
+      "expected_output": "Quick の監査：EC の業種を検出し、Japan Credit Card Security Guidelines 6.1 の確認項目を確認する。",
+      "expectations": [
+        "detect_stack が sectors: ecommerce を列挙し、standards_modules に ecommerce と pci-dss が含まれる",
+        "カード情報の非保持化、決済画面のスクリプトの完全性、管理画面の保護、カード不正利用の制限、3-D セキュア、会員登録 / ログイン / 属性変更時のログイン不正対策が、それぞれカバー済み、該当なし、または欠落として記載されている",
+        "EC プラットフォームとプラグインのバージョンが、指定されている場合は platform_inventory / threat_intel を通じて最新の勧告と照合されている",
+        "指摘事項は PCI DSS v4.0.1 または OWASP の管理策と並べて Japan Credit Card Security Guidelines 6.1 を引用する"
+      ]
+    }
+  ]
+}

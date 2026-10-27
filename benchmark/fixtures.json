@@ -1,0 +1,8 @@
+{
+  "_comment": "Public, deliberately vulnerable repositories the live benchmark audits, pinned to the exact commit the published results were measured on. `python benchmark/bench.py fetch` clones them into benchmark/fixtures/ (gitignored) and checks out these commits; a fixture at any other commit is a different benchmark.",
+  "fixtures": {
+    "DVWA": {"url": "https://github.com/digininja/DVWA", "commit": "a1978a2fed195acd093010af6395f86a281537ca"},
+    "NodeGoat": {"url": "https://github.com/OWASP/NodeGoat", "commit": "c5cb68a7084e4ae7dcc60e6a98768720a81841e8"},
+    "juice-shop": {"url": "https://github.com/juice-shop/juice-shop", "commit": "717f5efa886b0417eeecb52378b03cf10567b7e2"}
+  }
+}

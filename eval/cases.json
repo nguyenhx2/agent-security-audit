@@ -1,0 +1,42 @@
+{
+  "_comment": "Expected outcomes for eval/run_eval.py. Each fixture is a folder under eval/fixtures/. detect: the exact set of industry sectors detect_stack.py must report, and standards modules that must (modules) or must not (absent_modules) be selected. platform: deployed components [product, version, context] and exposure signal ids platform_inventory.py must report (components, signals) or must not (absent_signals). Expectations state what is TRUE of the fixture, written before the tool was run against it; a miss is a detector gap, not a fixture to edit.",
+  "detect": [
+    {"fixture": "detect/medical-fhir", "why": "FHIR client dependency", "sectors": ["medical"], "modules": ["medical", "privacy"]},
+    {"fixture": "detect/medical-jp-romaji", "why": "Japanese clinic schema in romaji (kanja, karte, monshin), no medical dependency", "sectors": ["medical"], "modules": ["medical", "privacy"]},
+    {"fixture": "detect/finance-zengin", "why": "Zengin bank-code dependency", "sectors": ["finance"], "modules": ["finance"]},
+    {"fixture": "detect/finance-identifiers", "why": "bank_account / iban / salary identifiers", "sectors": ["finance"], "modules": ["finance", "privacy"]},
+    {"fixture": "detect/crypto-wallet", "why": "ethers dependency", "sectors": ["crypto"], "modules": ["finance"]},
+    {"fixture": "detect/ecommerce-cart", "why": "cart, order items, shipping address in three files", "sectors": ["ecommerce"], "modules": ["ecommerce"]},
+    {"fixture": "detect/education-lti", "why": "LTI dependency", "sectors": ["education"], "modules": ["education"]},
+    {"fixture": "detect/government-lgwan", "why": "LGWAN zone and ISMAP in config", "sectors": ["government"], "modules": ["public-sector"]},
+    {"fixture": "detect/iot-mqtt", "why": "MQTT client dependency", "sectors": ["iot"], "modules": ["iot-ot"]},
+    {"fixture": "detect/ot-modbus", "why": "Modbus dependency", "sectors": ["ot"], "modules": ["iot-ot"]},
+    {"fixture": "detect/automotive-can", "why": "CAN bus dependencies", "sectors": ["automotive"], "modules": ["iot-ot"]},
+    {"fixture": "detect/medical-snake-case", "why": "snake_case ids only (kanja_id, patient_id, clinic_id, monshin_hyo) in three files; underscores must separate words", "sectors": ["medical"], "modules": ["medical", "privacy"]},
+    {"fixture": "detect/neg-server-inventory", "why": "a server-monitoring collector reports firmware_version and secure_boot; that is not an IoT product", "sectors": [], "absent_modules": ["iot-ot"]},
+    {"fixture": "detect/neg-azure-sku", "why": "Azure SDK SKUs and a marketing coupon are not an online shop", "sectors": [], "absent_modules": ["ecommerce", "pci-dss"]},
+    {"fixture": "detect/neg-plain-api", "why": "a to-do API has no sector", "sectors": [], "absent_modules": ["privacy", "pci-dss", "medical", "finance"]}
+  ],
+  "platform": [
+    {"fixture": "platform/php-dockerfile-pin", "why": "PHP version pinned through a Dockerfile ARG, image runs as root with curl installed",
+     "components": [["php", "8.1.2", "deploy"]],
+     "signals": ["container-runs-as-root", "download-tools-in-runtime-image"]},
+    {"fixture": "platform/compose-admin-tool", "why": "phpMyAdmin and a published MySQL port in compose; Redis bound to loopback",
+     "components": [["mysql", "5.7", "deploy"], ["phpmyadmin", "5.2.1", "deploy"]],
+     "signals": ["admin-tool-image", "datastore-port-published"]},
+    {"fixture": "platform/webroot-env", "why": ".env and phpinfo() under the web root, allow_url_include on",
+     "signals": ["webroot-sensitive-file", "phpinfo-exposed", "php-ini:allow_url_include"]},
+    {"fixture": "platform/serverless-k8s", "why": "Lambda runtime in Terraform, a Deployment with no NetworkPolicy, .nvmrc",
+     "components": [["node", "18", "deploy"], ["node", "20.11.1", "declared"]],
+     "signals": ["k8s-no-networkpolicy"]},
+    {"fixture": "platform/neg-hardened", "why": "non-root final stage, curl only in the build stage, loopback-only Redis, Dependabot covers images",
+     "components": [["node", "22.11.0", "deploy"]],
+     "absent_signals": ["container-runs-as-root", "download-tools-in-runtime-image", "datastore-port-published", "admin-tool-image", "no-image-update-automation"]}
+  ],
+  "intel": {
+    "fixture": "intel/php-mysql-app",
+    "feeds": "feeds",
+    "today": "2026-10-26",
+    "why": "PHP 8.3.30 and MySQL 5.7 deployed; KEV, IPA, NVD and EPSS name the PHP CVEs; MySQL 5.7 is end of life; JVN iPedia answers with an HTML error page; one IPA title carries a bidi override and an injected instruction"
+  }
+}

@@ -1,0 +1,49 @@
+---
+id: {{FIND-<REPO>-NNN}}             # 安定した ID、監査内で一意
+repo: {{repo-name}}                 # または "cross-repo"
+severity: {{P0|P1|P2|Info}}         # 影響 + 強制ルールで決定（reference/method/triage.md）
+confidence: {{confirmed|likely|needs-runtime-check}}
+kind: {{security|sensitive-data-at-rest|secret|supply-chain|configuration|privacy|performance|quality}}
+standard: {{例：OWASP Top 10 | OWASP ASVS | PCI DSS | OWASP API Security Top 10}}
+standard_version: {{例：2025 | 5.0.0 | v4.0.1 | 2023。法令：公式の番号、例：2016/679、91/2025/QH15}}  # 決して省略しない
+requirement_id: {{例：A01 | V8.2.1 | Req 3.3.1 | API1}}   # 上記の版とともに引用する
+also_maps_to: {{任意、例："OWASP ASVS 5.0.0 V8.2; CWE-639"}}
+cwe: {{CWE-NNN または n/a}}
+shares_anchor_with: {{任意 - 同じ行を別の根本原因で引用している他の指摘事項 ID。使わない場合は削除}}
+confirmed_by: {{scanner+rule | manual review | both}}       # 例："semgrep eval-detected + manual review"
+status: open                        # open|in-progress|closed|accepted-risk|false-positive。クリーンな再スキャンでのみクローズ
+found: {{YYYY-MM-DD}}
+verified: n/a                       # 再スキャンで修正を確認した日付（Phase 8）
+---
+<!-- 見出しと本文はすべて監査言語で書く。見出し - ja：該当箇所 / 内容 / 影響 / 根拠 / 是正策（修正は利用者が実施。監査者は修正しない） / 検証（クローズ条件）。
+     英語の報告書では英語の見出しを使う - en：Location / What it is / Why it matters / Evidence / Remedy (the user applies it - the auditor does not patch) / Verification (how this closes)。frontmatter の値は英語のコードのまま。 -->
+
+# {{id}} - {{欠陥を示す短い件名、例：「プロフィール参照に所有者チェックがない（BOLA）」}}
+
+## 該当箇所
+- `{{path/to/file.ext}}:{{line}}` - {{役割：source | sink | 欠落している制御 | カラム}}
+- {{追加のアンカー。保存データの場合：カラム名 + マイグレーションの file:line。データそのものは決して書かない。}}
+
+## 内容
+{{根本原因を2〜4文で。1ファイルにつき根本原因となる欠陥は1つ。多数の呼び出し箇所が同じ原因を共有する場合は、
+別々の指摘事項にせず、ここに列挙する。}}
+
+## 影響
+{{悪用された場合の具体的な結果、悪用できる者（未認証 / 任意のユーザー / 管理者）、到達される
+データや操作。これが重大度を決める。性能の指摘：計測値または構造的根拠。}}
+
+## 根拠
+{{追跡：エントリポイント -> ... -> シンク、file:line 付き。スキャナによる裏付け（tool:rule、cid）。
+`likely` / `needs-runtime-check` の場合：証明できていない部分。ソース内のインライン抑制はこれを変えない。}}
+
+## 是正策（修正は利用者が実施。監査者は修正しない）
+{{具体的な修正と、このスタックで安全な API／パターン。クラス別のルール：
+ - SAD（CVV／トラック／PIN）：カラムを削除 + ログ／キャッシュ／バックアップを消去。「暗号化する」は是正策ではない。
+ - PAN：トークン化 / 鍵付きハッシュ / 管理された鍵による暗号化 / 切り詰め。保持の正当性を示す。
+ - コミットされたシークレット：<console> でローテーションする。ローテーションで何が動かなくなるか。履歴のみか。クライアント成果物に含まれるか。
+ - 依存関係：<direct dep> を >= <version> にアップグレード。推移的な経路を記す。
+ - 機能していない制御：実際に強制させる + 何もしない状態になったら失敗するテストを追加する。}}
+
+## 検証（クローズ条件）
+{{同じイメージダイジェスト + ルールセット（scanners.json）で <tool> を再実行する。手動の指摘は <file:line> を
+読み直す。再現しなくなった場合にのみクローズする。検出したルールが今も存在することを確認する。}}

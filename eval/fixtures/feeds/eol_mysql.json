@@ -1,0 +1,14 @@
+{
+ "result": {
+  "releases": [
+   {
+    "name": "5.7",
+    "isEol": true,
+    "eolFrom": "2023-10-31",
+    "latest": {
+     "name": "5.7.44"
+    }
+   }
+  ]
+ }
+}

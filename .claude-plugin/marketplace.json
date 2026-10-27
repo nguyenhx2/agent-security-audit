@@ -1,0 +1,15 @@
+{
+  "name": "agent-security-audit",
+  "owner": {
+    "name": "nguyenhx2"
+  },
+  "description": "Claude Code plugin for the security-audit skill: read-only, evidence-anchored security audits with live threat intelligence and industry standards.",
+  "plugins": [
+    {
+      "name": "security-audit",
+      "source": "./security-audit",
+      "description": "Read-only security audit of one or more repositories: evidence-anchored findings, Markdown, HTML and Excel reports.",
+      "version": "1.15.0"
+    }
+  ]
+}

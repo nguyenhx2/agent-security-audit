@@ -1,0 +1,65 @@
+name: codeql
+
+# Static analysis for what this repository ships: Python (the skill's scripts, the eval and the
+# release tooling) and GitHub Actions workflows. The release workflow publishes artifacts people
+# install into their Claude Code setup, so a vulnerable workflow is a supply-chain problem for every
+# user; CodeQL's `actions` language scans the workflow files themselves for that class.
+#
+# Advanced setup (this file) rather than default setup: every control here is a file you can read,
+# diff and delete. A scanner configured through a settings page is not.
+#
+# The fixtures under eval/fixtures/ are deliberately insecure configuration (a root container, a
+# .env under a web root), not Python, so they are not in this scan's scope.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly, so a newly published query reaches this repo without waiting for a commit. Monday
+    # 03:17 UTC - an odd minute, to avoid the top-of-hour queue on hosted runners.
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      security-events: write   # upload the SARIF results
+      packages: read
+      actions: read
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+            build-mode: none
+          - language: python
+            build-mode: none
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          # security-extended adds the lower-severity and precision queries to the default suite.
+          # A security tool's own code is held to a higher bar than the default.
+          queries: security-extended
+
+      - name: Analyze
+        uses: github/codeql-action/analyze@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          category: "/language:${{ matrix.language }}"

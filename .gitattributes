@@ -1,0 +1,26 @@
+# Every text file in this repository is LF, on every platform.
+#
+# The skill ships to Windows, macOS and Linux from one zip. A CRLF Python script still runs, but
+# a CRLF shebang line breaks `./script.py` on POSIX ("bad interpreter: ...python3^M"), and a CRLF
+# Markdown or JSON file makes the two editions diff on every line. validate_release.py fails on a
+# CRLF file anyway; this makes git produce LF in the first place, even with core.autocrlf=true.
+*               text=auto eol=lf
+
+*.py            text eol=lf
+*.md            text eol=lf
+*.json          text eol=lf
+*.template      text eol=lf
+*.yml           text eol=lf
+*.yaml          text eol=lf
+*.svg           text eol=lf
+*.rdf           text eol=lf
+*.sql           text eol=lf
+*.ini           text eol=lf
+*.txt           text eol=lf
+
+# Binary. Never normalised, never diffed as text.
+*.png           binary
+*.jpg           binary
+*.gif           binary
+*.zip           binary
+*.xlsx          binary

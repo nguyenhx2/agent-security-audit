@@ -1,0 +1,13 @@
+services:
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+  pma:
+    image: phpmyadmin:5.2.1
+    ports:
+      - "8080:80"
+  cache:
+    image: redis:7.2
+    ports:
+      - "127.0.0.1:6379:6379"

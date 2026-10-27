@@ -1,0 +1,647 @@
+{
+ "skill_version": "1.15.0",
+ "summary": {
+  "passed": 75,
+  "total": 75
+ },
+ "parts": {
+  "gates": {
+   "passed": 5,
+   "total": 5
+  },
+  "detect": {
+   "passed": 38,
+   "total": 38
+  },
+  "platform": {
+   "passed": 19,
+   "total": 19
+  },
+  "intel": {
+   "passed": 13,
+   "total": 13
+  }
+ },
+ "selftest": {
+  "selftest_en": {
+   "passed": 184,
+   "total": 184
+  },
+  "selftest_ja": {
+   "passed": 184,
+   "total": 184
+  }
+ },
+ "detection": {
+  "sectors": {
+   "micro": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "tp": 12,
+    "fp": 0,
+    "fn": 0
+   },
+   "classes": {
+    "automotive": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 1,
+     "fp": 0,
+     "fn": 0
+    },
+    "crypto": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 1,
+     "fp": 0,
+     "fn": 0
+    },
+    "ecommerce": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 1,
+     "fp": 0,
+     "fn": 0
+    },
+    "education": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 1,
+     "fp": 0,
+     "fn": 0
+    },
+    "finance": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 2,
+     "fp": 0,
+     "fn": 0
+    },
+    "government": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 1,
+     "fp": 0,
+     "fn": 0
+    },
+    "iot": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 1,
+     "fp": 0,
+     "fn": 0
+    },
+    "medical": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 3,
+     "fp": 0,
+     "fn": 0
+    },
+    "ot": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 1,
+     "fp": 0,
+     "fn": 0
+    }
+   }
+  },
+  "platform_signals": {
+   "micro": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "tp": 8,
+    "fp": 0,
+    "fn": 0
+   },
+   "classes": {
+    "admin-tool-image": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 1,
+     "fp": 0,
+     "fn": 0
+    },
+    "container-runs-as-root": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 1,
+     "fp": 0,
+     "fn": 0
+    },
+    "datastore-port-published": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 1,
+     "fp": 0,
+     "fn": 0
+    },
+    "download-tools-in-runtime-image": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 1,
+     "fp": 0,
+     "fn": 0
+    },
+    "k8s-no-networkpolicy": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 1,
+     "fp": 0,
+     "fn": 0
+    },
+    "no-image-update-automation": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 0,
+     "fp": 0,
+     "fn": 0
+    },
+    "php-ini:allow_url_include": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 1,
+     "fp": 0,
+     "fn": 0
+    },
+    "phpinfo-exposed": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 1,
+     "fp": 0,
+     "fn": 0
+    },
+    "webroot-sensitive-file": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "tp": 1,
+     "fp": 0,
+     "fn": 0
+    }
+   }
+  },
+  "platform_components": {
+   "recall": 1.0,
+   "found": 6,
+   "expected": 6
+  }
+ },
+ "fixtures": {
+  "detect": 15,
+  "platform": 5,
+  "intel": 1
+ },
+ "checks": [
+  {
+   "part": "gates",
+   "name": "selftest en: 184/184 checks passed",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "gates",
+   "name": "selftest ja: 184/184 checks passed",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "gates",
+   "name": "selftest: both editions run the same number of checks",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "gates",
+   "name": "edition parity (check_editions.py)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "gates",
+   "name": "skill linter (skill-check.py --published) on the English edition",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "medical-fhir: sectors ['medical']",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "medical-fhir: module medical selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "medical-fhir: module privacy selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "medical-jp-romaji: sectors ['medical']",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "medical-jp-romaji: module medical selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "medical-jp-romaji: module privacy selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "finance-zengin: sectors ['finance']",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "finance-zengin: module finance selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "finance-identifiers: sectors ['finance']",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "finance-identifiers: module finance selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "finance-identifiers: module privacy selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "crypto-wallet: sectors ['crypto']",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "crypto-wallet: module finance selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "ecommerce-cart: sectors ['ecommerce']",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "ecommerce-cart: module ecommerce selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "education-lti: sectors ['education']",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "education-lti: module education selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "government-lgwan: sectors ['government']",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "government-lgwan: module public-sector selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "iot-mqtt: sectors ['iot']",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "iot-mqtt: module iot-ot selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "ot-modbus: sectors ['ot']",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "ot-modbus: module iot-ot selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "automotive-can: sectors ['automotive']",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "automotive-can: module iot-ot selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "medical-snake-case: sectors ['medical']",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "medical-snake-case: module medical selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "medical-snake-case: module privacy selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "neg-server-inventory: sectors none",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "neg-server-inventory: module iot-ot not selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "neg-azure-sku: sectors none",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "neg-azure-sku: module ecommerce not selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "neg-azure-sku: module pci-dss not selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "neg-plain-api: sectors none",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "neg-plain-api: module privacy not selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "neg-plain-api: module pci-dss not selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "neg-plain-api: module medical not selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "detect",
+   "name": "neg-plain-api: module finance not selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "php-dockerfile-pin: component php 8.1.2 (deploy)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "php-dockerfile-pin: signal container-runs-as-root",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "php-dockerfile-pin: signal download-tools-in-runtime-image",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "compose-admin-tool: component mysql 5.7 (deploy)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "compose-admin-tool: component phpmyadmin 5.2.1 (deploy)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "compose-admin-tool: signal admin-tool-image",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "compose-admin-tool: signal datastore-port-published",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "webroot-env: signal php-ini:allow_url_include",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "webroot-env: signal phpinfo-exposed",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "webroot-env: signal webroot-sensitive-file",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "serverless-k8s: component node 18 (deploy)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "serverless-k8s: component node 20.11.1 (declared)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "serverless-k8s: signal k8s-no-networkpolicy",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "neg-hardened: component node 22.11.0 (deploy)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "neg-hardened: no signal admin-tool-image",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "neg-hardened: no signal container-runs-as-root",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "neg-hardened: no signal datastore-port-published",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "neg-hardened: no signal download-tools-in-runtime-image",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "platform",
+   "name": "neg-hardened: no signal no-image-update-automation",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "intel",
+   "name": "platform inventory of the deployment",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "intel",
+   "name": "threat_intel.py exits 0 with offline feeds",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "intel",
+   "name": "php 8.3.30: KEV + national alert on the exact deployed version -> act-now",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "intel",
+   "name": "php 8.3.30: KEV CVE ranked first, with its EPSS score",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "intel",
+   "name": "php 8.3.30: CVEs outside the window are counted, not listed",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "intel",
+   "name": "mysql 5.7: end of life",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "intel",
+   "name": "php ^8.1 constraint: judged by its lowest cycle (range allows EOL)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "intel",
+   "name": "an HTML error page from a feed is a stated gap, never a pass",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "intel",
+   "name": "healthy feeds parsed (KEV, IPA, JPCERT/CC)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "intel",
+   "name": "hostile feed text sanitised: no bidi / zero-width characters, no foreign links",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "intel",
+   "name": "alert window applied (the 2025 alert is dropped) and feed text marked untrusted",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "intel",
+   "name": "dependency named in KEV matched (guzzle)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "part": "intel",
+   "name": "offline with an empty cache: exit 0, every feed a stated gap, no network",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

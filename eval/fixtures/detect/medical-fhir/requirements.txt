@@ -1,0 +1,2 @@
+flask==3.0.3
+fhir.resources==7.1.0

@@ -1,0 +1,19 @@
+{
+ "vulnerabilities": [
+  {
+   "cveID": "CVE-2026-0001",
+   "vendorProject": "PHP Group",
+   "product": "PHP",
+   "vulnerabilityName": "PHP RCE",
+   "dateAdded": "2026-10-23",
+   "knownRansomwareCampaignUse": "Unknown"
+  },
+  {
+   "cveID": "CVE-2026-0009",
+   "vendorProject": "Acme",
+   "product": "Guzzle",
+   "vulnerabilityName": "Guzzle header injection",
+   "dateAdded": "2026-10-20"
+  }
+ ]
+}

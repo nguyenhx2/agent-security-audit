@@ -1,0 +1,23 @@
+{
+  "name": "security-audit",
+  "version": "1.15.0",
+  "description": "Read-only security audit of one or more repositories: evidence-anchored findings, Markdown, HTML and Excel reports.",
+  "author": {
+    "name": "nguyenhx2",
+    "url": "https://github.com/nguyenhx2"
+  },
+  "homepage": "https://github.com/nguyenhx2/agent-security-audit",
+  "repository": "https://github.com/nguyenhx2/agent-security-audit",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "security",
+    "audit",
+    "owasp",
+    "asvs",
+    "pci-dss",
+    "sast",
+    "threat-intelligence",
+    "compliance",
+    "japan"
+  ]
+}
