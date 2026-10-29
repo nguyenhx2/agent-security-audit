@@ -72,6 +72,7 @@ LLM_SWITCH = re.compile(r"(allow_dangerous_(code|requests|deserialization)\s*=\s
                         r"0\.0\.0\.0:11434|OLLAMA_HOST\s*=\s*0\.0\.0\.0|LANGCHAIN_TRACING_V2|LANGSMITH_|LANGFUSE_|"
                         r"HELICONE|NEXT_PUBLIC_\w*(OPENAI|ANTHROPIC|GEMINI|API)_?KEY|VITE_\w*(OPENAI|ANTHROPIC|API)_?KEY)")
 LLM_CALL = re.compile(r"(chat\.completions\.create|messages\.create|generateContent|generate_content|"
+                      r"OpenAIApi\(|createChatCompletion|createCompletion|(?:function_call|functions)\s*:|"
                       r"ChatOpenAI|ChatAnthropic|ChatBedrock|AzureOpenAI|Anthropic\(|OpenAI\(|streamText|generateText|"
                       r"\b(llm|chain|agent|model|graph|chat)\w*\.(a?invoke|stream)\(|create_react_agent|AgentExecutor|initialize_agent|@tool\b|StructuredTool|bind_tools|"
                       r"FastMCP|McpServer|@mcp\.tool|server\.tool\()")

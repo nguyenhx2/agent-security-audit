@@ -558,8 +558,13 @@ def main() -> int:
         write(ag / "Makefile", "run:\n\tclaude --dangerously-skip-permissions -p hi\n")
         write(ag / "CLAUDE.md", "Rules\u200b here\n")
         write(ag / "app.py", "from langchain.agents import AgentExecutor\nPythonREPLTool()\n")
+        write(ag / "legacy.js", "const { Configuration, OpenAIApi } = require('openai');\n"
+                               "const openai = new OpenAIApi(new Configuration({ apiKey: process.env.OPENAI_API_KEY }));\n"
+                               "openai.createChatCompletion({ model: 'gpt-4o', messages, functions: [] });\n")
         rc, out, _ = run("agent_config_audit.py", ag, "--out", tmp / "ac.md")
         acj = json.loads((tmp / "ac.json").read_text(encoding="utf-8")) if rc == 0 else {"rows": []}
+        check("agent_config_audit: detects OpenAI Node SDK v3 calls",
+              rc == 0 and any(r["surface"] == "llm-code" and r["file"].startswith("legacy.js:") for r in acj["rows"]), out[-200:])
         risks = " ".join(r for row in acj["rows"] for r in row["risk"])
         acm = (tmp / "ac.md").read_text(encoding="utf-8") if rc == 0 else ""
         for want in ("bypass-or-auto-mode", "broad-allow", "file access outside the repo", "redirect/TLS/proxy env",
