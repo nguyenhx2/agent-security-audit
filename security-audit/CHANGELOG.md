@@ -16,6 +16,28 @@ When standards or scanner pins are re-verified, also update `metadata.standards-
 `scanner-pins-verified`, the table in `reference/standards/index.md`, and `PINS_VERIFIED` in
 `scripts/run_scanners.py` - that is a `z` bump unless a module is added or removed (then `y`).
 
+## [1.15.1] - 2026-10-30
+
+Fixes from real audits: five places where a helper script gave the lanes a wrong or empty starting
+point.
+
+### Fixed
+- A Japanese report that cites the IPA guide (or any Japanese standard) no longer fails validation
+  with "English prose in a ja report". The standards table now shows Japanese standards by their
+  Japanese names in a ja report, and the prose check never counts a canonical standard name.
+- The AI and agent inventory no longer says "No AI components found" for an app on the OpenAI v3
+  SDK (`OpenAIApi`, `createChatCompletion`, `createCompletion`, legacy `function_call`). A direct LLM
+  or agent SDK dependency in `package.json`, `requirements*.txt` or `pyproject.toml` is also listed.
+- A small e-commerce backend (orders, coupons, shipping, a payment gateway) is detected as sector
+  `ecommerce` even when its shop vocabulary sits in one or two files. Card payments and refunds no
+  longer make a repo `finance` on their own; that needs banking, securities or ledger signals.
+- The route map no longer marks an Express route as authenticated because of middleware on a
+  neighbouring route, in a comment or inside a string. Markers come only from the route call's own
+  arguments, so an unauthenticated endpoint is not hidden from the authz lane.
+- `fetch(request, env)` handlers (Cloudflare Workers, Deno, Bun) are no longer reported as "0 routes,
+  0 gaps". Literal routes (a `Map` or object of paths, `pathname ===`, `case "/x":`,
+  `pathname.startsWith`) are listed; a handler whose dispatch cannot be read is a stated gap.
+
 ## [1.15.0] - 2026-10-26
 
 Industry sectors and Japanese standards, a full re-verification of the standards baseline, and

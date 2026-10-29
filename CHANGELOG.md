@@ -7,6 +7,15 @@ what the release contains; the itemised change log of the skill itself lives in
 release body is generated from the skill CHANGELOG by `scripts/release_notes.py`; see
 [`docs/RELEASING.md`](docs/RELEASING.md).
 
+## v1.15.1
+
+A fix release of the `security-audit` skill, both editions. Five helper scripts gave the review
+lanes a wrong or empty starting point on real repositories: a ja report citing the IPA guide failed
+its own validation, apps on the OpenAI v3 SDK showed no AI components, a small shop was classed as
+finance, the route map took an auth marker from a neighbouring Express route, and Cloudflare Worker
+routes were not mapped. Each now has a self-test case (189 per edition). Details in
+[`security-audit/CHANGELOG.md`](security-audit/CHANGELOG.md).
+
 ## v1.15.0
 
 First public release of the repository. It ships the `security-audit` skill at 1.15.0 in two

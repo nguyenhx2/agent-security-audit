@@ -11,7 +11,7 @@
   <a href="LICENSE.md"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue.svg" alt="ライセンス: AGPL-3.0"></a>
   <a href="https://github.com/nguyenhx2/agent-security-audit/actions/workflows/ci.yml"><img src="https://github.com/nguyenhx2/agent-security-audit/actions/workflows/ci.yml/badge.svg" alt="CI ワークフロー"></a>
   <a href="https://github.com/nguyenhx2/agent-security-audit/actions/workflows/codeql.yml"><img src="https://github.com/nguyenhx2/agent-security-audit/actions/workflows/codeql.yml/badge.svg" alt="CI: CodeQL"></a>
-  <a href="#自分で確かめる"><img src="https://img.shields.io/badge/selftest-184%2F184%20per%20edition-brightgreen.svg" alt="セルフテスト: 各エディションで 184 件中 184 件に合格"></a>
+  <a href="#自分で確かめる"><img src="https://img.shields.io/badge/selftest-189%2F189%20per%20edition-brightgreen.svg" alt="セルフテスト: 各エディションで 189 件中 189 件に合格"></a>
   <a href="eval/README.ja.md"><img src="https://img.shields.io/badge/eval-75%2F75-brightgreen.svg" alt="オフライン評価: 75 件中 75 件に合格"></a>
   <a href="#業種"><img src="https://img.shields.io/badge/industry%20sectors-9%20signals%2C%206%20modules-blue.svg" alt="業種: 9 つの業種シグナルを業種モジュール（6 つ）に対応付け"></a>
   <a href="#ライブ脅威情報"><img src="https://img.shields.io/badge/advisory%20feeds-8%20global%20%2B%20Japan-blue.svg" alt="国内外の 8 つのフィード"></a>
@@ -51,14 +51,14 @@
 
 **リリースから**（オフライン、プラグインの仕組みは不要）：
 [最新リリース](https://github.com/nguyenhx2/agent-security-audit/releases/latest)から
-`security-audit-1.15.0.zip` を入手し、スキルのフォルダに展開します。
+`security-audit-1.15.1.zip` を入手し、スキルのフォルダに展開します。
 
 ```bash
-unzip security-audit-1.15.0.zip -d ~/.claude/skills/
+unzip security-audit-1.15.1.zip -d ~/.claude/skills/
 ```
 
 ```powershell
-Expand-Archive security-audit-1.15.0.zip -DestinationPath $HOME\.claude\skills\
+Expand-Archive security-audit-1.15.1.zip -DestinationPath $HOME\.claude\skills\
 ```
 
 **Claude Code のプラグインとして：**
@@ -79,8 +79,8 @@ Expand-Archive security-audit-1.15.0.zip -DestinationPath $HOME\.claude\skills\
 または Podman（ネイティブ版でも動きます。どちらもない場合はコードを読むだけの監査になり、その旨を明記します）。
 Windows、macOS、Linux（WSL を含む）に対応します。
 
-**どちらの zip を選ぶか。** 推奨は英語版（`security-audit-1.15.0.zip`）です。報告書は英語、日本語、またはその両方で
-書けます。`security-audit-ja-1.15.0.zip` は手順書と参照資料が日本語の同じスキルで、スキル自体を日本語で読み、
+**どちらの zip を選ぶか。** 推奨は英語版（`security-audit-1.15.1.zip`）です。報告書は英語、日本語、またはその両方で
+書けます。`security-audit-ja-1.15.1.zip` は手順書と参照資料が日本語の同じスキルで、スキル自体を日本語で読み、
 保守したいチーム向けです。どちらも `security-audit` としてインストールされるため、入れるのはどちらか一方だけです。
 
 <p align="center">
@@ -294,7 +294,7 @@ python benchmark/bench.py fetch                       # ライブのベンチマ
 python benchmark/bench.py run --help                  #   実際に監査する（費用がかかり、CI では実行しない）
 ```
 
-セルフテストはオフラインで約 1 分かかります。各エディション <!--n:selftest_checks-->184<!--/n--> 件で、両方の件数は
+セルフテストはオフラインで約 1 分かかります。各エディション <!--n:selftest_checks-->189<!--/n--> 件で、両方の件数は
 同じです。CI では Windows、macOS、Linux で、Python 3.9 と 3.13 を使って実行します。オフライン評価
 （<!--n:eval_passed-->75<!--/n-->/<!--n:eval_total-->75<!--/n--> 件）には API キーもネットワークも Docker も
 要りません。本物に近いフィクスチャから各業種を検出できること（`Sku` だらけの Azure SDK を EC と誤認しないこと）、

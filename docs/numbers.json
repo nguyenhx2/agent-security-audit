@@ -1,6 +1,6 @@
 {
- "version": "1.15.0",
- "selftest_checks": 184,
+ "version": "1.15.1",
+ "selftest_checks": 189,
  "eval_passed": 75,
  "eval_total": 75,
  "detect_precision_pct": 100,

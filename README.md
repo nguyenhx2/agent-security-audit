@@ -11,7 +11,7 @@
   <a href="LICENSE.md"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue.svg" alt="License: AGPL-3.0"></a>
   <a href="https://github.com/nguyenhx2/agent-security-audit/actions/workflows/ci.yml"><img src="https://github.com/nguyenhx2/agent-security-audit/actions/workflows/ci.yml/badge.svg" alt="CI workflow"></a>
   <a href="https://github.com/nguyenhx2/agent-security-audit/actions/workflows/codeql.yml"><img src="https://github.com/nguyenhx2/agent-security-audit/actions/workflows/codeql.yml/badge.svg" alt="CI: CodeQL"></a>
-  <a href="#proof-you-can-run"><img src="https://img.shields.io/badge/selftest-184%2F184%20per%20edition-brightgreen.svg" alt="Self-test: 184 of 184 checks pass, in each edition"></a>
+  <a href="#proof-you-can-run"><img src="https://img.shields.io/badge/selftest-189%2F189%20per%20edition-brightgreen.svg" alt="Self-test: 189 of 189 checks pass, in each edition"></a>
   <a href="eval/README.md"><img src="https://img.shields.io/badge/eval-75%2F75-brightgreen.svg" alt="Offline eval: 75 of 75 checks pass"></a>
   <a href="#industry-sectors"><img src="https://img.shields.io/badge/industry%20sectors-9%20signals%2C%206%20modules-blue.svg" alt="Industry sectors: 9 sector signals mapped to 6 sector modules"></a>
   <a href="#live-threat-intelligence"><img src="https://img.shields.io/badge/advisory%20feeds-8%20global%20%2B%20Japan-blue.svg" alt="8 advisory feeds, global and Japanese"></a>
@@ -53,16 +53,16 @@ HTML and Excel, in English and Japanese.
 ## Install
 
 **From a release** (offline, no plugin system needed): download
-`security-audit-1.15.0.zip` from the
+`security-audit-1.15.1.zip` from the
 [latest release](https://github.com/nguyenhx2/agent-security-audit/releases/latest) and unzip it
 into your skills folder:
 
 ```bash
-unzip security-audit-1.15.0.zip -d ~/.claude/skills/
+unzip security-audit-1.15.1.zip -d ~/.claude/skills/
 ```
 
 ```powershell
-Expand-Archive security-audit-1.15.0.zip -DestinationPath $HOME\.claude\skills\
+Expand-Archive security-audit-1.15.1.zip -DestinationPath $HOME\.claude\skills\
 ```
 
 **As a Claude Code plugin:**
@@ -83,8 +83,8 @@ Requirements: Claude Code, Python 3.9+ (standard library; `openpyxl` only for Ex
 Podman for the scanners (native installs work too; with neither, the audit runs reading-only and
 states the gap). Windows, macOS and Linux, including WSL.
 
-**Which zip?** The English edition (`security-audit-1.15.0.zip`) is recommended for everyone: it
-writes reports in English, Japanese or both. `security-audit-ja-1.15.0.zip` is the same skill with
+**Which zip?** The English edition (`security-audit-1.15.1.zip`) is recommended for everyone: it
+writes reports in English, Japanese or both. `security-audit-ja-1.15.1.zip` is the same skill with
 Japanese instructions and reference prose, for teams that want to read and maintain the skill
 itself in Japanese. Both install as `security-audit`, so install one or the other, never both.
 
@@ -306,7 +306,7 @@ python benchmark/bench.py fetch                       # live benchmark: clone th
 python benchmark/bench.py run --help                  #   then run real audits (costs money, never in CI)
 ```
 
-The self-test runs offline in about a minute: <!--n:selftest_checks-->184<!--/n--> checks per
+The self-test runs offline in about a minute: <!--n:selftest_checks-->189<!--/n--> checks per
 edition, with the same count in both, on Windows, macOS and Linux under Python 3.9 and 3.13 in CI.
 The offline eval (<!--n:eval_passed-->75<!--/n-->/<!--n:eval_total-->75<!--/n--> checks) needs no
 API key, network or Docker: it proves each industry sector is detected from real-looking fixtures

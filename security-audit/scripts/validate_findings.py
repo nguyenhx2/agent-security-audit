@@ -281,7 +281,7 @@ def main() -> int:
         if has_placeholder(text):
             errs.append(f"{where}: unresolved {{{{placeholder}}}} in body")
         if rlang in PROSE_CHECK:
-            eng = english_prose_lines(text)
+            eng = english_prose_lines(text, keep=tuple(CANON))
             if eng:
                 errs.append(f"{where}: English prose in a {rlang} audit ({len(eng)}+ lines), e.g. {eng[0]!r} - "
                             f"translate (code, paths, IDs, standard names may stay)")
@@ -342,7 +342,7 @@ def main() -> int:
             if has_placeholder(rt):
                 errs.append("report: unresolved {{placeholder}}")
             if rlang in PROSE_CHECK:
-                eng = english_prose_lines(rt, max_hits=8)
+                eng = english_prose_lines(rt, max_hits=8, keep=tuple(CANON))
                 if eng:
                     errs.append(f"report: English prose in a {rlang} report ({len(eng)}+ lines), e.g. {eng[0]!r}")
             sec = find_secrets(rt)

@@ -897,6 +897,52 @@ def main() -> int:
         rc, out, _ = run("route_map.py", rm / "go", "--out", tmp / "rm-out" / "go.md")
         check("route_map: unparsed framework reported as a gap",
               rc == 0 and "not parsed: Go" in (tmp / "rm-out" / "go.md").read_text(encoding="utf-8"))
+        write(rm / "ex2/package.json", '{"dependencies": {"express": "4.18.0"}}')
+        write(rm / "ex2/routes/a.js", "const router = require('express').Router();\n"
+                                      "router.post('/chat', authenticate, async (req, res) => {\n  res.json(1);\n});\n\n"
+                                      "// Link preview for chat messages.\n"
+                                      "router.get('/preview', async (req, res) => {\n  res.send(await fetch(req.query.url));\n});\n"
+                                      "router.get('/x', /* authenticate later */ limit({ msg: 'please authenticate' }), h);\n"
+                                      "module.exports = router;\n")
+        rc, out, _ = run("route_map.py", rm / "ex2", "--out", tmp / "rm-out" / "ex2.md")
+        r2 = {r["path"]: r["auth"] for r in json.loads((tmp / "rm-out" / "ex2.json").read_text(encoding="utf-8"))["routes"]} \
+            if rc == 0 else {}
+        check("route_map Express: markers only from the route's own arguments (not neighbours, comments, strings)",
+              r2.get("/chat") == ["authenticate"] and r2.get("/preview") == [] and r2.get("/x") == [], str(r2))
+        write(rm / "cf/wrangler.toml", 'name = "site"\nmain = "src/index.js"\n')
+        write(rm / "cf/src/index.js", "const ROUTES = new Map([\n  ['/', [HTML, home]],\n  ['/robots.txt', [TEXT, robots]],\n]);\n"
+                                      "export default {\n  async fetch(request, env) {\n"
+                                      "    if (url.pathname === '/admin' && request.method === 'POST') return admin(request);\n"
+                                      "    return ROUTES.get(new URL(request.url).pathname)[1](request);\n  },\n};\n")
+        write(rm / "cf/src/other.ts", "export default {\n  async fetch(request: Request, env: Env) {\n"
+                                      "    return router.handle(request, env);\n  },\n};\n")
+        rc, out, _ = run("route_map.py", rm / "cf", "--out", tmp / "rm-out" / "cf.md")
+        cj = json.loads((tmp / "rm-out" / "cf.json").read_text(encoding="utf-8")) if rc == 0 else {}
+        check("route_map: Workers fetch handler -> Map / pathname routes parsed, opaque handler is a gap",
+              {("ANY", "/robots.txt"), ("POST", "/admin")} <= {(r["method"], r["path"]) for r in cj.get("routes", [])}
+              and any("src/other.ts" in g for g in cj.get("gaps", [])), str(cj.get("routes"))[:300] + str(cj.get("gaps")))
+        # AI の棚卸し：OpenAI v3 SDK の呼び出しと LLM SDK への依存
+        v3 = tmp / "ai-v3"
+        write(v3 / "package.json", '{"dependencies": {"openai": "^3.3.0", "express": "4.18.0"}}')
+        write(v3 / "requirements.txt", "anthropic>=0.30\nrequests==2.32.0\n")
+        write(v3 / "routes/assistant.js", "const { Configuration, OpenAIApi } = require('openai');\n"
+                                          "const openai = new OpenAIApi(new Configuration({}));\n"
+                                          "const c = await openai.createChatCompletion({ model: 'm', messages, functions });\n")
+        rc, out, _ = run("agent_config_audit.py", v3, "--out", tmp / "ac-v3.md")
+        items = {r["item"] for r in json.loads((tmp / "ac-v3.json").read_text(encoding="utf-8"))["rows"]} if rc == 0 else set()
+        check("agent_config_audit: OpenAI v3 SDK calls and LLM SDK dependencies -> llm-code",
+              {"OpenAIApi(", ".createChatCompletion(", "openai", "anthropic"} <= items and "requests" not in items, str(items))
+        # 決済フローのある小規模な独自ショップ：finance ではなく ecommerce
+        shop = tmp / "shop"
+        write(shop / "package.json", '{"dependencies": {"express": "4.18.0", "stripe": "14.0.0"}}')
+        write(shop / "routes/orders.js", "router.post('/checkout', async (req, res) => { const order = await createOrder(req.body); });\n"
+                                         "router.post('/orders/:id/refund', h); // refund\nrouter.post('/coupons/apply', h);\n")
+        write(shop / "db.js", "db.exec('CREATE TABLE orders (id, card_number, shipping_address)'); // refund\n")
+        write(shop / "routes/refunds.js", "// refund payout wallet\n")
+        rc, out, _ = run("detect_stack.py", shop, "--format", "json")
+        shrec = json.loads(out)[0].get("recommendations", {}) if rc == 0 else {}
+        check("detect: small shop with payments -> ecommerce sector, not finance",
+              "ecommerce" in shrec.get("sectors", {}) and "finance" not in shrec.get("sectors", {}), str(shrec.get("sectors")))
 
         # ---------------- lane_pack (redaction, budget, secret files excluded, deterministic) ----------------
         lp = tmp / "lp"
@@ -1074,6 +1120,20 @@ def main() -> int:
                   and "JVN iPedia" in sec and "Ignore previous" not in rt, out[-200:])
             if lg == "ja":
                 check("build_report ja: intel section has no English prose", not english_prose_lines(sec), str(english_prose_lines(sec)))
+        # 日本の基準を引用する ja 報告書：表には日本語名、正規の基準名は「英語の文章」と見なさない
+        ib = tmp / "2026-10-28_0900"
+        write(ib / "work" / "app" / "scanners.json", json.dumps({"mode": "native", "tools": [], "coverage_gaps": [], "git_history": False}))
+        write(ib / "findings" / "ja" / "app" / "find-app-001.md", finding("FIND-APP-001", "P1", lang="ja").replace(
+            "standard: OWASP API Security Top 10\nstandard_version: 2023\nrequirement_id: API1",
+            "standard: IPA How to Secure Your Web Site\nstandard_version: 7th\nrequirement_id: 1.5"))
+        rc, out, _ = run("build_report.py", ib, "--project", "App", "--depth", "quick", "--lang", "ja")
+        rp = next(iter(sorted((ib / "reports" / "md").glob("*.md"))), None) if rc == 0 else None
+        rt = rp.read_text(encoding="utf-8") if rp else ""
+        rc, vout, _ = run("validate_findings.py", ib / "findings" / "ja", "--report", rp or ib)
+        check("build_report ja: Japanese standard name in the standards table, no English-prose error for it",
+              "| IPA 安全なウェブサイトの作り方 | 7th |" in rt and "How to Secure" not in vout
+              and not english_prose_lines("| IPA How to Secure Your Web Site | 7th | 0 | 2 |", keep=("IPA How to Secure Your Web Site",))
+              and english_prose_lines("| IPA How to Secure Your Web Site | 7th | 0 | 2 |"), vout[-300:])
         rc, out, _ = run("validate_findings.py", ia / "findings" / "en")
         check("validate: unaddressed KEV CVE and EOL deploy component -> WARN",
               "intel: CVE-2026-0001 (KEV)" in out and "intel: end-of-life mysql 5.7" in out, out[-400:])

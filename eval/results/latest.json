@@ -1,5 +1,5 @@
 {
- "skill_version": "1.15.0",
+ "skill_version": "1.15.1",
  "summary": {
   "passed": 75,
   "total": 75
@@ -24,12 +24,12 @@
  },
  "selftest": {
   "selftest_en": {
-   "passed": 184,
-   "total": 184
+   "passed": 189,
+   "total": 189
   },
   "selftest_ja": {
-   "passed": 184,
-   "total": 184
+   "passed": 189,
+   "total": 189
   }
  },
  "detection": {
@@ -195,13 +195,13 @@
  "checks": [
   {
    "part": "gates",
-   "name": "selftest en: 184/184 checks passed",
+   "name": "selftest en: 189/189 checks passed",
    "ok": true,
    "detail": ""
   },
   {
    "part": "gates",
-   "name": "selftest ja: 184/184 checks passed",
+   "name": "selftest ja: 189/189 checks passed",
    "ok": true,
    "detail": ""
   },

@@ -75,7 +75,15 @@ LLM_SWITCH = re.compile(r"(allow_dangerous_(code|requests|deserialization)\s*=\s
 LLM_CALL = re.compile(r"(chat\.completions\.create|messages\.create|generateContent|generate_content|"
                       r"ChatOpenAI|ChatAnthropic|ChatBedrock|AzureOpenAI|Anthropic\(|OpenAI\(|streamText|generateText|"
                       r"\b(llm|chain|agent|model|graph|chat)\w*\.(a?invoke|stream)\(|create_react_agent|AgentExecutor|initialize_agent|@tool\b|StructuredTool|bind_tools|"
-                      r"FastMCP|McpServer|@mcp\.tool|server\.tool\()")
+                      r"FastMCP|McpServer|@mcp\.tool|server\.tool\(|"
+                      r"OpenAIApi\(|\.createChatCompletion\(|\.createCompletion\(|function_call\s*:\s*[\"'{])")
+# LLM / エージェント SDK への直接の依存。宣言されていれば、棚卸しが「該当なし」になることはない
+LLM_DEP_NPM = re.compile(r"\"(openai|@anthropic-ai/sdk|langchain|@langchain/[\w.-]+|ai|@ai-sdk/[\w.-]+|"
+                         r"@google/generative-ai|@google/genai|cohere-ai|@mistralai/mistralai|ollama|llamaindex|"
+                         r"@modelcontextprotocol/sdk)\"\s*:")
+LLM_DEP_PY = re.compile(r"^\s*[\"']?(openai|anthropic|langchain[\w-]*|langgraph|llama[-_]index[\w-]*|"
+                        r"google-generativeai|google-genai|cohere|mistralai|ollama|litellm|mcp|crewai|autogen[\w-]*)"
+                        r"\s*(\[[^\]]*\])?\s*([<>=~!;\"',]|$)", re.I | re.M)
 CI_AGENT = re.compile(r"(anthropics/claude-code-action|anthropics/claude-code-base-action|openai/codex-action|"
                       r"coderabbit|copilot-setup-steps|google-github-actions/run-gemini-cli|\bclaude\s+-p\b|"
                       r"\bcodex\s+exec\b|\bgemini\s+-p\b)", re.I)
@@ -381,6 +389,10 @@ def main() -> int:
                 if re.search(r"contents:\s*write|id-token:\s*write|secrets\.", text):
                     risk.append("agent job holds write/secrets")
                 add("ci-agents", rel, CI_AGENT.search(text).group(0), "", risk)
+        if name == "package.json" or re.match(r"requirements[\w.-]*\.txt$|pyproject\.toml$", name):
+            rx = LLM_DEP_NPM if name == "package.json" else LLM_DEP_PY
+            for dep in sorted({m.group(1).lower() for m in rx.finditer(text)}):
+                add("llm-code", rel, dep, "LLM / agent SDK dependency", [])
         for i, line in enumerate(text.splitlines(), 1):
             if len(line) > 3000:
                 continue

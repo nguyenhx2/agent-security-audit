@@ -94,6 +94,24 @@ def stmt(lines, i, limit=25, end=None):
     return " ".join(buf), j
 
 
+def call_args(lines, i, start, limit=25):
+    """Arguments of the call whose `(` opens before `start` on line i, up to its own `)`: strings blanked,
+    comments dropped, so names in literals, comments or the next statement never count."""
+    out, depth = [], 1
+    for j in range(i, min(len(lines), i + limit)):
+        ln = lines[j][start:] if j == i else lines[j]
+        ln = re.sub(r"//.*$", "", STR.sub('""', ln[:400]))
+        out.append(ln)
+        text = re.sub(r"/\*.*?\*/", " ", " ".join(out))
+        for k, c in enumerate(text):
+            depth += c in "([{"
+            depth -= c in ")]}"
+            if depth <= 0:
+                return text[:k]
+        depth = 1
+    return re.sub(r"/\*.*?\*/", " ", " ".join(out))
+
+
 def lit(text, key=None):
     """First string literal after `(` (or after `key=` / `key:` / `'key' =>`)."""
     if key:
@@ -444,8 +462,7 @@ def parse_js(M: Map):
             for m in JS_ROUTE.finditer(ln):
                 if m.group(1) in JS_CLIENTS or "test" in m.group(1).lower():
                     continue
-                t = stmt(ls, i)[0]
-                args = t[t.find(m.group(4)) + len(m.group(4)) + 1:]
+                args = call_args(ls, i, m.end())
                 cut = re.search(r"\basync\b|=>|\bfunction\b", args)
                 pre = args[:cut.start()] if cut else args
                 toks = [x for x in re.findall(r"[A-Za-z_$][\w$.]*", pre) if x not in JS_WORDS]
@@ -476,6 +493,43 @@ def parse_js(M: Map):
         local = [x for l2, p2, m2 in uses.get(r, []) if l2 < line and (not p2 or path.startswith(p2)) for x in m2]
         for pre, pmk, mount in eff(r):
             M.add(fw_of[r], "ANY" if meth == "all" else meth, join(pre, path), r, line, pmk + local + mk, handler, mount)
+
+
+# ---------------------------------------------------------------- fetch handlers (Workers / Deno / Bun)
+FETCH_ENTRY = re.compile(r"(?m)^\s*(async\s+)?fetch\s*\(\s*(request|req)\b[^)]*\)\s*(:[^{]*)?\{|"
+                         r"\bfetch\s*:\s*(async\s*)?\(\s*(request|req)\b|addEventListener\(\s*[\"']fetch[\"']|"
+                         r"\b(Deno|Bun)\.serve\(")
+FETCH_PATH = [  # literal routes only; anything computed stays a gap
+    re.compile(r"^\s*\[\s*([\"'`])(/[^\"'`]*)\1\s*,"),  # new Map([["/path", handler], ...])
+    re.compile(r"^\s*([\"'`])(/[^\"'`]*)\1\s*:"),  # { "/path": handler }
+    re.compile(r"\bpathname\s*===?\s*([\"'`])(/[^\"'`]*)\1"),
+    re.compile(r"([\"'`])(/[^\"'`]*)\1\s*===?\s*[\w.]*pathname\b"),
+    re.compile(r"\bcase\s+([\"'`])(/[^\"'`]*)\1\s*:"),
+    re.compile(r"\bpathname\.startsWith\(\s*([\"'`])(/[^\"'`]*)\1"),
+]
+
+
+def parse_fetch(M: Map):
+    for r, ls in M.of(".js", ".mjs", ".cjs", ".ts"):
+        text = "\n".join(ls)
+        if not FETCH_ENTRY.search(text) or re.search(r"new Hono\(", text):
+            continue
+        fw = "Fetch handler (Workers / Deno / Bun)"
+        n = 0
+        for i, ln in enumerate(ls):
+            for k, rx in enumerate(FETCH_PATH):
+                m = rx.search(ln)
+                if m:
+                    meth = re.search(r"\bmethod\s*===?\s*[\"'](GET|POST|PUT|DELETE|PATCH)[\"']", ln)
+                    path = m.group(2) + ("*" if k == len(FETCH_PATH) - 1 else "")
+                    M.add(fw, meth.group(1) if meth else "ANY", path, r, i + 1, [])
+                    n += 1
+                    break
+        if not n:
+            M.gaps.append(f"{fw}: entry point in `{r}` but 0 literal routes parsed - map its dispatch by hand")
+        else:
+            M.notes.append(f"`{r}`: fetch handler; routes are literal paths only (auth is checked inside the "
+                           f"handler, so no marker is taken) - read the dispatch for computed routes")
 
 
 # ---------------------------------------------------------------- NestJS / Spring (annotations)
@@ -795,7 +849,7 @@ def main() -> int:
         except OSError:
             continue
     M = Map(root, files)
-    for fn in (parse_python, parse_django, parse_js, parse_annotations, parse_laravel, parse_rails):
+    for fn in (parse_python, parse_django, parse_js, parse_fetch, parse_annotations, parse_laravel, parse_rails):
         try:
             fn(M)
         except Exception as e:  # one parser's bug must not lose the others' routes

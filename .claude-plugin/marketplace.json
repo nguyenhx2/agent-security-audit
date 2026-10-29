@@ -9,7 +9,7 @@
       "name": "security-audit",
       "source": "./security-audit",
       "description": "Read-only security audit of one or more repositories: evidence-anchored findings, Markdown, HTML and Excel reports.",
-      "version": "1.15.0"
+      "version": "1.15.1"
     }
   ]
 }

@@ -281,7 +281,7 @@ def main() -> int:
         if has_placeholder(text):
             errs.append(f"{where}: 本文に未解決の {{{{placeholder}}}} がある")
         if rlang in PROSE_CHECK:
-            eng = english_prose_lines(text)
+            eng = english_prose_lines(text, keep=tuple(CANON))
             if eng:
                 errs.append(f"{where}: {rlang} の監査に英語の文章がある（{len(eng)} 行以上）。例：{eng[0]!r} - "
                             f"翻訳する（コード、パス、ID、基準名はそのままでよい）")
@@ -342,7 +342,7 @@ def main() -> int:
             if has_placeholder(rt):
                 errs.append("report: 未解決の {{placeholder}} がある")
             if rlang in PROSE_CHECK:
-                eng = english_prose_lines(rt, max_hits=8)
+                eng = english_prose_lines(rt, max_hits=8, keep=tuple(CANON))
                 if eng:
                     errs.append(f"report: {rlang} の報告書に英語の文章がある（{len(eng)} 行以上）。例：{eng[0]!r}")
             sec = find_secrets(rt)

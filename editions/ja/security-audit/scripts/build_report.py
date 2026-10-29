@@ -35,7 +35,8 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from i18n import LANGS, LOCATION_RX, T as I18N, ai_risk, ai_surface, gap_text, intel_status, label, ui  # noqa: E402
+from i18n import (LANGS, LOCATION_RX, T as I18N, ai_risk, ai_surface, gap_text, intel_status, label,  # noqa: E402
+                  std_name, ui)
 from layout import findings_dir as _fdir, report_out, work_dir  # noqa: E402
 import safegit  # noqa: E402
 
@@ -507,7 +508,7 @@ def main() -> int:
                 by_std[(st, v)][1] += 1
     for (std, v), (n1, n2) in sorted(by_std.items()):
         if std != "CWE":
-            L.append(f"  | {std} | {v} | {n1} | {n2} |")
+            L.append(f"  | {std_name(std, lang)} | {v} | {n1} | {n2} |")
     L.append("")
     imgs = sorted({f"`{t.get('image', t['tool']).split('@')[0]}` "
                    f"(`{(t.get('digest') or t.get('version') or '?').split('@')[-1][:19]}`)"

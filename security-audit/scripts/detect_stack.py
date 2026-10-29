@@ -170,6 +170,9 @@ KEYWORD_SIGNALS = {
     "sector_ecommerce": re.compile(r"(?<![A-Za-z0-9])(cart_?items?|order_?items?|shipping_?address|product_?variants?|"
                                    r"coupon_?codes?|add_?to_?cart|eccube|ec_?cube|woocommerce|magento|"
                                    r"three_?d_?secure|3ds2|tds2|emv_?3ds)(?![A-Za-z0-9])", re.I),
+    # weak shop vocabulary: counts only next to a payment flow (see sectors in recommend)
+    "shop": re.compile(r"(?<![A-Za-z0-9])(carts?|orders?|order_?(id|items?|status)|coupons?|shipping(_?\w+)?|"
+                       r"line_?items?|fulfil+ments?)(?![A-Za-z0-9])", re.I),
     "sector_crypto": re.compile(r"(?<![A-Za-z0-9])(hot_?wallet|cold_?wallet|xpub|xprv|mnemonic|seed_?phrase|multisig|"
                                 r"deposit_?address|withdrawal_?address|txid|block_?height)(?![A-Za-z0-9])", re.I),
     "sector_education": re.compile(r"(?<![A-Za-z0-9])(students?|student_?id|guardians?|gradebook|enrollments?|classrooms?|"
@@ -560,7 +563,12 @@ def recommend(p: dict) -> dict:
             sectors[name] = {"dependencies": deps_, "files_with_keywords": hits}
     if health or sec("sector:medical"):
         sectors["medical"] = {"dependencies": sorted(sec("sector:medical") or []), "files_with_keywords": kh.get("health", 0)}
-    if financial or money or sec("sector:finance"):
+    # a small custom shop keeps its vocabulary in 1-2 files: with a payment flow that is enough
+    if "ecommerce" not in sectors and payments and (kh.get("sector_ecommerce", 0) >= 1 or kh.get("shop", 0) >= 2):
+        sectors["ecommerce"] = {"dependencies": [], "files_with_keywords": kh.get("sector_ecommerce", 0) + kh.get("shop", 0)}
+    # finance: banking, securities or ledger signals; card payments and refunds alone are ecommerce / PCI DSS
+    ledger = kh.get("money_movement", 0) >= 3 and "ecommerce" not in sectors
+    if financial or ledger or sec("sector:finance"):
         sectors["finance"] = {"dependencies": sorted(sec("sector:finance") or []),
                               "files_with_keywords": kh.get("financial", 0) + kh.get("money_movement", 0)}
     if "medical" in sectors and "privacy" not in modules:

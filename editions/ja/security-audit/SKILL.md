@@ -13,8 +13,8 @@ allowed-tools: >-
   Bash(docker info *) Bash(docker image inspect *) Bash(podman info *) Bash(podman image inspect *)
 compatibility: "Claude Code 専用（when_to_use、argument-hint、effort / omitClaudeMd 付きの名前付きサブエージェントを使用 - 旧バージョンは後の 2 つを無視する）。Windows、macOS、Linux（WSL を含む）。Python 3.9+（標準ライブラリ。openpyxl は Excel にのみ必要）。コンテナエンジンは任意（Docker または Podman）- ない場合はネイティブのスキャナ、またはコード読解のみのフォールバック。"
 metadata:
-  version: "1.15.0"
-  updated: "2026-10-26"
+  version: "1.15.1"
+  updated: "2026-10-30"
   standards-verified: "2026-10-26"
   scanner-pins-verified: "2026-10-26"
   changelog: CHANGELOG.md
@@ -22,7 +22,7 @@ metadata:
 
 # セキュリティ監査
 
-**Skill v1.15.0 · 基準の検証日 2026-10-26 · スキャナのピン検証日 2026-10-26**（変更履歴：
+**Skill v1.15.1 · 基準の検証日 2026-10-26 · スキャナのピン検証日 2026-10-26**（変更履歴：
 `CHANGELOG.md`）。報告書のバージョン欄と Phase 0 の鮮度チェックにはこれらの値を使用する。
 
 **プラットフォーム（Phase 0 の最初の手順）：** Windows では `py -3 "${CLAUDE_SKILL_DIR}/scripts/env_check.py"`、

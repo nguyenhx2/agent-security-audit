@@ -279,20 +279,46 @@ _KEEP = re.compile(
 _WORDS = re.compile(r"(?:\b[A-Za-z][A-Za-z'’]+\b[ ,;:()/-]*){7,}")
 
 
-def english_prose_lines(text: str, max_hits: int = 5) -> list[str]:
-    """Lines (outside code, IDs, paths, standard names) that contain >= 7 consecutive English words."""
+def english_prose_lines(text: str, max_hits: int = 5, keep: tuple = ()) -> list[str]:
+    """Lines (outside code, IDs, paths, standard names) that contain >= 7 consecutive English words.
+    `keep`: extra names that may stay in English (the canonical standard names)."""
     hits = []
     body = re.sub(r"^---\s*\n.*?\n---\s*\n", "", text or "", flags=re.S)
+    names = sorted(keep, key=len, reverse=True)
     for line in _CODE.sub(" ", body).splitlines():
         if line.lstrip().startswith(("|---", "<!--")):
             continue
-        stripped = _KEEP.sub(" ", line)
+        stripped = line
+        for n in names:
+            stripped = stripped.replace(n, " ")
+        stripped = _KEEP.sub(" ", stripped)
         m = _WORDS.search(stripped)
         if m:
             hits.append(line.strip()[:100])
             if len(hits) >= max_hits:
                 break
     return hits
+
+
+# ---- display names of canonical standards issued in Japan (standards table of a ja report)
+STD_NAME = {"ja": {
+    "IPA How to Secure Your Web Site": "IPA 安全なウェブサイトの作り方",
+    "MHLW Medical Information Security Guidelines": "厚生労働省 医療情報システムの安全管理に関するガイドライン",
+    "MIC/METI Medical Service Provider Guidelines":
+        "総務省・経済産業省 医療情報を取り扱う情報システム・サービスの提供事業者における安全管理ガイドライン",
+    "FISC Security Guidelines": "FISC 金融機関等コンピュータシステムの安全対策基準",
+    "Japan APPI": "個人情報保護法", "Japan My Number Act": "番号法",
+    "Japan Credit Card Security Guidelines": "クレジットカード・セキュリティガイドライン",
+    "FSA Cybersecurity Guidelines": "金融庁 金融分野におけるサイバーセキュリティに関するガイドライン",
+    "Japan Government Unified Standards": "政府機関等のサイバーセキュリティ対策のための統一基準",
+    "MEXT Education Information Security Guidelines": "文部科学省 教育情報セキュリティポリシーに関するガイドライン",
+    "Japan Telecommunications Business Act": "電気通信事業法",
+    "Japan Active Cyber Defense Act": "サイバー対処能力強化法",
+}}
+
+
+def std_name(std: str, lang: str) -> str:
+    return STD_NAME.get(lang, {}).get(std, std)
 
 
 # ---- AI and agent inventory (agent_config_audit.py) surface names and risk labels
