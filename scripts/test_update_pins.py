@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Offline tests for scripts/update_pins.py: no network, the real repo is never written.
 
-Each test copies the files update_pins.py manages (both editions + both READMEs) into a temporary
-root and drives the script with --offline-fixture scripts/fixtures/update_pins.json and
+Each test copies a frozen snapshot of the files update_pins.py manages (both editions + both READMEs,
+scripts/fixtures/update_pins_tree/*.fixture) into a temporary root and drives the script with --offline-fixture scripts/fixtures/update_pins.json and
 --today 2026-10-30, so the cooldown cutoff is 2026-10-23. Covered: highest stable tag wins, rc /
 floating / arch-suffixed / other-style tags are ignored, a too-new release (by registry or GitHub
 date) waits, never a downgrade, a failed lookup exits 2, a non-index tag is refused, --write moves
@@ -31,6 +31,9 @@ HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parent
 SCRIPT = HERE / "update_pins.py"
 FIXTURE = HERE / "fixtures" / "update_pins.json"
+# a frozen copy of the managed files with the pins the fixture was written against, so the tests
+# keep passing after the real pins move (refresh both together, never one alone)
+TREE = HERE / "fixtures" / "update_pins_tree"
 EN, JA = "security-audit", "editions/ja/security-audit"
 COPY = [f"{ed}/{rel}" for ed in (EN, JA) for rel in (
     "SKILL.md", "scripts/run_scanners.py", "scripts/env_check.py",
@@ -55,7 +58,7 @@ class TempRoot(unittest.TestCase):
         self.root = pathlib.Path(self._tmp.name)
         for rel in COPY:
             (self.root / rel).parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(ROOT / rel, self.root / rel)
+            shutil.copyfile(TREE / (rel + ".fixture"), self.root / rel)
 
     def tearDown(self):
         self._tmp.cleanup()
