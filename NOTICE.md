@@ -27,6 +27,11 @@ AGPL-3.0-only.
   AGPL-3.0-only) provided the release tooling patterns and the skill linter vendored at
   `eval/vendor/skill-check.py`.
 
+## Contributors
+
+- **@mikemikimike** (https://github.com/mikemikimike): OpenAI v3 SDK detection patterns for the AI
+  and agent inventory (pull request #6, in 1.15.1).
+
 ## Public advisory feeds
 
 `scripts/threat_intel.py` reads public feeds that need no account. It sends only product names and

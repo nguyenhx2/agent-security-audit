@@ -28,6 +28,7 @@
 - OpenAI v3 SDK（`OpenAIApi`、`createChatCompletion`、`createCompletion`、旧来の `function_call`）を使う
   アプリについて、AI・エージェントの構成一覧が「AI コンポーネントは見つからなかった」と示すことはなくなった。
   `package.json`、`requirements*.txt`、`pyproject.toml` にある LLM / エージェント SDK への直接の依存も一覧に載る。
+  パターンを提案してくれた @mikemikimike さんに感謝する（プルリクエスト #6）。
 - 小規模な EC のバックエンド（注文、クーポン、配送、決済ゲートウェイ）は、ショップの用語が 1-2 ファイルに
   しかなくても業種 `ecommerce` として検出する。カード決済と返金だけでリポジトリを `finance` と判定することは
   なくなった。`finance` には銀行、証券、元帳のシグナルが必要。

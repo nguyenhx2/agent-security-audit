@@ -28,6 +28,7 @@ point.
 - The AI and agent inventory no longer says "No AI components found" for an app on the OpenAI v3
   SDK (`OpenAIApi`, `createChatCompletion`, `createCompletion`, legacy `function_call`). A direct LLM
   or agent SDK dependency in `package.json`, `requirements*.txt` or `pyproject.toml` is also listed.
+  Thanks to @mikemikimike for the patterns (pull request #6).
 - A small e-commerce backend (orders, coupons, shipping, a payment gateway) is detected as sector
   `ecommerce` even when its shop vocabulary sits in one or two files. Card payments and refunds no
   longer make a repo `finance` on their own; that needs banking, securities or ledger signals.

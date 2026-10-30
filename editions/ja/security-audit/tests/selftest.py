@@ -927,11 +927,15 @@ def main() -> int:
         write(v3 / "requirements.txt", "anthropic>=0.30\nrequests==2.32.0\n")
         write(v3 / "routes/assistant.js", "const { Configuration, OpenAIApi } = require('openai');\n"
                                           "const openai = new OpenAIApi(new Configuration({}));\n"
-                                          "const c = await openai.createChatCompletion({ model: 'm', messages, functions });\n")
+                                          "const c = await openai.createChatCompletion({ model: 'm', messages, functions });\n"
+                                          "const d = await openai.createCompletion ({ prompt });\n")
+        write(v3 / "serverless.yml", "functions:\n  api:\n    handler: handler.main\n")
         rc, out, _ = run("agent_config_audit.py", v3, "--out", tmp / "ac-v3.md")
-        items = {r["item"] for r in json.loads((tmp / "ac-v3.json").read_text(encoding="utf-8"))["rows"]} if rc == 0 else set()
-        check("agent_config_audit: OpenAI v3 SDK calls and LLM SDK dependencies -> llm-code",
-              {"OpenAIApi(", ".createChatCompletion(", "openai", "anthropic"} <= items and "requests" not in items, str(items))
+        v3rows = json.loads((tmp / "ac-v3.json").read_text(encoding="utf-8"))["rows"] if rc == 0 else []
+        items = {r["item"] for r in v3rows}
+        check("agent_config_audit: OpenAI v3 SDK calls and LLM SDK dependencies -> llm-code (not a bare `functions:` key)",
+              {"OpenAIApi(", ".createChatCompletion(", ".createCompletion (", "openai", "anthropic"} <= items
+              and "requests" not in items and not any(r["file"].startswith("serverless.yml") for r in v3rows), str(items))
         # 決済フローのある小規模な独自ショップ：finance ではなく ecommerce
         shop = tmp / "shop"
         write(shop / "package.json", '{"dependencies": {"express": "4.18.0", "stripe": "14.0.0"}}')

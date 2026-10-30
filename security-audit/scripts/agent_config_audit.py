@@ -75,7 +75,7 @@ LLM_CALL = re.compile(r"(chat\.completions\.create|messages\.create|generateCont
                       r"ChatOpenAI|ChatAnthropic|ChatBedrock|AzureOpenAI|Anthropic\(|OpenAI\(|streamText|generateText|"
                       r"\b(llm|chain|agent|model|graph|chat)\w*\.(a?invoke|stream)\(|create_react_agent|AgentExecutor|initialize_agent|@tool\b|StructuredTool|bind_tools|"
                       r"FastMCP|McpServer|@mcp\.tool|server\.tool\(|"
-                      r"OpenAIApi\(|\.createChatCompletion\(|\.createCompletion\(|function_call\s*:\s*[\"'{])")
+                      r"OpenAIApi\s*\(|\.createChatCompletion\s*\(|\.createCompletion\s*\(|function_call\s*:\s*[\"'{])")
 # direct LLM / agent SDK dependencies, so the inventory never says "none" when one is declared
 LLM_DEP_NPM = re.compile(r"\"(openai|@anthropic-ai/sdk|langchain|@langchain/[\w.-]+|ai|@ai-sdk/[\w.-]+|"
                          r"@google/generative-ai|@google/genai|cohere-ai|@mistralai/mistralai|ollama|llamaindex|"
