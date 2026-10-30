@@ -16,13 +16,13 @@ metadata:
   version: "1.15.1"
   updated: "2026-10-30"
   standards-verified: "2026-10-26"
-  scanner-pins-verified: "2026-10-26"
+  scanner-pins-verified: "2026-10-30"
   changelog: CHANGELOG.md
 ---
 
 # セキュリティ監査
 
-**Skill v1.15.1 · 基準の検証日 2026-10-26 · スキャナのピン検証日 2026-10-26**（変更履歴：
+**Skill v1.15.1 · 基準の検証日 2026-10-26 · スキャナのピン検証日 2026-10-30**（変更履歴：
 `CHANGELOG.md`）。報告書のバージョン欄と Phase 0 の鮮度チェックにはこれらの値を使用する。
 
 **プラットフォーム（Phase 0 の最初の手順）：** Windows では `py -3 "${CLAUDE_SKILL_DIR}/scripts/env_check.py"`、

@@ -5,7 +5,7 @@ regression-checkable; they cannot see design-level defects (`reference/method/de
 
 ## Contents
 - Run it: `scripts/run_scanners.py`
-- Tool matrix (pins verified 2026-10-26)
+- Tool matrix (pins verified 2026-10-30)
 - Mode resolution and fallbacks
 - Rules the runner enforces (and why)
 - Reading the output: `scripts/normalize_findings.py`
@@ -30,10 +30,10 @@ finding's rule id is still emitted.
 | Tool | Image (pinned) | Role | Run when |
 |------|----------------|------|----------|
 | gitleaks | `ghcr.io/gitleaks/gitleaks:v8.30.1` | Secrets: `git` mode (full history, `--log-opts=--all`) + `dir` mode (working tree incl. untracked) | always |
-| semgrep | `semgrep/semgrep:1.181.0` | SAST, `--config p/default --metrics off` (no login, no telemetry) | any supported language |
+| semgrep | `semgrep/semgrep:1.182.1` | SAST, `--config p/default --metrics off` (no login, no telemetry) | any supported language |
 | trivy | `aquasec/trivy:0.76.1` | Dependency CVEs, IaC/Dockerfile misconfig (license scan off - enable only for a license policy) | lockfiles or containers |
 | osv-scanner | `ghcr.io/google/osv-scanner:v2.7.0` | Lockfile-precise CVEs + malicious-package (`MAL-*`) advisories | lockfiles |
-| checkov | `bridgecrew/checkov:3.3.29` | IaC: Terraform, CFN, K8s, Helm, Dockerfile, GH Actions | IaC or containers |
+| checkov | `bridgecrew/checkov:3.3.30` | IaC: Terraform, CFN, K8s, Helm, Dockerfile, GH Actions | IaC or containers |
 | hadolint | `hadolint/hadolint:v2.15.1` | Dockerfile lint + ShellCheck | Dockerfiles |
 | zizmor | `ghcr.io/zizmorcore/zizmor:1.31.1` | GitHub Actions security (offline audits) | `.github/workflows` |
 | mobsfscan | `opensecurity/mobsfscan:1.0.1` | Android/iOS source SAST | mobile |
