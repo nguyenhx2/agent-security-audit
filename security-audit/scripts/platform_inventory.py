@@ -200,7 +200,7 @@ def image_ref(ref: str):
     if ":" in path.rsplit("/", 1)[-1]:
         path, tag = path.rsplit(":", 1)
     path = re.sub(r"^library/", "", path.lower())
-    if reg.startswith("mcr.microsoft.com") and path.startswith("dotnet/"):
+    if reg.split(":", 1)[0] == "mcr.microsoft.com" and path.startswith("dotnet/"):  # exact host, not a prefix
         path = "/".join(path.split("/")[:2])
     if reg == "public.ecr.aws":
         path = re.sub(r"^docker/library/", "", path)

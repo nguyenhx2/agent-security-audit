@@ -316,7 +316,7 @@ def main() -> int:
         if posix_locked:
             os.chmod(locked, 0o500)
         else:
-            os.chmod(locked / "x.sarif", 0o444)
+            os.chmod(locked / "x.sarif", 0o400)
         rc, out, err = run("prune_work.py", nl)
         if posix_locked:
             os.chmod(locked, 0o700)
@@ -944,6 +944,18 @@ def main() -> int:
         check("route_map: Workers fetch handler -> Map / pathname routes parsed, opaque handler is a gap",
               {("ANY", "/robots.txt"), ("POST", "/admin")} <= {(r["method"], r["path"]) for r in cj.get("routes", [])}
               and any("src/other.ts" in g for g in cj.get("gaps", [])), str(cj.get("routes"))[:300] + str(cj.get("gaps")))
+        # ReDoS: a hostile line `"\a\a\a...` (400 chars, the per-line cap) must not hang the string-literal regex
+        write(tmp / "redos.txt", '"' + "\\a" * 200 + "\n" + 'f("a\\"b", \'c\') + q("x\\")\n')
+        try:
+            r = subprocess.run([PY, "-B", "-c", "import sys, json; sys.path.insert(0, sys.argv[1]); import route_map; "
+                                "print(json.dumps([route_map.STR.sub('', ln) for ln in "
+                                "open(sys.argv[2], encoding='utf-8').read().splitlines()]))", str(S), str(tmp / "redos.txt")],
+                               capture_output=True, text=True, timeout=30)
+            got = json.loads(r.stdout) if r.returncode == 0 else r.stderr[-300:]
+        except subprocess.TimeoutExpired:
+            got = "timeout"
+        check("route_map: string-literal regex stays linear on a hostile escape run (no ReDoS)",
+              got == ['"' + "\\a" * 200, "f(, ) + q()"], str(got)[:300])
         # AI inventory: OpenAI v3 SDK calls and LLM SDK dependencies
         v3 = tmp / "ai-v3"
         write(v3 / "package.json", '{"dependencies": {"openai": "^3.3.0", "express": "4.18.0"}}')
@@ -1066,6 +1078,11 @@ def main() -> int:
         pmd = (pw / "plat" / "platform.md").read_text(encoding="utf-8") if rc == 0 else ""
         check("platform_inventory: no secret value in output", FAKE_SECRET not in pmd and FAKE_SECRET not in
               json.dumps(pj))
+        import platform_inventory as _pi  # noqa: E402
+        check("platform_inventory: mcr.microsoft.com matched as the exact registry host, not a prefix",
+              _pi.image_ref("mcr.microsoft.com/dotnet/aspnet/x:8.0")[3] == "dotnet/aspnet"
+              and _pi.image_ref("mcr.microsoft.com:443/dotnet/aspnet/x:8.0")[3] == "dotnet/aspnet"
+              and _pi.image_ref("mcr.microsoft.com.evil.example/dotnet/aspnet/x:8.0")[3] == "dotnet/aspnet/x")
         fx = tmp / "feeds"
         bidi = "‮​"
         write(fx / "kev.json", json.dumps({"vulnerabilities": [

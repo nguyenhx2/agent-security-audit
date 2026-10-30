@@ -24,12 +24,12 @@
  },
  "selftest": {
   "selftest_en": {
-   "passed": 194,
-   "total": 194
+   "passed": 196,
+   "total": 196
   },
   "selftest_ja": {
-   "passed": 194,
-   "total": 194
+   "passed": 196,
+   "total": 196
   }
  },
  "detection": {
@@ -195,13 +195,13 @@
  "checks": [
   {
    "part": "gates",
-   "name": "selftest en: 194/194 checks passed",
+   "name": "selftest en: 196/196 checks passed",
    "ok": true,
    "detail": ""
   },
   {
    "part": "gates",
-   "name": "selftest ja: 194/194 checks passed",
+   "name": "selftest ja: 196/196 checks passed",
    "ok": true,
    "detail": ""
   },

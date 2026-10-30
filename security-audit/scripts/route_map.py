@@ -45,7 +45,9 @@ NOT_AUTH = re.compile(r"(?i)(?:db|database|sql|async|orm)_?session|get_session\b
                       r"accesslog|tokeniz|csrf_?token\b|security_?headers")
 NEG_RX = re.compile(r"(?i)\b(AllowAny|permitAll|Public|SkipAuth|AllowAnonymous|skip_before_action|withoutMiddleware|"
                     r"csrf_exempt|NoAuth|skip_?auth)\b|permission_classes=\[\]")
-STR = re.compile(r"([\"'`])(?:\\.|(?!\1).)*\1")
+# string literal; a backslash is only ever an escape (no overlapping branches, so no exponential backtracking
+# on hostile lines such as `"\a\a\a...`); `\\?` keeps the old match for an unterminated `"abc\"`
+STR = re.compile(r"([\"'`])(?:\\.|(?!\1)[^\\\n])*\\?\1")
 HTTP = ("get", "post", "put", "delete", "patch", "head", "options")
 SRC_EXT = {".py", ".js", ".mjs", ".cjs", ".ts", ".jsx", ".tsx", ".java", ".kt", ".php", ".rb"}
 
