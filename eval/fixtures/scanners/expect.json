@@ -1,0 +1,75 @@
+{
+  "_about": "Planted-defect expectations for scripts/smoke_scanners.py. Per tool: the exit codes that mean 'ran normally' and the checks that must ALL pass. A check passes when at least one SARIF result in `output` (default: every SARIF output of the tool) has a rule id or rule text containing one of `any_of` (case-insensitive substring) and, when `path_contains` is set, a location whose path contains it. Edit `any_of` deliberately when a scanner renames a rule; never widen it to something the fixture did not plant.",
+  "history_only": ["legacy/deploy.env"],
+  "tools": {
+    "gitleaks": {
+      "planted": "fake GitHub token in config/settings.ini (working tree) and in legacy/deploy.env (deleted, history only)",
+      "ok_exit_codes": [0],
+      "checks": [
+        {"output": "gitleaks-git.sarif", "any_of": ["github-pat", "generic-api-key"], "path_contains": "legacy/deploy.env"},
+        {"output": "gitleaks-dir.sarif", "any_of": ["github-pat", "generic-api-key"], "path_contains": "config/settings.ini"}
+      ]
+    },
+    "semgrep": {
+      "planted": "Flask command injection, os.system, yaml.load, eval, md5, debug=True in app/views.py",
+      "ok_exit_codes": [0, 1],
+      "checks": [
+        {"output": "semgrep.sarif", "path_contains": "app/views.py", "any_of": [
+          "subprocess-shell-true", "dangerous-subprocess-use", "subprocess-injection", "os-system-injection",
+          "dangerous-system-call", "avoid-pyyaml-load", "eval-injection", "eval-detected",
+          "insecure-hash-algorithm-md5", "debug-enabled", "avoid_app_run_with_bad_host"]}
+      ]
+    },
+    "trivy": {
+      "planted": "lodash 4.17.4 (web/package-lock.json), requests 2.19.1 (requirements.txt); Dockerfile FROM :latest + USER root; open SSH security group",
+      "ok_exit_codes": [0],
+      "checks": [
+        {"output": "trivy.sarif", "any_of": [
+          "CVE-2021-23337", "CVE-2020-8203", "CVE-2019-10744", "CVE-2018-16487", "CVE-2018-3721",
+          "CVE-2018-18074", "CVE-2023-32681", "CVE-2024-35195"]},
+        {"output": "trivy.sarif", "any_of": [
+          "DS001", "DS-0001", "DS002", "DS-0002", "AWS-0107", "AWS0107",
+          "Specify a tag in the 'FROM' statement", "Image user should not be 'root'"]}
+      ]
+    },
+    "osv-scanner": {
+      "planted": "lodash 4.17.4 (web/package-lock.json), requests 2.19.1 (requirements.txt)",
+      "ok_exit_codes": [0, 1],
+      "checks": [
+        {"output": "osv-scanner.sarif", "any_of": [
+          "GHSA-35jh-r3h4-6jhm", "GHSA-p6mc-m468-83gw", "GHSA-jf85-cpcp-j695", "GHSA-4xc9-xhrj-v574",
+          "GHSA-fvqr-27wr-82fm", "GHSA-x84v-xcm2-53pg", "GHSA-j8r2-6x86-q33q",
+          "CVE-2021-23337", "CVE-2020-8203", "CVE-2019-10744", "CVE-2018-18074", "CVE-2023-32681"]}
+      ]
+    },
+    "checkov": {
+      "planted": "security group with SSH from 0.0.0.0/0 and a public-read S3 bucket in infra/main.tf",
+      "ok_exit_codes": [0],
+      "checks": [
+        {"output": "checkov/results_sarif.sarif", "path_contains": "main.tf", "any_of": ["CKV_AWS_24", "CKV_AWS_20"]}
+      ]
+    },
+    "hadolint": {
+      "planted": "FROM ubuntu:latest, unpinned apt-get install, last USER root in Dockerfile",
+      "ok_exit_codes": [0],
+      "checks": [
+        {"output": "hadolint.sarif", "any_of": ["DL3007", "DL3002", "DL3008", "DL3009", "DL3015"]}
+      ]
+    },
+    "zizmor": {
+      "planted": "pull_request_target + checkout of the PR head, PR title expanded in run: in .github/workflows/pr-target.yml",
+      "ok_exit_codes": [0, 10, 11, 12, 13, 14],
+      "checks": [
+        {"output": "zizmor.sarif", "any_of": ["dangerous-triggers", "template-injection"]}
+      ]
+    },
+    "mobsfscan": {
+      "planted": "Log.d of a password, java.util.Random, WebView SSL error ignored, MD5 in MainActivity.java",
+      "ok_exit_codes": [0, 1],
+      "checks": [
+        {"output": "mobsfscan.sarif", "any_of": [
+          "android_logging", "android_insecure_random", "android_webview_ignore_ssl", "android_md5"]}
+      ]
+    }
+  }
+}

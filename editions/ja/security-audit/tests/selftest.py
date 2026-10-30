@@ -216,6 +216,29 @@ def main() -> int:
         check("scanners: offline osv is a stated gap, not clean", "needs network" in out)
         rc, out, _ = run("run_scanners.py", "--list")
         check("scanners: pins carry digests", rc == 0 and out.count("@sha256:") >= 7)
+        sys.path.insert(0, str(S))
+        import run_scanners as _rsu
+        pk = _rsu.pick_update
+        check("scanners: update check picks the newest stable tag (rc, beta, arch, latest and other-style tags ignored)",
+              pk("0.76.1", ["0.76.1", "0.77.0-rc1", "0.77.0", "0.76.2", "v0.99.0", "latest", "0.78.0-arm64",
+                            "0.78.0-beta.1", "edge"]) == ("0.77.0", "newer available"))
+        check("scanners: update check keeps the v prefix and never reports an older tag as newer",
+              pk("v8.30.1", ["v8.30.1", "v8.29.0", "8.31.0", "v8.31.0-rc.1"]) == ("v8.30.1", "current")
+              and pk("v2.7.0", ["v2.6.9", "v2.10.0"]) == ("v2.10.0", "newer available")
+              and pk("0.77.0", ["0.76.1", "0.77.0"]) == ("0.77.0", "current"))
+        check("scanners: update check marks an empty or incomplete tag list as lookup failed, never current",
+              pk("1.181.0", ["1.99.0", "1.180.9"])[1] == "lookup failed" and pk("1.0.1", [])[1] == "lookup failed"
+              and pk("1.0.1", None)[1] == "lookup failed" and pk("1.0.1", [None, 7, "1.0.1\n"])[1] == "lookup failed")
+        check("scanners: image refs split into registry / repository / tag",
+              _rsu.split_image(_rsu.IMAGES["gitleaks"])[:2] == ("ghcr.io", "gitleaks/gitleaks")
+              and _rsu.split_image("semgrep/semgrep:1.2.3@sha256:ab") == ("docker.io", "semgrep/semgrep", "1.2.3")
+              and _rsu.split_image("alpine:3.20.0")[1] == "library/alpine")
+        rc, out, _ = run("run_scanners.py", "--check-updates", "--offline", "--json", tmp / "updates.json")
+        upd = json.loads((tmp / "updates.json").read_text(encoding="utf-8")) if (tmp / "updates.json").is_file() else {}
+        check("scanners: --check-updates --offline exits 0, makes no lookups, says so and shows how to pin",
+              rc == 0 and "--offline" in out and "--pin tool=image:tag@sha256:" in out and upd.get("offline") is True
+              and len(upd.get("tools", [])) == len(_rsu.IMAGES)
+              and all(r["status"] == _rsu.NOT_CHECKED for r in upd["tools"]), out[-300:])
 
         # ---------------- findings + validate ----------------
         fd = ad / "findings" / "app"

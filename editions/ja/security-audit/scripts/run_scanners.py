@@ -19,6 +19,8 @@ podman には --userns=keep-id を付ける。SELinux が enforcing（または 
   python run_scanners.py <repo> --out <dir> [--tools gitleaks,semgrep,trivy,osv-scanner,checkov,
         hadolint,zizmor] [--mode auto|container|docker|native] [--engine auto|docker|podman]
         [--pin tool=image:tag ...] [--timeout 900] [--offline] [--list]
+  python run_scanners.py --check-updates [--offline] [--json PATH]
+        報告のみ：固定した各イメージの最新の安定版タグを表示する。pull もピンの変更も行わず、exit 0
 
 シェルスクリプトではなく Python を使うのは、Windows のパスを崩さずに `docker -v` へ渡すため - Git Bash の
 MSYS パス変換は、/src マウントが黙って空になる典型的な原因である。
@@ -41,6 +43,9 @@ import shutil
 import subprocess
 import sys
 import time
+import urllib.error
+import urllib.parse
+import urllib.request
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -427,6 +432,160 @@ def merge_sarif(docs: list[str]) -> dict:
     return {"version": "2.1.0", "runs": runs}
 
 
+# ---------------- --check-updates：固定したスキャナより新しい安定版タグを報告のみで確認する ----------------
+REGISTRY_TIMEOUT = 10  # 1 リクエストあたりの秒数。試行は 1 回で、リトライしない
+REGISTRY_MAX_BYTES = 5_000_000
+REGISTRY_MAX_PAGES = 10
+REGISTRIES = {  # レジストリ -> （API ホスト、匿名 pull トークンの URL）。接続するのはこれらのホストのみ
+    "docker.io": ("registry-1.docker.io",
+                  "https://auth.docker.io/token?service=registry.docker.io&scope=repository:{repo}:pull"),
+    "ghcr.io": ("ghcr.io", "https://ghcr.io/token?service=ghcr.io&scope=repository:{repo}:pull"),
+}
+REGISTRY_HOSTS = {"registry-1.docker.io", "auth.docker.io", "ghcr.io"}
+STABLE_TAG = re.compile(r"(v?)([0-9]{1,6})\.([0-9]{1,6})\.([0-9]{1,6})")  # X.Y.Z のみ：rc / beta / アーキテクチャの接尾辞は除外
+NOT_CHECKED = "not checked (offline)"
+
+
+def split_image(image: str) -> tuple[str, str, str]:
+    """'ghcr.io/a/b:v1@sha256:..' -> ('ghcr.io', 'a/b', 'v1')。Docker Hub の単独名には 'library/' を付ける。"""
+    name, tag = image.split("@", 1)[0], ""
+    if ":" in name.rsplit("/", 1)[-1]:
+        name, tag = name.rsplit(":", 1)
+    first, _, rest = name.partition("/")
+    reg, repo = (first, rest) if rest and ("." in first or ":" in first or first == "localhost") \
+        else ("docker.io", name)
+    if reg == "docker.io" and "/" not in repo:
+        repo = "library/" + repo
+    return reg, repo, tag
+
+
+def stable_key(tag, prefix: str | None = None) -> tuple | None:
+    m = STABLE_TAG.fullmatch(tag) if isinstance(tag, str) else None
+    if not m or (prefix is not None and m.group(1) != prefix):
+        return None
+    return tuple(int(x) for x in m.group(2, 3, 4))
+
+
+def pick_update(pinned: str, tags) -> tuple[str, str]:
+    """->（ピンと同じ形式で最新の安定版タグ、状態）。純粋関数のため、selftest は固定のタグ一覧を渡して検証する。
+    ピンより古いタグを「newer」とすることは決してない。使えない一覧は「current」ではなく「lookup failed」とする。"""
+    m = STABLE_TAG.fullmatch(pinned or "")
+    tags = [t for t in (tags or []) if isinstance(t, str)]
+    if not m:
+        return "", "lookup failed"
+    best, best_key = "", None
+    for t in tags:
+        k = stable_key(t, m.group(1))
+        if k is not None and (best_key is None or k > best_key):
+            best, best_key = t, k
+    if best_key is not None and best_key > stable_key(pinned):
+        return best, "newer available"
+    if pinned in tags:
+        return pinned, "current"
+    return best, "lookup failed"  # ピンが一覧にない：不完全な応答を「current」とはしない
+
+
+def _clean(s, n: int = 100) -> str:
+    """信頼できないレジストリのテキスト -> 表示可能な 1 行。"""
+    s = re.sub(r"\s+", " ", "".join(c if c.isprintable() else " " for c in str(s or ""))).strip()
+    return s[:n] + ("..." if len(s) > n else "")
+
+
+class _RegistryRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        p = urllib.parse.urlparse(newurl)
+        if p.scheme != "https" or p.hostname not in REGISTRY_HOSTS:
+            raise urllib.error.HTTPError(newurl, code, "redirect off the registry refused", headers, fp)
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+_REG_OPENER = urllib.request.build_opener(_RegistryRedirect)
+
+
+def _registry_get(url: str, headers: dict | None = None) -> tuple[bytes, str]:
+    p = urllib.parse.urlparse(url)
+    if p.scheme != "https" or p.hostname not in REGISTRY_HOSTS:
+        raise ValueError("host not allowed")
+    req = urllib.request.Request(url, headers={"User-Agent": "security-audit-skill (scanner pin check)",
+                                               "Accept": "application/json", **(headers or {})})
+    with _REG_OPENER.open(req, timeout=REGISTRY_TIMEOUT) as r:
+        data, link = r.read(REGISTRY_MAX_BYTES + 1), r.headers.get("Link", "")
+    if len(data) > REGISTRY_MAX_BYTES:
+        raise ValueError("response too large")
+    return data, link
+
+
+def registry_tags(image: str) -> list[str]:
+    """イメージのリポジトリの全タグ（Registry v2 の tags list、匿名の bearer トークン）。"""
+    reg, repo, _ = split_image(image)
+    if reg not in REGISTRIES:
+        raise ValueError(f"registry {reg} not supported")
+    if not re.fullmatch(r"[a-z0-9]+(?:[._/-][a-z0-9]+)*", repo):
+        raise ValueError("unexpected repository name")
+    host, token_url = REGISTRIES[reg]
+    token = json.loads(_registry_get(token_url.format(repo=repo))[0]).get("token")
+    if not isinstance(token, str) or not token:
+        raise ValueError("no anonymous token")
+    url, tags = f"https://{host}/v2/{repo}/tags/list?n=10000", []
+    for _ in range(REGISTRY_MAX_PAGES):
+        data, link = _registry_get(url, {"Authorization": "Bearer " + token})
+        page = json.loads(data).get("tags") or []
+        if not isinstance(page, list):
+            raise ValueError("malformed tag list")
+        tags += [t for t in page if isinstance(t, str)]
+        nxt = re.search(r'<([^>]+)>\s*;\s*rel="?next"?', link or "")
+        if not nxt:
+            return tags
+        url = urllib.parse.urljoin(f"https://{host}/", nxt.group(1))
+    raise ValueError("too many pages")
+
+
+def check_one(tool: str, offline: bool) -> dict:
+    image = IMAGES[tool]
+    row = {"tool": tool, "image": image, "pinned": split_image(image)[2], "newest": "", "status": NOT_CHECKED,
+           "detail": ""}
+    if offline:
+        return row
+    try:
+        tags = registry_tags(image)
+    except Exception as e:  # 報告のみ：失敗はすべて「lookup failed」と明記し、決して「current」としない
+        why = f"HTTP {e.code}" if isinstance(e, urllib.error.HTTPError) else \
+            getattr(e, "reason", None) or f"{type(e).__name__}: {e}"
+        row.update(status="lookup failed", detail=_clean(why, 80))
+        return row
+    row["newest"], row["status"] = pick_update(row["pinned"], tags)
+    if row["status"] == "lookup failed":
+        row["detail"] = "pinned tag not in the registry list"
+    return row
+
+
+def check_updates(offline: bool, json_path: str | None) -> int:
+    """報告のみ：pull も IMAGES の変更も決して行わない。更新があっても、問い合わせに失敗しても exit 0。"""
+    with cf.ThreadPoolExecutor(max_workers=4) as ex:
+        rows = list(ex.map(lambda t: check_one(t, offline), IMAGES))
+    print(f"スキャナのピン更新チェック - 報告のみ：何も pull せず、ピンも変更しない "
+          f"（ピンの検証日 {PINS_VERIFIED}）。")
+    if offline:
+        print("offline: レジストリへの問い合わせは行っていない（--offline）。確認するには --offline なしで実行する。")
+    w = [max(len(h), *(len(r[k]) for r in rows)) for h, k in (("tool", "tool"), ("pinned", "pinned"),
+                                                              ("newest stable", "newest"))]
+    print(f"{'tool':<{w[0]}}  {'pinned':<{w[1]}}  {'newest stable':<{w[2]}}  status")
+    for r in rows:
+        st = r["status"] + (f" ({r['detail']})" if r["detail"] else "")
+        print(f"{r['tool']:<{w[0]}}  {r['pinned']:<{w[1]}}  {r['newest'] or '-':<{w[2]}}  {st}")
+    n = {s: sum(r["status"] == s for r in rows) for s in ("newer available", "lookup failed")}
+    if not offline:
+        print(f"newer available {n['newer available']} 件、lookup failed {n['lookup failed']} 件。")
+    print("既定のピンは検証済みのものであり、監査では引き続きそれを使う。新しい版を意図的に試す場合は、その実行に限り "
+          "--pin tool=image:tag@sha256:<digest> を渡す（ダイジェストの確認："
+          "`docker buildx imagetools inspect image:tag`）。")
+    if json_path:
+        Path(host_path(json_path)).write_text(json.dumps(
+            {"checked": dt.datetime.now().isoformat(timespec="seconds"), "pins_verified": PINS_VERIFIED,
+             "offline": offline, "tools": rows}, indent=1), encoding="utf-8")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("repo", nargs="?")
@@ -441,7 +600,14 @@ def main() -> int:
     ap.add_argument("--offline", action="store_true", help="キャッシュ済みの DB を使う。ネットワーク経由のルール / DB 更新は行わない")
     ap.add_argument("--jobs", type=int, default=3)
     ap.add_argument("--list", action="store_true", help="固定したイメージを表示して終了する")
+    ap.add_argument("--check-updates", action="store_true",
+                    help="固定したイメージより新しい安定版タグを報告する（報告のみ。pull もピンの変更も行わない）")
+    ap.add_argument("--json", metavar="PATH", help="--check-updates と併用：結果を JSON でも書き出す")
     a = ap.parse_args()
+    if a.json and not a.check_updates:
+        ap.error("--json には --check-updates が必要")
+    if a.check_updates:
+        return check_updates(a.offline, a.json)
     if a.list:
         print(json.dumps({"pins_verified": PINS_VERIFIED, "images": IMAGES}, indent=1))
         return 0

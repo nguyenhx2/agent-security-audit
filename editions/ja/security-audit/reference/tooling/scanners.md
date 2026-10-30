@@ -41,6 +41,10 @@
 ピンは `image:tag@sha256:digest` の形式である。タグは人間のため、ダイジェストは再現性のため（タグが付け替えられても
 実行内容は変わらない）。`python run_scanners.py --list` で一覧を表示する。`PINS_VERIFIED` が約 90 日より古い場合は、
 新しいタグを確認して `--pin tool=image:tag` を渡す。ランナーは `:latest` とタグなしのピンを拒否する。
+`python run_scanners.py --check-updates` は Docker Hub / GHCR に各ピンの最新の安定版タグを問い合わせ、
+current / newer available / lookup failed を表示する（`--json PATH` でファイルにも出力、`--offline` = 問い合わせなし）。
+報告のみであり、pull もピンの変更も行わず、exit 0 で終了する。既定のピンは検証済みのものであり、新しいタグは
+`--pin tool=image:tag@sha256:...` で意図的に試す。
 キャッシュ済みのイメージは再 pull しない。`--offline` では存在しないイメージはスキップされ（欠落として記載）、
 決して pull されない。ダイジェストは実行ごとに `scanners.json` に記録される。
 

@@ -5,7 +5,7 @@ name: ci
 #   selftest  both editions' tests/selftest.py on Ubuntu, Windows and macOS x Python 3.9 and 3.13.
 #             The skill promises Windows, macOS and Linux and Python 3.9+, and this is the only
 #             place macOS is exercised at all: the maintainer develops on Windows. Each job prints
-#             the selftest summary line into the job summary, so a reader sees "189/189" per cell.
+#             the selftest summary line into the job summary, so a reader sees "194/194" per cell.
 #   eval      the offline eval suite (eval/run_eval.py) and the figure check that reads its result.
 #   checks    the release and documentation gates: edition parity, plugin manifests, icon, version
 #             sync, package preflight, figures, diagrams.
@@ -124,6 +124,13 @@ jobs:
       # masked, same files, same versions, same agent and eval metadata.
       - name: Editions are in parity
         run: python -B scripts/check_editions.py
+
+      # The scanner-pin tooling behind update-pins.yml, offline: tag choice, cooldown, the files
+      # --write touches, and the smoke test's pass / fail logic against canned scanner output.
+      - name: Scanner-pin tooling unit tests
+        run: |
+          python -B scripts/test_update_pins.py
+          python -B scripts/test_smoke_scanners.py
 
       # Versions in sync across both SKILL.md files, both CHANGELOGs and the plugin manifests;
       # licence; no em-dash or CRLF; the skill linter. Without a version argument here; the

@@ -11,7 +11,7 @@
   <a href="LICENSE.md"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue.svg" alt="ライセンス: AGPL-3.0"></a>
   <a href="https://github.com/nguyenhx2/agent-security-audit/actions/workflows/ci.yml"><img src="https://github.com/nguyenhx2/agent-security-audit/actions/workflows/ci.yml/badge.svg" alt="CI ワークフロー"></a>
   <a href="https://github.com/nguyenhx2/agent-security-audit/actions/workflows/codeql.yml"><img src="https://github.com/nguyenhx2/agent-security-audit/actions/workflows/codeql.yml/badge.svg" alt="CI: CodeQL"></a>
-  <a href="#自分で確かめる"><img src="https://img.shields.io/badge/selftest-189%2F189%20per%20edition-brightgreen.svg" alt="セルフテスト: 各エディションで 189 件中 189 件に合格"></a>
+  <a href="#自分で確かめる"><img src="https://img.shields.io/badge/selftest-194%2F194%20per%20edition-brightgreen.svg" alt="セルフテスト: 各エディションで 194 件中 194 件に合格"></a>
   <a href="eval/README.ja.md"><img src="https://img.shields.io/badge/eval-75%2F75-brightgreen.svg" alt="オフライン評価: 75 件中 75 件に合格"></a>
   <a href="#業種"><img src="https://img.shields.io/badge/industry%20sectors-9%20signals%2C%206%20modules-blue.svg" alt="業種: 9 つの業種シグナルを業種モジュール（6 つ）に対応付け"></a>
   <a href="#ライブ脅威情報"><img src="https://img.shields.io/badge/advisory%20feeds-8%20global%20%2B%20Japan-blue.svg" alt="国内外の 8 つのフィード"></a>
@@ -294,7 +294,7 @@ python benchmark/bench.py fetch                       # ライブのベンチマ
 python benchmark/bench.py run --help                  #   実際に監査する（費用がかかり、CI では実行しない）
 ```
 
-セルフテストはオフラインで約 1 分かかります。各エディション <!--n:selftest_checks-->189<!--/n--> 件で、両方の件数は
+セルフテストはオフラインで約 1 分かかります。各エディション <!--n:selftest_checks-->194<!--/n--> 件で、両方の件数は
 同じです。CI では Windows、macOS、Linux で、Python 3.9 と 3.13 を使って実行します。オフライン評価
 （<!--n:eval_passed-->75<!--/n-->/<!--n:eval_total-->75<!--/n--> 件）には API キーもネットワークも Docker も
 要りません。本物に近いフィクスチャから各業種を検出できること（`Sku` だらけの Azure SDK を EC と誤認しないこと）、

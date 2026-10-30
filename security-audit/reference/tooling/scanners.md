@@ -41,7 +41,11 @@ finding's rule id is still emitted.
 Pins are `image:tag@sha256:digest` - the tag for humans, the digest for reproducibility (a re-pointed
 tag cannot change what runs). `python run_scanners.py --list` prints them. If `PINS_VERIFIED` is
 older than ~90 days, check for newer tags and pass `--pin tool=image:tag`; the runner refuses
-`:latest` and untagged pins. Images already cached are not re-pulled; with `--offline` a missing
+`:latest` and untagged pins. `python run_scanners.py --check-updates` asks Docker Hub / GHCR for the
+newest stable tag of each pin and prints current / newer available / lookup failed (`--json PATH`
+for a file, `--offline` = no lookup). It only reports: it never pulls, never changes a pin and exits 0;
+the default pins stay the verified ones, and a newer tag is tried deliberately with
+`--pin tool=image:tag@sha256:...`. Images already cached are not re-pulled; with `--offline` a missing
 image is skipped (stated as a gap), never pulled. Digests are recorded per run in `scanners.json`.
 
 Optional extras (not wired into the runner; run manually when the stack calls for it and state them

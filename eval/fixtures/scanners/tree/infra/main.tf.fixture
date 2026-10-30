@@ -1,0 +1,22 @@
+# PLANTED DEFECTS for scripts/smoke_scanners.py (checkov, trivy misconfig). Never apply this file.
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_security_group" "open_ssh" {
+  name        = "smoke-open-ssh"
+  description = "SSH open to the internet"
+
+  ingress {
+    description = "ssh from anywhere"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_s3_bucket" "public" {
+  bucket = "smoke-fixture-public-bucket"
+  acl    = "public-read"
+}

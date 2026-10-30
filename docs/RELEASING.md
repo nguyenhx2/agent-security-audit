@@ -52,6 +52,8 @@ releases skill 1.15.0.
 When standards or scanner pins are re-verified, the skill CHANGELOG's rules also apply:
 `metadata.standards-verified` / `scanner-pins-verified`, the table in
 `reference/standards/index.md` and `PINS_VERIFIED` in `scripts/run_scanners.py`, in both editions.
+Scanner pins usually arrive through the weekly pull request described in
+[Scanner pin updates](#scanner-pin-updates).
 
 ## Procedure
 
@@ -106,6 +108,54 @@ The live benchmark (`benchmark/bench.py`) is not part of the release gates: it c
 needs Claude. Re-run it when a change could move cost or recall, and commit its results before the
 tag.
 
+## Scanner pin updates
+
+The skill runs eight scanner images, each pinned by tag and digest. An audit never changes a scanner
+on its own: the digest stays fixed, so the Phase 8 re-scan that verifies a fix runs exactly the
+rules of the first scan, and two audits of the same code on different days agree. Pins move only
+through this repository, in a pull request a maintainer reviews.
+
+The `update-pins` workflow (`.github/workflows/update-pins.yml`) prepares that pull request every
+Monday:
+
+1. **Check.** `scripts/update_pins.py --check` asks each registry for a newer tag. A tag is proposed
+   only once it has been public for 7 days (the cooldown). A compromised image pushed to a registry is
+   usually noticed and pulled within days; the cooldown keeps this repository out of that window. A
+   failed registry lookup fails the run, so an outage never reads as "everything is current".
+2. **Smoke test.** `scripts/smoke_scanners.py` runs every candidate image, with docker, on a fixture
+   with a planted defect for that scanner. A new version that no longer finds its defect, or crashes,
+   stops the run: the pin only moves when detection still works.
+3. **Write and gate.** `update_pins.py --write` updates the pins in both editions, then both
+   selftests, the offline eval, `check_editions.py`, `build_plugins.py --check`, `check_numbers.py`
+   and `validate_release.py` run on the result.
+4. **Pull request.** The change is force-pushed to the branch `bot/scanner-pins` and opened as one
+   pull request labelled `scanner-pins`, or the open one is updated. The title lists each move
+   (`scanner pins: trivy 0.76.1 -> 0.77.0, ...`); the body has the release notes links, a draft
+   CHANGELOG entry and the smoke test table. It is **never merged automatically**.
+
+A pull request opened with `GITHUB_TOKEN` does not start other workflows, so the gates above run
+inside `update-pins` itself, and it then dispatches `ci.yml` on `bot/scanner-pins` for the full
+operating system matrix. If that CI run is missing from the pull request, start it by hand:
+`gh workflow run ci.yml --ref bot/scanner-pins`.
+
+**Run it by hand.** Start the workflow from the Actions tab or with
+`gh workflow run update-pins.yml -f cooldown_days=7 -f tools="trivy semgrep"` (both inputs optional;
+an empty `tools` means all eight). Run from any branch other than the default one it is a dry run:
+everything up to the patch, no branch pushed, no pull request. Locally, without the workflow:
+
+```bash
+python scripts/update_pins.py --check --json pins.json --pr-body body.md
+python scripts/smoke_scanners.py --pins-json pins.json   # needs docker or podman
+python scripts/update_pins.py --write
+```
+
+`--check` exits 0 when nothing is new, 10 when updates are available and 2 when a lookup failed.
+
+**Release the result.** A pin update is a `z` release. Review and merge the pull request, then follow
+the [procedure](#procedure): bump the version, and write the CHANGELOG entries in both editions and
+the root, starting from the draft in the pull request body. The merged pins reach users only with
+that release.
+
 ## What enforces this
 
 | Rule | Enforced by |
@@ -119,6 +169,7 @@ tag.
 | No em-dash, no CRLF | `validate_release.py` |
 | The README figures match the code and the eval of this commit | `check_numbers.py` after `run_eval.py` |
 | A re-run does not fail on an existing release | `gh release edit` and `gh release upload --clobber` |
+| A scanner pin moves only after the cooldown, a passing smoke test and the gates, through a reviewed pull request | `update-pins.yml` (`update_pins.py`, `smoke_scanners.py`) |
 
 ## Withdrawing a release
 

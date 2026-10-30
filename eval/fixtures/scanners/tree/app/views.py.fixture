@@ -1,0 +1,41 @@
+# PLANTED DEFECTS for scripts/smoke_scanners.py (semgrep p/default). Never deploy this file.
+import hashlib
+import os
+import subprocess
+
+import yaml
+from flask import Flask, request
+
+app = Flask(__name__)
+
+
+@app.route("/ping")
+def ping():
+    host = request.args.get("host", "")
+    # command injection: user input in a shell command
+    return subprocess.check_output("ping -c 1 " + host, shell=True)
+
+
+@app.route("/echo")
+def echo():
+    os.system("echo " + request.args.get("msg", ""))
+    return "ok"
+
+
+@app.route("/load", methods=["POST"])
+def load():
+    # unsafe YAML deserialisation (no SafeLoader)
+    return str(yaml.load(request.data))
+
+
+@app.route("/calc")
+def calc():
+    return str(eval(request.args.get("expr", "0")))
+
+
+def digest(data):
+    return hashlib.md5(data).hexdigest()
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", debug=True)

@@ -1,0 +1,345 @@
+name: update-pins
+
+# Weekly check for newer scanner images, proposed as ONE pull request that a maintainer reviews and
+# merges by hand. Never auto-merged: a scanner pin decides which rules every audit runs.
+#
+# The skill pins eight scanner images by tag AND digest, so an audit, and its Phase 8 re-scan, run
+# exactly the rules that were tested. This workflow is how those pins move forward:
+#
+#   check   (contents: read) scripts/update_pins.py --check looks up each registry. A tag newer than
+#           the pin is only proposed once it has been public for --cooldown-days (default 7): a
+#           compromised image pushed to a registry is usually spotted and pulled within days, and
+#           the cooldown keeps this repository from being among the first to install it.
+#             exit 0  nothing new: the job ends green and nothing else runs.
+#             exit 2  a registry lookup failed: the job FAILS. A lookup error must be visible,
+#                     never read as "everything is current".
+#             exit 10 updates exist: scripts/smoke_scanners.py runs each candidate image on its
+#                     planted-defect fixture with docker (a scanner that no longer finds its defect,
+#                     or crashes, stops here), then update_pins.py --write applies the pins and the
+#                     repository gates run on the result. The change leaves this job as a patch.
+#   pr      (contents: write, pull-requests: write, actions: write) applies that patch on the fixed
+#           branch bot/scanner-pins (force-updated), opens the pull request or updates the one that
+#           is already open, and labels it scanner-pins. It never runs a scanner image: the new
+#           images execute only in the read-only job, away from the write token.
+#
+# A pull request opened with GITHUB_TOKEN does not trigger other workflows, so ci.yml would not run
+# on it by itself. Two things cover that: the gates ci.yml runs on Ubuntu (both selftests, the
+# offline eval, edition parity, plugin manifests, figures, versions and style) already ran in the
+# check job above, and the pr job dispatches ci.yml on bot/scanner-pins (workflow_dispatch is the
+# one event GITHUB_TOKEN may start), so the full matrix reports on the PR's head commit. If that
+# dispatch is ever missing, run it by hand: gh workflow run ci.yml --ref bot/scanner-pins.
+#
+# Releasing the merged result is a normal z release (docs/RELEASING.md, "Scanner pin updates"): the
+# maintainer adds the CHANGELOG entries and bumps the version; the PR body carries a draft entry.
+#
+# Run from a branch other than the default branch, this is a DRY RUN: every step up to the patch
+# runs, no branch is pushed and no pull request is opened.
+#
+# Inputs reach the shell through env and are validated before use, never expanded into a script.
+
+on:
+  schedule:
+    # Monday 02:17 UTC - an odd minute, to avoid the top-of-hour queue on hosted runners.
+    - cron: "17 2 * * 1"
+  workflow_dispatch:
+    inputs:
+      cooldown_days:
+        description: "days a new tag must have been public before it is proposed"
+        required: false
+        default: "7"
+      tools:
+        description: "only these scanners, space-separated (empty = all eight)"
+        required: false
+        default: ""
+
+# Least privilege, declared rather than inherited: only the pr job writes, and it says so.
+permissions:
+  contents: read
+
+# One run at a time, and a running one is never cancelled half way through a push.
+concurrency:
+  group: update-pins
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: check, smoke test and gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    # Scheduled runs only in the upstream repository; a fork can still dispatch it by hand.
+    if: github.event_name != 'schedule' || github.repository == 'nguyenhx2/agent-security-audit'
+    outputs:
+      status: ${{ steps.check.outputs.status }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.13"
+
+      - name: Validate the inputs
+        id: args
+        env:
+          INPUT_COOLDOWN: ${{ github.event.inputs.cooldown_days }}
+          INPUT_TOOLS: ${{ github.event.inputs.tools }}
+        run: |
+          cooldown="${INPUT_COOLDOWN:-7}"
+          if ! printf '%s' "$cooldown" | grep -Eq '^[0-9]{1,3}$'; then
+            echo "::error::cooldown_days '$cooldown' is not a whole number of days"; exit 1
+          fi
+          if ! printf '%s' "$INPUT_TOOLS" | grep -Eq '^[a-z0-9 _-]*$'; then
+            echo "::error::tools must be scanner names separated by spaces"; exit 1
+          fi
+          echo "cooldown=$cooldown" >> "$GITHUB_OUTPUT"
+          echo "tools=$INPUT_TOOLS" >> "$GITHUB_OUTPUT"
+          mkdir -p "$RUNNER_TEMP/pin-update"
+
+      # Exit codes: 0 nothing new, 10 updates available, 2 a lookup failed. Anything but 0 or 10
+      # fails the job, so a registry outage is a red run, not a silent "current".
+      - name: Look for newer scanner images
+        id: check
+        env:
+          COOLDOWN: ${{ steps.args.outputs.cooldown }}
+          TOOLS: ${{ steps.args.outputs.tools }}
+        run: |
+          out="$RUNNER_TEMP/pin-update"
+          # update_pins.py takes one --tool followed by every name (nargs="+").
+          tool_args=()
+          if [ -n "${TOOLS// /}" ]; then read -r -a names <<< "$TOOLS"; tool_args=(--tool "${names[@]}"); fi
+          set +e
+          python -B scripts/update_pins.py --check --cooldown-days "$COOLDOWN" \
+            --json "$out/pins.json" --pr-body "$out/body.md" "${tool_args[@]}"
+          rc=$?
+          set -e
+          case "$rc" in
+            0)  echo "status=current" >> "$GITHUB_OUTPUT"
+                echo "Every scanner pin is current (cooldown $COOLDOWN days)." >> "$GITHUB_STEP_SUMMARY" ;;
+            10) echo "status=updates" >> "$GITHUB_OUTPUT"
+                { echo "## Pin updates proposed"; echo; cat "$out/body.md"; } >> "$GITHUB_STEP_SUMMARY" ;;
+            2)  echo "::error::a registry lookup failed - see the log; the pins were NOT confirmed current"
+                exit 1 ;;
+            *)  echo "::error::update_pins.py --check exited $rc"; exit 1 ;;
+          esac
+
+      # Everything below runs only when there is something to propose.
+
+      - name: Install openpyxl (Excel report checks in the selftest)
+        if: steps.check.outputs.status == 'updates'
+        run: python -m pip install --disable-pip-version-check "openpyxl==3.1.5"
+
+      # The candidate images run here, in a job whose token can only read. Exit 1 means a scanner
+      # missed its planted defect or crashed; exit 2 means no container engine. Both stop the run.
+      - name: Smoke test the candidate images on planted defects
+        if: steps.check.outputs.status == 'updates'
+        env:
+          TOOLS: ${{ steps.args.outputs.tools }}
+        run: |
+          out="$RUNNER_TEMP/pin-update"
+          tool_args=()
+          for t in $TOOLS; do tool_args+=(--tool "$t"); done   # smoke_scanners.py: one --tool per name
+          docker version --format 'docker {{.Server.Version}}'
+          python -B scripts/smoke_scanners.py --pins-json "$out/pins.json" \
+            --json "$out/smoke.json" "${tool_args[@]}"
+
+      - name: Write the new pins
+        if: steps.check.outputs.status == 'updates'
+        env:
+          COOLDOWN: ${{ steps.args.outputs.cooldown }}
+          TOOLS: ${{ steps.args.outputs.tools }}
+        run: |
+          # update_pins.py takes one --tool followed by every name (nargs="+").
+          tool_args=()
+          if [ -n "${TOOLS// /}" ]; then read -r -a names <<< "$TOOLS"; tool_args=(--tool "${names[@]}"); fi
+          set +e
+          python -B scripts/update_pins.py --write --cooldown-days "$COOLDOWN" "${tool_args[@]}"
+          rc=$?
+          set -e
+          if [ "$rc" != "10" ]; then
+            echo "::error::update_pins.py --write exited $rc (expected 10: pins written)"; exit 1
+          fi
+          git diff --stat
+
+      # The same gates ci.yml runs on Ubuntu, because ci.yml does not start by itself on a pull
+      # request opened with GITHUB_TOKEN. check_mermaid and check_svg are left to ci.yml: a pin
+      # update touches no diagram or figure.
+      - name: Gate - both editions' selftests
+        if: steps.check.outputs.status == 'updates'
+        run: |
+          status=0
+          for ed in security-audit editions/ja/security-audit; do
+            python -B "$ed/tests/selftest.py" > "$RUNNER_TEMP/selftest.log" 2>&1 || status=1
+            grep '^FAIL' "$RUNNER_TEMP/selftest.log" || true
+            line=$(grep -E '^[0-9]+/[0-9]+ checks passed' "$RUNNER_TEMP/selftest.log" || echo "no summary line")
+            echo "$ed: $line"
+            n=$(echo "$line" | sed -nE 's#^([0-9]+)/([0-9]+).*#\1 \2#p')
+            set -- $n
+            if [ -z "${1:-}" ] || [ "$1" != "$2" ] || [ "$1" = "0" ]; then status=1; fi
+          done
+          exit $status
+
+      # The eval result is part of the change when it moves: ci.yml fails a commit whose
+      # eval/results/latest.json differs from its own run.
+      - name: Gate - offline eval
+        if: steps.check.outputs.status == 'updates'
+        run: |
+          set -o pipefail
+          python -B eval/run_eval.py 2>&1 | tee "$RUNNER_TEMP/eval.log"
+
+      - name: Gate - editions, plugin manifests, figures, versions and style
+        if: steps.check.outputs.status == 'updates'
+        run: |
+          python -B scripts/check_editions.py
+          python -B scripts/build_plugins.py --check
+          python -B scripts/check_numbers.py
+          python -B scripts/validate_release.py
+
+      # Tracked files only: logs and work files live in RUNNER_TEMP, never in the tree. The title
+      # and the smoke table are built from the JSON the scripts wrote, as data.
+      - name: Package the change for the pr job
+        if: steps.check.outputs.status == 'updates'
+        run: |
+          out="$RUNNER_TEMP/pin-update"
+          git diff --binary > "$out/pins.patch"
+          if [ ! -s "$out/pins.patch" ]; then
+            echo "::error::update_pins.py reported updates but changed no tracked file"; exit 1
+          fi
+          git diff --stat
+          python -B - "$out" <<'PY'
+          import json, sys, pathlib
+          out = pathlib.Path(sys.argv[1])
+          pins = json.loads((out / "pins.json").read_text(encoding="utf-8"))
+          parts = [f"{u['tool']} {u['old_tag']} -> {u['new_tag']}" for u in pins.get("updates", [])]
+          title = "scanner pins: " + ", ".join(parts)
+          if len(title) > 200:
+              title = title[:197] + "..."
+          (out / "title.txt").write_text(title + "\n", encoding="utf-8")
+
+          def cell(v):
+              return str(v).replace("|", "\\|").replace("\n", " ")
+
+          lines = ["", "## Smoke test", "",
+                   "Each candidate image ran on its planted-defect fixture in CI and found it.", ""]
+          smoke = None
+          p = out / "smoke.json"
+          if p.is_file():
+              smoke = json.loads(p.read_text(encoding="utf-8"))
+          rows = smoke if isinstance(smoke, list) else None
+          if isinstance(smoke, dict):
+              rows = next((v for v in smoke.values()
+                           if isinstance(v, list) and v and all(isinstance(r, dict) for r in v)), None)
+          if rows and all(isinstance(r, dict) for r in rows):
+              cols = []
+              for r in rows:
+                  for k, v in r.items():
+                      if k not in cols and not isinstance(v, (dict, list)):
+                          cols.append(k)
+              cols = cols[:6]
+              lines.append("| " + " | ".join(cols) + " |")
+              lines.append("|" + "---|" * len(cols))
+              for r in rows:
+                  lines.append("| " + " | ".join(cell(r.get(c, "")) for c in cols) + " |")
+          elif smoke is not None:
+              lines += ["```json", json.dumps(smoke, indent=1), "```"]
+          else:
+              lines.append("(smoke_scanners.py wrote no JSON result)")
+          lines += ["", "Opened by the `update-pins` workflow. Review it like any other change; "
+                    "it is never merged automatically."]
+          body = (out / "body.md").read_text(encoding="utf-8").rstrip("\n") + "\n" + "\n".join(lines) + "\n"
+          (out / "pr-body.md").write_text(body, encoding="utf-8")
+          print(title)
+          PY
+          cat "$out/pr-body.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: steps.check.outputs.status == 'updates'
+        with:
+          name: pin-update
+          path: |
+            ${{ runner.temp }}/pin-update/pins.patch
+            ${{ runner.temp }}/pin-update/pins.json
+            ${{ runner.temp }}/pin-update/smoke.json
+            ${{ runner.temp }}/pin-update/title.txt
+            ${{ runner.temp }}/pin-update/pr-body.md
+            ${{ runner.temp }}/eval.log
+          if-no-files-found: error
+          retention-days: 14
+
+  pr:
+    name: open or update the pull request
+    needs: check
+    # Only on the default branch; from any other ref the run is a dry run that stops after check.
+    if: needs.check.outputs.status == 'updates' && github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write        # push bot/scanner-pins
+      pull-requests: write   # gh pr create / edit
+      actions: write         # gh workflow run ci.yml on the bot branch
+    env:
+      BRANCH: bot/scanner-pins
+      BASE: ${{ github.event.repository.default_branch }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: pin-update
+          path: ${{ runner.temp }}/pin-update
+
+      # The patch may touch the skill, its data and the generated results, never .github/: this
+      # job holds a write token, so what it commits is checked, not trusted.
+      - name: Apply the change and commit it
+        run: |
+          patch="$RUNNER_TEMP/pin-update/pins.patch"
+          if git apply --numstat "$patch" | awk '{print $3}' | grep -E '^\.github/'; then
+            echo "::error::the pin patch touches .github/ - refusing to commit it"; exit 1
+          fi
+          git apply --index "$patch"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH"
+          git commit -q -F "$RUNNER_TEMP/pin-update/title.txt"
+          git log -1 --stat
+
+      # The token goes on the push alone, as a header, never into .git/config or a remote URL.
+      - name: Force-update bot/scanner-pins
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          basic=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          echo "::add-mask::$basic"
+          auth="AUTHORIZATION: basic $basic"
+          git -c http.extraheader="$auth" push --force origin "HEAD:refs/heads/$BRANCH"
+
+      - name: Open or update the pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          dir="$RUNNER_TEMP/pin-update"
+          title=$(head -n 1 "$dir/title.txt")
+          gh label create scanner-pins --color 0e8a16 \
+            --description "Scanner image pin updates from the update-pins workflow" --force
+          number=$(gh pr list --head "$BRANCH" --base "$BASE" --state open --json number -q '.[0].number')
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --title "$title" --body-file "$dir/pr-body.md" --add-label scanner-pins
+            echo "updated pull request #$number" | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            gh pr create --base "$BASE" --head "$BRANCH" --title "$title" \
+              --body-file "$dir/pr-body.md" --label scanner-pins
+            echo "opened a pull request from $BRANCH" | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+
+      # A pull request opened with GITHUB_TOKEN starts no workflow; workflow_dispatch is the one
+      # event that token may start, so ci.yml is dispatched on the branch and reports on its head
+      # commit. A failure here does not undo the pull request; it says to start CI by hand.
+      - name: Run ci.yml on the bot branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if ! gh workflow run ci.yml --ref "$BRANCH"; then
+            echo "::warning::could not dispatch ci.yml; run it by hand: gh workflow run ci.yml --ref $BRANCH"
+          fi

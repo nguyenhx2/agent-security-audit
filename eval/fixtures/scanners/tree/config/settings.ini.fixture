@@ -1,0 +1,5 @@
+; PLANTED DEFECT for scripts/smoke_scanners.py (gitleaks, working tree). The value below is a
+; placeholder; smoke_scanners.py replaces it at run time with a well-formed but FAKE token that
+; never existed. Nothing secret is committed to this repository.
+[github]
+github_token = @@FAKE_GITHUB_TOKEN_TREE@@

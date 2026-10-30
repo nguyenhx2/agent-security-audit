@@ -1,0 +1,6 @@
+# PLANTED DEFECTS for scripts/smoke_scanners.py (hadolint, trivy, checkov). Never build this file.
+FROM ubuntu:latest
+RUN apt-get update && apt-get install -y curl
+COPY . /app
+USER root
+CMD ["python3", "/app/app/views.py"]

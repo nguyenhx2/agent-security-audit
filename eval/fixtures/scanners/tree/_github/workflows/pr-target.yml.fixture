@@ -1,0 +1,15 @@
+# PLANTED DEFECTS for scripts/smoke_scanners.py (zizmor). Never enable this workflow.
+name: pr-target
+
+on:
+  pull_request_target:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - run: echo "title ${{ github.event.pull_request.title }}"
+      - run: make test

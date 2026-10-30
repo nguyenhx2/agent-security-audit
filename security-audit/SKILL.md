@@ -160,7 +160,9 @@ Path format for script arguments and the Write tool: env_check `choices.path_for
    or an existing harness-bootstrap audit control plane, or a path the user gave. Focus left empty =
    all detected lanes; a domain the user deselects is listed as a coverage gap.
 3. Standards freshness: if today is > 90 days past "standards verified" above, re-verify the in-scope
-   rows (`reference/standards/index.md` procedure) before citing.
+   rows (`reference/standards/index.md` procedure) before citing. If "scanner pins verified" is > 90 days
+   old, you may run `run_scanners.py --check-updates` (report only) and tell the user in one line which
+   scanners have newer stable tags - information only; the audit still uses the verified pins.
 4. Create `<audit_dir>/work/`, save the detect output as `work/profile.md`, and start Phase 3 immediately.
    Standard/Deep: `python "${CLAUDE_SKILL_DIR}/scripts/install_agents.py" --check`; on exit 1 run it
    without `--check` - it writes only `~/.claude/agents/security-audit/*.md` (the named subagents of

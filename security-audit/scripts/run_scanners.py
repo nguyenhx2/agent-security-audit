@@ -18,6 +18,8 @@ Usage:
   python run_scanners.py <repo> --out <dir> [--tools gitleaks,semgrep,trivy,osv-scanner,checkov,
         hadolint,zizmor] [--mode auto|container|docker|native] [--engine auto|docker|podman]
         [--pin tool=image:tag ...] [--timeout 900] [--offline] [--list]
+  python run_scanners.py --check-updates [--offline] [--json PATH]
+        report-only: newest stable tag per pinned image; never pulls, never changes a pin, exit 0
 
 Python is used (not a shell script) so Windows paths reach `docker -v` unmangled - Git Bash's MSYS
 path conversion is the classic cause of a silently-empty /src mount.
@@ -40,6 +42,9 @@ import shutil
 import subprocess
 import sys
 import time
+import urllib.error
+import urllib.parse
+import urllib.request
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -426,6 +431,160 @@ def merge_sarif(docs: list[str]) -> dict:
     return {"version": "2.1.0", "runs": runs}
 
 
+# ---------------- --check-updates: report-only lookup of newer stable scanner tags ----------------
+REGISTRY_TIMEOUT = 10  # seconds per request; one attempt, no retries
+REGISTRY_MAX_BYTES = 5_000_000
+REGISTRY_MAX_PAGES = 10
+REGISTRIES = {  # registry -> (API host, anonymous pull-token URL); only these hosts are ever contacted
+    "docker.io": ("registry-1.docker.io",
+                  "https://auth.docker.io/token?service=registry.docker.io&scope=repository:{repo}:pull"),
+    "ghcr.io": ("ghcr.io", "https://ghcr.io/token?service=ghcr.io&scope=repository:{repo}:pull"),
+}
+REGISTRY_HOSTS = {"registry-1.docker.io", "auth.docker.io", "ghcr.io"}
+STABLE_TAG = re.compile(r"(v?)([0-9]{1,6})\.([0-9]{1,6})\.([0-9]{1,6})")  # X.Y.Z only: no rc/beta/arch suffix
+NOT_CHECKED = "not checked (offline)"
+
+
+def split_image(image: str) -> tuple[str, str, str]:
+    """'ghcr.io/a/b:v1@sha256:..' -> ('ghcr.io', 'a/b', 'v1'); a bare Docker Hub name gets 'library/'."""
+    name, tag = image.split("@", 1)[0], ""
+    if ":" in name.rsplit("/", 1)[-1]:
+        name, tag = name.rsplit(":", 1)
+    first, _, rest = name.partition("/")
+    reg, repo = (first, rest) if rest and ("." in first or ":" in first or first == "localhost") \
+        else ("docker.io", name)
+    if reg == "docker.io" and "/" not in repo:
+        repo = "library/" + repo
+    return reg, repo, tag
+
+
+def stable_key(tag, prefix: str | None = None) -> tuple | None:
+    m = STABLE_TAG.fullmatch(tag) if isinstance(tag, str) else None
+    if not m or (prefix is not None and m.group(1) != prefix):
+        return None
+    return tuple(int(x) for x in m.group(2, 3, 4))
+
+
+def pick_update(pinned: str, tags) -> tuple[str, str]:
+    """-> (newest stable tag in the pin's style, status). Pure, so the selftest feeds it canned lists.
+    A tag older than the pin is never 'newer'; an unusable list is 'lookup failed', never 'current'."""
+    m = STABLE_TAG.fullmatch(pinned or "")
+    tags = [t for t in (tags or []) if isinstance(t, str)]
+    if not m:
+        return "", "lookup failed"
+    best, best_key = "", None
+    for t in tags:
+        k = stable_key(t, m.group(1))
+        if k is not None and (best_key is None or k > best_key):
+            best, best_key = t, k
+    if best_key is not None and best_key > stable_key(pinned):
+        return best, "newer available"
+    if pinned in tags:
+        return pinned, "current"
+    return best, "lookup failed"  # pin missing from the list: an incomplete answer is not "current"
+
+
+def _clean(s, n: int = 100) -> str:
+    """Untrusted registry text -> one printable line."""
+    s = re.sub(r"\s+", " ", "".join(c if c.isprintable() else " " for c in str(s or ""))).strip()
+    return s[:n] + ("..." if len(s) > n else "")
+
+
+class _RegistryRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        p = urllib.parse.urlparse(newurl)
+        if p.scheme != "https" or p.hostname not in REGISTRY_HOSTS:
+            raise urllib.error.HTTPError(newurl, code, "redirect off the registry refused", headers, fp)
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+_REG_OPENER = urllib.request.build_opener(_RegistryRedirect)
+
+
+def _registry_get(url: str, headers: dict | None = None) -> tuple[bytes, str]:
+    p = urllib.parse.urlparse(url)
+    if p.scheme != "https" or p.hostname not in REGISTRY_HOSTS:
+        raise ValueError("host not allowed")
+    req = urllib.request.Request(url, headers={"User-Agent": "security-audit-skill (scanner pin check)",
+                                               "Accept": "application/json", **(headers or {})})
+    with _REG_OPENER.open(req, timeout=REGISTRY_TIMEOUT) as r:
+        data, link = r.read(REGISTRY_MAX_BYTES + 1), r.headers.get("Link", "")
+    if len(data) > REGISTRY_MAX_BYTES:
+        raise ValueError("response too large")
+    return data, link
+
+
+def registry_tags(image: str) -> list[str]:
+    """All tags of the image's repository (Registry v2 tags list, anonymous bearer token)."""
+    reg, repo, _ = split_image(image)
+    if reg not in REGISTRIES:
+        raise ValueError(f"registry {reg} not supported")
+    if not re.fullmatch(r"[a-z0-9]+(?:[._/-][a-z0-9]+)*", repo):
+        raise ValueError("unexpected repository name")
+    host, token_url = REGISTRIES[reg]
+    token = json.loads(_registry_get(token_url.format(repo=repo))[0]).get("token")
+    if not isinstance(token, str) or not token:
+        raise ValueError("no anonymous token")
+    url, tags = f"https://{host}/v2/{repo}/tags/list?n=10000", []
+    for _ in range(REGISTRY_MAX_PAGES):
+        data, link = _registry_get(url, {"Authorization": "Bearer " + token})
+        page = json.loads(data).get("tags") or []
+        if not isinstance(page, list):
+            raise ValueError("malformed tag list")
+        tags += [t for t in page if isinstance(t, str)]
+        nxt = re.search(r'<([^>]+)>\s*;\s*rel="?next"?', link or "")
+        if not nxt:
+            return tags
+        url = urllib.parse.urljoin(f"https://{host}/", nxt.group(1))
+    raise ValueError("too many pages")
+
+
+def check_one(tool: str, offline: bool) -> dict:
+    image = IMAGES[tool]
+    row = {"tool": tool, "image": image, "pinned": split_image(image)[2], "newest": "", "status": NOT_CHECKED,
+           "detail": ""}
+    if offline:
+        return row
+    try:
+        tags = registry_tags(image)
+    except Exception as e:  # report-only: any failure is a stated "lookup failed", never "current"
+        why = f"HTTP {e.code}" if isinstance(e, urllib.error.HTTPError) else \
+            getattr(e, "reason", None) or f"{type(e).__name__}: {e}"
+        row.update(status="lookup failed", detail=_clean(why, 80))
+        return row
+    row["newest"], row["status"] = pick_update(row["pinned"], tags)
+    if row["status"] == "lookup failed":
+        row["detail"] = "pinned tag not in the registry list"
+    return row
+
+
+def check_updates(offline: bool, json_path: str | None) -> int:
+    """Report-only: never pulls, never changes IMAGES. Exit 0 whether updates exist or lookups fail."""
+    with cf.ThreadPoolExecutor(max_workers=4) as ex:
+        rows = list(ex.map(lambda t: check_one(t, offline), IMAGES))
+    print(f"Scanner pin update check - report only: nothing is pulled, no pin is changed "
+          f"(pins verified {PINS_VERIFIED}).")
+    if offline:
+        print("offline: no registry lookups were made (--offline). Run without --offline to check.")
+    w = [max(len(h), *(len(r[k]) for r in rows)) for h, k in (("tool", "tool"), ("pinned", "pinned"),
+                                                              ("newest stable", "newest"))]
+    print(f"{'tool':<{w[0]}}  {'pinned':<{w[1]}}  {'newest stable':<{w[2]}}  status")
+    for r in rows:
+        st = r["status"] + (f" ({r['detail']})" if r["detail"] else "")
+        print(f"{r['tool']:<{w[0]}}  {r['pinned']:<{w[1]}}  {r['newest'] or '-':<{w[2]}}  {st}")
+    n = {s: sum(r["status"] == s for r in rows) for s in ("newer available", "lookup failed")}
+    if not offline:
+        print(f"{n['newer available']} newer available, {n['lookup failed']} lookup failed.")
+    print("The default pins are the verified ones and audits keep using them. To try a newer one deliberately, "
+          "pass it for one run: --pin tool=image:tag@sha256:<digest> (digest: "
+          "`docker buildx imagetools inspect image:tag`).")
+    if json_path:
+        Path(host_path(json_path)).write_text(json.dumps(
+            {"checked": dt.datetime.now().isoformat(timespec="seconds"), "pins_verified": PINS_VERIFIED,
+             "offline": offline, "tools": rows}, indent=1), encoding="utf-8")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("repo", nargs="?")
@@ -440,7 +599,14 @@ def main() -> int:
     ap.add_argument("--offline", action="store_true", help="use cached DBs; no network rule/DB updates")
     ap.add_argument("--jobs", type=int, default=3)
     ap.add_argument("--list", action="store_true", help="print pinned images and exit")
+    ap.add_argument("--check-updates", action="store_true",
+                    help="report newer stable tags of the pinned images (report only; never pulls or changes pins)")
+    ap.add_argument("--json", metavar="PATH", help="with --check-updates: also write the result as JSON")
     a = ap.parse_args()
+    if a.json and not a.check_updates:
+        ap.error("--json needs --check-updates")
+    if a.check_updates:
+        return check_updates(a.offline, a.json)
     if a.list:
         print(json.dumps({"pins_verified": PINS_VERIFIED, "images": IMAGES}, indent=1))
         return 0

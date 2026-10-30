@@ -144,7 +144,9 @@ metadata:
    または既存の harness-bootstrap の監査コントロールプレーン、またはユーザーが指定したパス。重点領域が空の場合 =
    検出したすべてのレーン。ユーザーが選択を外した領域はカバレッジの欠落として記載する。
 3. 基準の鮮度：今日が上記の「基準の検証日」から 90 日を超えている場合、引用する前に対象範囲の
-   行を再検証する（`reference/standards/index.md` の手順）。
+   行を再検証する（`reference/standards/index.md` の手順）。「スキャナのピン検証日」から 90 日を超えている場合は、
+   `run_scanners.py --check-updates`（報告のみ）を実行し、新しい安定版タグがあるスキャナを 1 行でユーザーに伝えてもよい -
+   あくまで情報提供であり、監査では引き続き検証済みのピンを使う。
 4. `<audit_dir>/work/` を作成し、detect の出力を `work/profile.md` として保存して、直ちに Phase 3 を開始する。
    Standard/Deep：`python "${CLAUDE_SKILL_DIR}/scripts/install_agents.py" --check` を実行し、exit 1 の場合は
    `--check` なしで実行する - 書き込むのは `~/.claude/agents/security-audit/*.md`

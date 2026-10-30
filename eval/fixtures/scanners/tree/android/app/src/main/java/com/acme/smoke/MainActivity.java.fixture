@@ -1,0 +1,42 @@
+// PLANTED DEFECTS for scripts/smoke_scanners.py (mobsfscan). Never ship this file.
+package com.acme.smoke;
+
+import android.app.Activity;
+import android.net.http.SslError;
+import android.os.Bundle;
+import android.util.Log;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+import java.security.MessageDigest;
+import java.util.Random;
+
+public class MainActivity extends Activity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        String password = getIntent().getStringExtra("password");
+        Log.d("Smoke", "password=" + password);
+
+        int otp = new Random().nextInt(999999);
+        Log.i("Smoke", "otp=" + otp);
+
+        WebView web = new WebView(this);
+        web.getSettings().setJavaScriptEnabled(true);
+        web.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                handler.proceed();
+            }
+        });
+        setContentView(web);
+
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(password.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

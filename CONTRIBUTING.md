@@ -62,6 +62,10 @@ The versioning rules are at the top of
 capability users notice, `z` for fixes, refinements and data updates. A release moves the version in
 both editions together. [`docs/RELEASING.md`](docs/RELEASING.md) has the procedure.
 
+Scanner image pins are not bumped by hand in a feature pull request: the weekly `update-pins`
+workflow proposes them after a 7-day cooldown and a smoke test, on the branch `bot/scanner-pins`
+([Scanner pin updates](docs/RELEASING.md#scanner-pin-updates)).
+
 ## Eval cases
 
 A new detector or a fixed false positive gets an eval case: a small fixture under `eval/fixtures/`

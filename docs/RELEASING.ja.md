@@ -44,7 +44,7 @@ flowchart TD
 | `.claude-plugin/marketplace.json`、`security-audit/.claude-plugin/plugin.json`（生成物） | `/plugin update` が読む。Claude Code は plugin.json のバージョンを優先する | `build_plugins.py --check`、`validate_release.py` |
 | `eval/results/latest.json`（生成物）、`docs/numbers.json`（生成物） | README が引用する数値 | `check_numbers.py`、CI の鮮度チェック |
 
-基準やスキャナのピンを再確認したときは、スキルの CHANGELOG の規則に従い、両エディションで `metadata.standards-verified` / `scanner-pins-verified`、`reference/standards/index.md` の表、`scripts/run_scanners.py` の `PINS_VERIFIED` も更新します。
+基準やスキャナのピンを再確認したときは、スキルの CHANGELOG の規則に従い、両エディションで `metadata.standards-verified` / `scanner-pins-verified`、`reference/standards/index.md` の表、`scripts/run_scanners.py` の `PINS_VERIFIED` も更新します。スキャナのピンは通常、[スキャナのピン更新](#スキャナのピン更新)で説明する週次のプルリクエストで届きます。
 
 ## 手順
 
@@ -85,6 +85,31 @@ flowchart TD
 
 ライブベンチマーク（`benchmark/bench.py`）はリリースのゲートに含みません。費用がかかり、Claude が必要だからです。コストや再現率が変わりうる変更のときに再実行し、結果をタグの前にコミットします。
 
+## スキャナのピン更新
+
+スキルは 8 つのスキャナイメージを使い、それぞれをタグとダイジェストで固定（ピン留め）しています。監査がスキャナを勝手に変えることはありません。ダイジェストが固定されているので、修正を確認する Phase 8 の再スキャンは最初のスキャンとまったく同じルールで動き、同じコードを別の日に監査しても結果が一致します。ピンが動くのはこのリポジトリを通じてだけで、メンテナがレビューするプルリクエストによります。
+
+`update-pins` ワークフロー（`.github/workflows/update-pins.yml`）が毎週月曜日にそのプルリクエストを用意します。
+
+1. **確認。** `scripts/update_pins.py --check` が各レジストリに新しいタグがあるか問い合わせます。新しいタグは、公開から 7 日経って初めて提案されます（クールダウン）。改ざんされたイメージがレジストリに公開されても、たいてい数日のうちに発見されて取り下げられます。クールダウンは、このリポジトリがその期間に取り込まないようにするためのものです。レジストリへの問い合わせが失敗すると実行は失敗します。障害が「すべて最新」と読まれることはありません。
+2. **スモークテスト。** `scripts/smoke_scanners.py` が候補のイメージをそれぞれ docker で、そのスキャナ向けに欠陥を仕込んだフィクスチャに対して実行します。新しいバージョンが仕込んだ欠陥を見つけられない、またはクラッシュする場合はそこで止まります。ピンが動くのは、検出が引き続き機能するときだけです。
+3. **書き込みとゲート。** `update_pins.py --write` が両エディションのピンを更新し、その結果に対して両方のセルフテスト、オフライン評価、`check_editions.py`、`build_plugins.py --check`、`check_numbers.py`、`validate_release.py` を実行します。
+4. **プルリクエスト。** 変更はブランチ `bot/scanner-pins` に強制 push され、ラベル `scanner-pins` を付けた 1 つのプルリクエストとして作成されます。すでに開いているものがあればそれを更新します。タイトルには各スキャナの変更が並び（`scanner pins: trivy 0.76.1 -> 0.77.0, ...`）、本文には各リリースノートへのリンク、CHANGELOG の下書き、スモークテストの表が入ります。**自動でマージされることはありません。**
+
+`GITHUB_TOKEN` で作成したプルリクエストは他のワークフローを起動しません。そのため上のゲートは `update-pins` の中で実行し、そのうえで `bot/scanner-pins` に対して `ci.yml` を起動して、全 OS のマトリクスを走らせます。プルリクエストにその CI の結果が出ていなければ、`gh workflow run ci.yml --ref bot/scanner-pins` で手動で起動します。
+
+**手動で実行する。** Actions タブから、または `gh workflow run update-pins.yml -f cooldown_days=7 -f tools="trivy semgrep"` でワークフローを起動します（入力はどちらも任意で、`tools` が空なら 8 つすべて）。既定ブランチ以外から実行すると予行演習になります。パッチの作成までは実行しますが、ブランチの push もプルリクエストの作成もしません。ワークフローを使わず手元で実行する場合:
+
+```bash
+python scripts/update_pins.py --check --json pins.json --pr-body body.md
+python scripts/smoke_scanners.py --pins-json pins.json   # docker か podman が必要
+python scripts/update_pins.py --write
+```
+
+`--check` の終了コードは、新しいものがなければ 0、更新があれば 10、問い合わせに失敗すれば 2 です。
+
+**結果をリリースする。** ピンの更新は `z` のリリースです。プルリクエストをレビューしてマージしたら、[手順](#手順)に従ってバージョンを上げ、両エディションとリポジトリ直下の CHANGELOG を書きます。プルリクエスト本文の下書きを出発点にしてかまいません。マージしたピンが利用者に届くのは、そのリリースからです。
+
 ## 何がこれを保証するか
 
 | 規則 | 保証するもの |
@@ -98,6 +123,7 @@ flowchart TD
 | em ダッシュも CRLF もない | `validate_release.py` |
 | README の数値がこのコミットのコードと評価に一致する | `run_eval.py` の後の `check_numbers.py` |
 | 再実行しても既存のリリースで失敗しない | `gh release edit` と `gh release upload --clobber` |
+| スキャナのピンは、クールダウン、スモークテストの合格、ゲートの通過を経て、レビューされたプルリクエストでのみ動く | `update-pins.yml`（`update_pins.py`、`smoke_scanners.py`） |
 
 ## リリースの取り下げ
 
