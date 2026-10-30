@@ -292,14 +292,16 @@ jobs:
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: pin-update
-          path: ${{ runner.temp }}/pin-update
+          # the upload kept the paths relative to runner.temp, so this restores pin-update/...
+          path: ${{ runner.temp }}
 
       # The patch may touch the skill, its data and the generated results, never .github/: this
       # job holds a write token, so what it commits is checked, not trusted.
       - name: Apply the change and commit it
         run: |
           patch="$RUNNER_TEMP/pin-update/pins.patch"
-          if git apply --numstat "$patch" | awk '{print $3}' | grep -E '^\.github/'; then
+          git apply --numstat "$patch" > "$RUNNER_TEMP/numstat"   # a bad patch fails here, not silently
+          if awk '{print $3}' "$RUNNER_TEMP/numstat" | grep -E '^\.github/'; then
             echo "::error::the pin patch touches .github/ - refusing to commit it"; exit 1
           fi
           git apply --index "$patch"
