@@ -1,0 +1,107 @@
+name: docs
+
+# The user guide in docs/guide/ (English) and docs/guide/ja/ (Japanese) is written once and published
+# twice, so the two outlets can never drift:
+#
+#   build  every push and pull request touching the docs: scripts/build_wiki.py --check (no broken
+#          link between guide pages or into the repository) and an mkdocs build of the site.
+#   pages  on the default branch only: deploys that site to GitHub Pages.
+#   wiki   on the default branch only: regenerates the Wiki from the same files and pushes it. The
+#          Wiki is output, not source: edits made there are overwritten (its footer says so).
+#
+# mkdocs and mkdocs-material are pinned. Least privilege per job: only pages holds pages / id-token,
+# only wiki holds contents: write (the Wiki is a separate git repository of this one).
+
+on:
+  push:
+    branches: [main]
+    paths: ["docs/**", "mkdocs.yml", "scripts/build_wiki.py", "scripts/mkdocs_hooks.py", ".github/workflows/docs.yml"]
+  pull_request:
+    paths: ["docs/**", "mkdocs.yml", "scripts/build_wiki.py", "scripts/mkdocs_hooks.py", ".github/workflows/docs.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: check links and build the site
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.13"
+
+      - name: Guide links resolve (pages, files, figures)
+        run: python -B scripts/build_wiki.py --check
+
+      - name: Build the site
+        run: |
+          python -m pip install --disable-pip-version-check "mkdocs==1.6.1" "mkdocs-material==9.8.0"
+          python -m mkdocs build --site-dir "$RUNNER_TEMP/site"
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        if: github.event_name != 'pull_request' && github.ref_name == github.event.repository.default_branch
+        with:
+          path: ${{ runner.temp }}/site
+
+  pages:
+    name: deploy GitHub Pages
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  wiki:
+    name: regenerate the Wiki
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write   # push to <repo>.wiki.git
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      # The token goes on each git call as a masked header, never into .git/config or a URL.
+      - name: Generate and push
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          basic=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          echo "::add-mask::$basic"
+          auth="AUTHORIZATION: basic $basic"
+          wiki="$RUNNER_TEMP/wiki"
+          git -c http.extraheader="$auth" clone --depth 1 "https://github.com/$REPO.wiki.git" "$wiki"
+          python -B scripts/build_wiki.py --out "$wiki"
+          cd "$wiki"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Wiki already current" | tee -a "$GITHUB_STEP_SUMMARY"; exit 0
+          fi
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -q -m "Sync from docs/guide at ${GITHUB_SHA::7}"
+          git -c http.extraheader="$auth" push origin HEAD
+          echo "Wiki updated from ${GITHUB_SHA::7}" | tee -a "$GITHUB_STEP_SUMMARY"

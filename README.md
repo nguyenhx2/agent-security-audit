@@ -335,6 +335,8 @@ a pass, and that hostile feed text is sanitised. Cases: [`eval/README.md`](eval/
 
 ## Go deeper
 
+**User guide:** [nguyenhx2.github.io/agent-security-audit](https://nguyenhx2.github.io/agent-security-audit/), in English and Japanese, from install to troubleshooting. The same pages are in [`docs/guide/`](docs/guide/index.md) and the [Wiki](https://github.com/nguyenhx2/agent-security-audit/wiki).
+
 ```mermaid
 flowchart TD
     subgraph U["Understand"]

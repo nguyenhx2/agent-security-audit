@@ -1,0 +1,94 @@
+# The documentation site (GitHub Pages), built by .github/workflows/docs.yml from docs/.
+# The guide in docs/guide/ is the one source: the Wiki is generated from it by scripts/build_wiki.py.
+site_name: security-audit
+site_description: Read-only, evidence-anchored security audits for Claude Code, in English and Japanese.
+site_url: https://nguyenhx2.github.io/agent-security-audit/
+repo_url: https://github.com/nguyenhx2/agent-security-audit
+repo_name: nguyenhx2/agent-security-audit
+edit_uri: edit/main/docs/
+copyright: Copyright (c) 2026 nguyenhx2 - AGPL-3.0-only
+
+docs_dir: docs
+hooks:
+  - scripts/mkdocs_hooks.py
+exclude_docs: |
+  assets/src/
+  numbers.json
+
+theme:
+  name: material
+  logo: assets/logo-mark.svg
+  favicon: assets/logo-mark.svg
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - search.highlight
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Light mode
+
+plugins:
+  - search:
+      lang: [en, ja]
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+
+validation:
+  links:
+    not_found: warn
+    anchors: info
+
+nav:
+  - English:
+      - Home: guide/index.md
+      - Install: guide/install.md
+      - Your first audit: guide/first-audit.md
+      - How an audit runs: guide/how-it-works.md
+      - Live threat intelligence: guide/threat-intelligence.md
+      - Scanners: guide/scanners.md
+      - Standards and sectors: guide/standards-and-sectors.md
+      - Findings and reports: guide/reports.md
+      - Models and cost: guide/models.md
+      - Re-scan: guide/rescan.md
+      - Security and privacy: guide/security-and-privacy.md
+      - Troubleshooting: guide/troubleshooting.md
+      - Contributing: guide/contributing.md
+      - Architecture: ARCHITECTURE.md
+      - Releasing: RELEASING.md
+  - 日本語:
+      - ホーム: guide/ja/index.md
+      - インストール: guide/ja/install.md
+      - 初めての監査: guide/ja/first-audit.md
+      - 監査の流れ: guide/ja/how-it-works.md
+      - ライブ脅威情報: guide/ja/threat-intelligence.md
+      - スキャナ: guide/ja/scanners.md
+      - 基準と業種: guide/ja/standards-and-sectors.md
+      - 指摘事項と報告書: guide/ja/reports.md
+      - モデルと費用: guide/ja/models.md
+      - 再スキャン: guide/ja/rescan.md
+      - セキュリティとプライバシー: guide/ja/security-and-privacy.md
+      - トラブルシューティング: guide/ja/troubleshooting.md
+      - コントリビュート: guide/ja/contributing.md
+      - アーキテクチャ: ARCHITECTURE.ja.md
+      - リリース手順: RELEASING.ja.md

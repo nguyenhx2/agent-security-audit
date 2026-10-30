@@ -320,6 +320,8 @@ python benchmark/bench.py run --help                  #   実際に監査する�
 
 ## さらに詳しく
 
+**ユーザーガイド：**[nguyenhx2.github.io/agent-security-audit](https://nguyenhx2.github.io/agent-security-audit/guide/ja/)（日本語と英語、インストールからトラブルシューティングまで）。同じ内容は [`docs/guide/ja/`](docs/guide/ja/index.md) と [Wiki](https://github.com/nguyenhx2/agent-security-audit/wiki/JA-Home) にもあります。
+
 ```mermaid
 flowchart TD
     subgraph U["理解する"]
