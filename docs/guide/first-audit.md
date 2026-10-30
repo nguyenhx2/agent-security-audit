@@ -71,7 +71,7 @@ Every depth runs the platform inventory, live threat intelligence, the sensitive
 
 | Depth | Measured |
 |---|---|
-| Quick | The live benchmark measured a mean of US$<!--n:bench_cost_usd-->2.36<!--/n--> and <!--n:bench_minutes-->7<!--/n--> minutes per audit on three deliberately vulnerable projects ([benchmark/RESULTS.md](https://github.com/nguyenhx2/agent-security-audit/blob/main/benchmark/RESULTS.md)). The depth question describes Quick as about 5-10 minutes. |
+| Quick | The live benchmark measured a mean of US$<!--n:bench_cost_usd-->2.52<!--/n--> and <!--n:bench_minutes-->8<!--/n--> minutes per audit on three deliberately vulnerable projects ([benchmark/RESULTS.md](https://github.com/nguyenhx2/agent-security-audit/blob/main/benchmark/RESULTS.md)). The depth question describes Quick as about 5-10 minutes. |
 | Standard, Deep | Not benchmarked. They run more subagents and stronger models, so expect more time and cost than Quick. |
 
 Inside any audit: scanners take about 1-5 minutes per repository with images cached (the first image pull adds 1-5 minutes), and the advisory match takes 10-90 seconds (longer without an `NVD_API_KEY`). Both run in the background while recon and the sweep continue.

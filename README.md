@@ -287,27 +287,29 @@ reading the same files of a small repo share one subagent. The matrix:
 <!-- BENCHMARK -->
 ## Measured, not modelled
 
-Real, headless Claude Code audits (CLI 2.1.310 for the 1.13.0 runs, 2.1.311 for 1.15.0) of three deliberately
-vulnerable projects pinned to exact commits (DVWA, NodeGoat, OWASP Juice Shop), 1.13.0 against
-1.15.0, the same prompt, depth (Quick) and per-run budget,
-18 runs in total, US$41.71 in total. Recall is scored by script
+Real, headless Claude Code audits (CLI 2.1.314) of three deliberately vulnerable projects pinned to
+exact commits (DVWA, NodeGoat, OWASP Juice Shop), 1.15.0 against 1.15.2, the same prompt, depth
+(Quick) and per-run budget, 18 runs in total, US$44.92 in total. Recall is scored by script
 against ten documented vulnerability classes per project, never by a model.
 
-| Measure | 1.13.0 | 1.15.0 | Change |
+| Measure | 1.15.0 | 1.15.2 | Change |
 |---|---:|---:|---:|
-| Ground-truth classes found (recall) | <!--n:bench_recall_pct_baseline-->88<!--/n-->% | <!--n:bench_recall_pct-->97<!--/n-->% | +9 pt |
-| Outdated or end-of-life runtime found (DVWA, NodeGoat) | 4/6 | 6/6 | +2 |
-| Threat-intelligence section produced | 0/9 | 9/9 | +9 |
-| Findings per audit | 20.4 | 22.3 | +1.9 |
+| Ground-truth classes found (recall) | <!--n:bench_recall_pct_baseline-->99<!--/n-->% | <!--n:bench_recall_pct-->97<!--/n-->% | -2 pt |
+| Outdated or end-of-life runtime found (DVWA, NodeGoat) | 6/6 | 6/6 | +0 |
+| Threat-intelligence section produced | 9/9 | 9/9 | +0 |
+| Findings per audit | 23.7 | 23.1 | -0.6 |
 | Audits whose findings pass the validator | 9/9 | 9/9 | +0 |
-| Cost per audit (USD) | <!--n:bench_cost_usd_baseline-->2.27<!--/n--> | <!--n:bench_cost_usd-->2.36<!--/n--> | +4% |
-| Wall-clock time per audit (minutes) | <!--n:bench_minutes_baseline-->11<!--/n--> | <!--n:bench_minutes-->7<!--/n--> | -30% |
+| Cost per audit (USD) | <!--n:bench_cost_usd_baseline-->2.47<!--/n--> | <!--n:bench_cost_usd-->2.52<!--/n--> | +2% |
+| Wall-clock time per audit (minutes) | <!--n:bench_minutes_baseline-->8<!--/n--> | <!--n:bench_minutes-->8<!--/n--> | +4% |
 
-1.15.0 found more of the known classes on DVWA and Juice Shop, and named the end-of-life runtime in
-every DVWA and NodeGoat audit, at about the same cost. Time is the weakest figure: the first two
-1.13.0 runs took 26 and 18 minutes while three audits shared the machine, and the medians are 8.2
-against 6.9 minutes. Three projects and three runs per cell are a small sample, and one run per
-version is not a verdict; per-run numbers and the history are in
+1.15.2 is a patch release (detection fixes, newer scanner pins, a ReDoS fix) and none of it changes
+how the model hunts; this run checks that nothing got worse. DVWA and NodeGoat are identical, 100%
+in every run. The recall gap is Juice Shop alone: 1.15.2 missed XSS twice and path traversal once,
+1.15.0 missed XSS once, and XSS on Juice Shop was already the weakest class for 1.15.0. With three
+runs per cell that reads as run-to-run variance, not a regression, but it cannot be ruled out.
+The earlier comparison, 1.13.0 against 1.15.0, is where the gains were: recall 88% to 97%, the
+end-of-life runtime found in 6/6 instead of 4/6 audits, and a threat-intelligence section in 9/9
+instead of 0/9, at about the same cost. Per-run numbers, that comparison and the history are in
 [`benchmark/RESULTS.md`](benchmark/RESULTS.md).
 Precision is not measured: these projects have more bugs than their documentation lists, so a
 finding outside the ten classes is not necessarily a false positive. Method and limits:

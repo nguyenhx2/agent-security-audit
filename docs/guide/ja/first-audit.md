@@ -70,7 +70,7 @@ are we affected by this CVE
 
 | 深さ | 実測値 |
 |---|---|
-| Quick | ライブのベンチマークでは、意図的に脆弱にした 3 つのプロジェクトに対し、監査 1 回あたり平均 US$<!--n:bench_cost_usd-->2.36<!--/n-->、<!--n:bench_minutes-->7<!--/n--> 分でした（[benchmark/RESULTS.ja.md](https://github.com/nguyenhx2/agent-security-audit/blob/main/benchmark/RESULTS.ja.md)）。深さの質問では、Quick は約 5-10 分と説明しています。 |
+| Quick | ライブのベンチマークでは、意図的に脆弱にした 3 つのプロジェクトに対し、監査 1 回あたり平均 US$<!--n:bench_cost_usd-->2.52<!--/n-->、<!--n:bench_minutes-->8<!--/n--> 分でした（[benchmark/RESULTS.ja.md](https://github.com/nguyenhx2/agent-security-audit/blob/main/benchmark/RESULTS.ja.md)）。深さの質問では、Quick は約 5-10 分と説明しています。 |
 | Standard、Deep | ベンチマークは取っていません。サブエージェントが増え、より強いモデルを使うため、Quick より時間も費用もかかると考えてください。 |
 
 監査の中では、スキャナはイメージがキャッシュにあればリポジトリごとに約 1-5 分（最初のイメージ取得でさらに 1-5 分）、脆弱性情報との照合は 10-90 秒（`NVD_API_KEY` がなければもっと長く）かかります。どちらもバックグラウンドで動き、その間に偵察とスイープが進みます。

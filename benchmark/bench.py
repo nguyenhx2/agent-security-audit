@@ -5,7 +5,7 @@ deliberately vulnerable repositories with two skill versions and measures cost, 
 and recall against a fixed ground truth (CWE groups). Costs real money; never runs in CI.
 
 Each run gets its own copy of the fixture, so concurrent runs never share an audit folder. The skill
-versions are installed side by side under distinct names (sa-v113, sa-v115) and invoked by slash
+versions are installed side by side under distinct names (sa-v1150, sa-v1152) and invoked by slash
 command, so the prompt is identical apart from the name.
 
 The fixtures are pinned: benchmark/fixtures.json names each repository and the exact commit the
@@ -14,7 +14,7 @@ commit is a different benchmark, so `run` refuses one whose HEAD does not match 
 
 Usage:
   python benchmark/bench.py fetch   (clone the pinned fixtures into benchmark/fixtures/, gitignored)
-  python benchmark/bench.py run --skill sa-v113=<dir> --skill sa-v115=<dir> --fixtures DVWA NodeGoat juice-shop
+  python benchmark/bench.py run --skill sa-v1150=<dir> --skill sa-v1152=<dir> --fixtures DVWA NodeGoat juice-shop
                       --reps 2 --parallel 3 [--depth quick] [--budget 10]
   python benchmark/bench.py report  (aggregate runs/*/result.json into results/results.json)
 
@@ -126,7 +126,9 @@ def one(run_id: str, skill: str, fixture: str, depth: str, budget: float) -> dic
 
 
 def analyse(d: Path, fixture: str) -> dict:
-    audits = sorted(d.glob(f"*-security-audit/*/"))
+    # only the timestamped audit folders (YYYY-MM-DD_HHMM): a run may leave a helper folder beside them
+    # (a "snapshot-..." copy of the repo), which sorts after them and holds no findings
+    audits = sorted(p for p in d.glob("*-security-audit/*/") if re.match(r"\d{4}-\d{2}-\d{2}_\d{4}", p.name))
     out = {"audit_dir": audits[-1].relative_to(HERE).as_posix() if audits else None}
     if not audits:
         return out | {"findings": 0}

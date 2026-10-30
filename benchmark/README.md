@@ -20,8 +20,9 @@ The results are in [`RESULTS.md`](RESULTS.md) ([日本語](RESULTS.ja.md)); the 
   intentional vulnerabilities, plus an "outdated / end-of-life runtime or image" class for DVWA and
   NodeGoat, which the threat-intelligence step is meant to catch. The same list is used for every
   skill version.
-- **Runs.** Each skill version is installed side by side under its own name (for example `sa-v113`
-  and `sa-v115`) and invoked with the same prompt, the same depth and the same per-run budget cap.
+- **Runs.** Each skill version is installed side by side under its own name (for example `sa-v1150`
+  and `sa-v1152`: `sa-v` plus the version without dots, which `scripts/check_numbers.py` uses to
+  tell the current release from the baseline) and invoked with the same prompt, the same depth and the same per-run budget cap.
   Each run audits its own fresh copy of the fixture, so concurrent runs never share state. Several
   repetitions per fixture and version, because a model run is not deterministic: results are
   reported as mean, standard deviation, minimum and maximum.
@@ -39,8 +40,8 @@ judging those takes a human read of each report.
 ```bash
 python benchmark/bench.py fetch          # clone the pinned fixtures into benchmark/fixtures/
 python benchmark/bench.py run \
-  --skill sa-v113=/path/to/security-audit-1.13.0 \
-  --skill sa-v115=security-audit \
+  --skill sa-v1150=/path/to/security-audit-1.15.0 \
+  --skill sa-v1152=security-audit \
   --fixtures DVWA NodeGoat juice-shop --reps 2 --parallel 3 --depth quick --budget 10
 python benchmark/bench.py report         # aggregate into benchmark/results/results.json
 ```

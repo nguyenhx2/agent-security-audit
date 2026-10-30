@@ -47,8 +47,8 @@ The repository's live benchmark runs real, headless Claude Code audits of three 
 | Measure | Value |
 |---|---|
 | Recall against ten documented vulnerability classes per project | <!--n:bench_recall_pct-->97<!--/n-->% |
-| Mean cost | US$<!--n:bench_cost_usd-->2.36<!--/n--> |
-| Mean wall-clock time | <!--n:bench_minutes-->7<!--/n--> minutes |
+| Mean cost | US$<!--n:bench_cost_usd-->2.52<!--/n--> |
+| Mean wall-clock time | <!--n:bench_minutes-->8<!--/n--> minutes |
 | Runs | <!--n:bench_runs-->9<!--/n--> |
 
 Recall is scored by a script, never by a model. Precision is not measured: these projects have more bugs than their documentation lists, so a finding outside the ten classes is not necessarily a false positive. Three projects and three runs per cell are a small sample. Standard and Deep are not benchmarked.

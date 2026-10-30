@@ -11,11 +11,11 @@
  "standards_modules": 14,
  "scanners": 8,
  "bench_recall_pct": 97,
- "bench_cost_usd": 2.36,
- "bench_minutes": 7,
+ "bench_cost_usd": 2.52,
+ "bench_minutes": 8,
  "bench_runs": 9,
- "bench_recall_pct_baseline": 88,
- "bench_cost_usd_baseline": 2.27,
- "bench_minutes_baseline": 11,
+ "bench_recall_pct_baseline": 99,
+ "bench_cost_usd_baseline": 2.47,
+ "bench_minutes_baseline": 8,
  "bench_runs_baseline": 9
 }
