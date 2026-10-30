@@ -133,17 +133,17 @@ A scanner run is only as current as its rules and its view of what you deploy. T
 deterministic layer current:
 
 - **Pinned, re-verified scanners.** <!--n:scanners-->8<!--/n--> scanners run from images pinned by
-  version and SHA-256 digest, re-verified for every release (last: 2026-10-26). Phase 8 re-scans
+  version and SHA-256 digest, re-verified for every release (last: 2026-10-30). Phase 8 re-scans
   with the same digests, so a fix is judged by the same rules that found the defect, and a finding
   closes only when it no longer reproduces and its rule still fires.
 
   | Scanner | Covers |
   |---|---|
-  | Semgrep 1.181.0 | code patterns (SAST) |
+  | Semgrep 1.182.1 | code patterns (SAST) |
   | Gitleaks 8.30.1 | secrets, including full git history |
   | Trivy 0.76.1 | dependencies, images, IaC misconfiguration |
   | OSV-Scanner 2.7.0 | dependencies against OSV, including malicious packages |
-  | Checkov 3.3.29 | Terraform, CloudFormation, Kubernetes, Helm |
+  | Checkov 3.3.30 | Terraform, CloudFormation, Kubernetes, Helm |
   | zizmor 1.31.1 | GitHub Actions workflows |
   | mobsfscan 1.0.1 | Android and iOS source |
   | hadolint 2.15.1 | Dockerfiles |

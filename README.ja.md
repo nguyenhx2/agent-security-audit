@@ -126,17 +126,17 @@ Windows、macOS、Linux（WSL を含む）に対応します。
 決定論的な層を最新に保つ仕組みは 2 つです。
 
 - **固定し、検証し直すスキャナ。** <!--n:scanners-->8<!--/n--> 種のスキャナを、バージョンと SHA-256 ダイジェストで
-  固定したイメージから実行し、リリースごとに検証し直します（最新の検証日：2026-10-26）。Phase 8 の再スキャンは同じ
+  固定したイメージから実行し、リリースごとに検証し直します（最新の検証日：2026-10-30）。Phase 8 の再スキャンは同じ
   ダイジェストを使うため、修正は欠陥を見つけたのと同じルールで判定されます。指摘が閉じるのは、再現しなくなり、
   かつその検出ルールがまだ有効なときだけです。
 
   | スキャナ | 対象 |
   |---|---|
-  | Semgrep 1.181.0 | コードのパターン（SAST） |
+  | Semgrep 1.182.1 | コードのパターン（SAST） |
   | Gitleaks 8.30.1 | 秘密情報（git の全履歴を含む） |
   | Trivy 0.76.1 | 依存関係、イメージ、IaC の設定ミス |
   | OSV-Scanner 2.7.0 | OSV に照らした依存関係（悪意のあるパッケージを含む） |
-  | Checkov 3.3.29 | Terraform、CloudFormation、Kubernetes、Helm |
+  | Checkov 3.3.30 | Terraform、CloudFormation、Kubernetes、Helm |
   | zizmor 1.31.1 | GitHub Actions のワークフロー |
   | mobsfscan 1.0.1 | Android と iOS のソース |
   | hadolint 2.15.1 | Dockerfile |
