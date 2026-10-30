@@ -132,6 +132,14 @@ Monday:
    pull request labelled `scanner-pins`, or the open one is updated. The title lists each move
    (`scanner pins: trivy 0.76.1 -> 0.77.0, ...`); the body has the release notes links, a draft
    CHANGELOG entry and the smoke test table. It is **never merged automatically**.
+5. **Failure issue.** When any step fails (a registry lookup, the smoke test, a gate, or opening the
+   pull request), the run opens one issue `update-pins failed` labelled `scanner-pins` with the
+   failed stage, the run link and what to do next; a later failure comments on it, and the next run
+   that succeeds closes it. Nothing is merged either way.
+
+The schedule is the `cron` line in `.github/workflows/update-pins.yml` (Mondays 02:17 UTC). The
+repository setting "Allow GitHub Actions to create and approve pull requests" must be on for step 4;
+the workflow never approves anything.
 
 A pull request opened with `GITHUB_TOKEN` does not start other workflows, so the gates above run
 inside `update-pins` itself, and it then dispatches `ci.yml` on `bot/scanner-pins` for the full

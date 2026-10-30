@@ -21,6 +21,8 @@ name: update-pins
 #           branch bot/scanner-pins (force-updated), opens the pull request or updates the one that
 #           is already open, and labels it scanner-pins. It never runs a scanner image: the new
 #           images execute only in the read-only job, away from the write token.
+#   report  (issues: write) when check or pr failed, opens one issue "update-pins failed" (or
+#           comments on the open one); when a later run succeeds, closes it.
 #
 # A pull request opened with GITHUB_TOKEN does not trigger other workflows, so ci.yml would not run
 # on it by itself. Two things cover that: the gates ci.yml runs on Ubuntu (both selftests, the
@@ -348,4 +350,51 @@ jobs:
         run: |
           if ! gh workflow run ci.yml --ref "$BRANCH"; then
             echo "::warning::could not dispatch ci.yml; run it by hand: gh workflow run ci.yml --ref $BRANCH"
+          fi
+
+  # A failed run must reach a person, not only turn red: it opens ONE issue labelled scanner-pins
+  # (later failures comment on it), and the next run that succeeds closes it. Cancelled runs are left
+  # alone. Default branch only, like the pr job; it reads no artifact and runs no scanner.
+  report:
+    name: open or close the failure issue
+    needs: [check, pr]
+    if: always() && github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    env:
+      CHECK: ${{ needs.check.result }}
+      PR: ${{ needs.pr.result }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Open, update or close the issue
+        run: |
+          title="update-pins failed"
+          gh label create scanner-pins --color 0e8a16 \
+            --description "Scanner image pin updates from the update-pins workflow" --force
+          number=$(gh issue list --label scanner-pins --state open --json number,title \
+            -q ".[] | select(.title == \"$title\") | .number" | head -n 1)
+          if [ "$CHECK" = failure ] || [ "$PR" = failure ]; then
+            if [ "$CHECK" = failure ]; then
+              stage="check, smoke test and gates"
+              hint="Open the run log. A registry lookup error is usually temporary: re-run. A smoke-test miss means a new scanner version no longer reports a planted defect: read its release notes, then either keep the old pin or update eval/fixtures/scanners/expect.json on purpose. A gate failure means the written pins broke a check."
+            else
+              stage="opening the pull request"
+              hint="The new pins passed every check, but the branch push or the pull request failed: check the repository's Actions permissions, then re-run."
+            fi
+            body=$(printf '%s\n\n- Failed stage: %s\n- Run: %s\n\n%s\n\nNothing was merged. This issue closes itself when a later run succeeds.\n' \
+              "The scheduled scanner pin update did not complete." "$stage" "$RUN_URL" "$hint")
+            if [ -n "$number" ]; then
+              gh issue comment "$number" --body "$body"
+              echo "commented on issue #$number" | tee -a "$GITHUB_STEP_SUMMARY"
+            else
+              gh issue create --title "$title" --label scanner-pins --body "$body"
+              echo "opened an issue: $title" | tee -a "$GITHUB_STEP_SUMMARY"
+            fi
+          elif [ "$CHECK" = success ] && [ -n "$number" ]; then
+            gh issue close "$number" --comment "Resolved: $RUN_URL completed."
+            echo "closed issue #$number" | tee -a "$GITHUB_STEP_SUMMARY"
           fi

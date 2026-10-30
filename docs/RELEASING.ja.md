@@ -95,6 +95,9 @@ flowchart TD
 2. **スモークテスト。** `scripts/smoke_scanners.py` が候補のイメージをそれぞれ docker で、そのスキャナ向けに欠陥を仕込んだフィクスチャに対して実行します。新しいバージョンが仕込んだ欠陥を見つけられない、またはクラッシュする場合はそこで止まります。ピンが動くのは、検出が引き続き機能するときだけです。
 3. **書き込みとゲート。** `update_pins.py --write` が両エディションのピンを更新し、その結果に対して両方のセルフテスト、オフライン評価、`check_editions.py`、`build_plugins.py --check`、`check_numbers.py`、`validate_release.py` を実行します。
 4. **プルリクエスト。** 変更はブランチ `bot/scanner-pins` に強制 push され、ラベル `scanner-pins` を付けた 1 つのプルリクエストとして作成されます。すでに開いているものがあればそれを更新します。タイトルには各スキャナの変更が並び（`scanner pins: trivy 0.76.1 -> 0.77.0, ...`）、本文には各リリースノートへのリンク、CHANGELOG の下書き、スモークテストの表が入ります。**自動でマージされることはありません。**
+5. **失敗時の Issue。** どこかの段階（レジストリの照会、スモークテスト、ゲート、プルリクエストの作成）で失敗すると、ラベル `scanner-pins` を付けた Issue `update-pins failed` を 1 つ作成し、失敗した段階、実行へのリンク、次に取るべき対応を記載します。その後の失敗はこの Issue へのコメントになり、次に成功した実行がこの Issue を閉じます。どちらの場合もマージは行いません。
+
+実行の頻度は `.github/workflows/update-pins.yml` の `cron` の行で決まります（毎週月曜 02:17 UTC）。手順 4 には、リポジトリの設定「Allow GitHub Actions to create and approve pull requests」を有効にしておく必要があります。ワークフローが承認を行うことはありません。
 
 `GITHUB_TOKEN` で作成したプルリクエストは他のワークフローを起動しません。そのため上のゲートは `update-pins` の中で実行し、そのうえで `bot/scanner-pins` に対して `ci.yml` を起動して、全 OS のマトリクスを走らせます。プルリクエストにその CI の結果が出ていなければ、`gh workflow run ci.yml --ref bot/scanner-pins` で手動で起動します。
 
