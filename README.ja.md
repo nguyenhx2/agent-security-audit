@@ -56,14 +56,14 @@
 
 **リリースから**（オフライン、プラグインの仕組みは不要）：
 [最新リリース](https://github.com/nguyenhx2/agent-security-audit/releases/latest)から
-`security-audit-1.15.1.zip` を入手し、スキルのフォルダに展開します。
+`security-audit-1.15.2.zip` を入手し、スキルのフォルダに展開します。
 
 ```bash
-unzip security-audit-1.15.1.zip -d ~/.claude/skills/
+unzip security-audit-1.15.2.zip -d ~/.claude/skills/
 ```
 
 ```powershell
-Expand-Archive security-audit-1.15.1.zip -DestinationPath $HOME\.claude\skills\
+Expand-Archive security-audit-1.15.2.zip -DestinationPath $HOME\.claude\skills\
 ```
 
 **Claude Code のプラグインとして：**
@@ -84,8 +84,8 @@ Expand-Archive security-audit-1.15.1.zip -DestinationPath $HOME\.claude\skills\
 または Podman（ネイティブ版でも動きます。どちらもない場合はコードを読むだけの監査になり、その旨を明記します）。
 Windows、macOS、Linux（WSL を含む）に対応します。
 
-**どちらの zip を選ぶか。** 推奨は英語版（`security-audit-1.15.1.zip`）です。報告書は英語、日本語、またはその両方で
-書けます。`security-audit-ja-1.15.1.zip` は手順書と参照資料が日本語の同じスキルで、スキル自体を日本語で読み、
+**どちらの zip を選ぶか。** 推奨は英語版（`security-audit-1.15.2.zip`）です。報告書は英語、日本語、またはその両方で
+書けます。`security-audit-ja-1.15.2.zip` は手順書と参照資料が日本語の同じスキルで、スキル自体を日本語で読み、
 保守したいチーム向けです。どちらも `security-audit` としてインストールされるため、入れるのはどちらか一方だけです。
 
 <p align="center">

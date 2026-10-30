@@ -16,6 +16,31 @@ When standards or scanner pins are re-verified, also update `metadata.standards-
 `scanner-pins-verified`, the table in `reference/standards/index.md`, and `PINS_VERIFIED` in
 `scripts/run_scanners.py` - that is a `z` bump unless a module is added or removed (then `y`).
 
+## [1.15.2] - 2026-10-30
+
+Current scanner pins, a hardening fix for hostile repositories, and a way to see newer scanner
+versions without changing any pin.
+
+### Added
+- `run_scanners.py --check-updates`: lists, for each pinned scanner, whether a newer stable version
+  exists on its registry. It only reports: nothing is pulled and no pin changes, so audits and the
+  Phase 8 re-scan keep running the verified digests. Phase 0 mentions it when the pins are more than
+  90 days old. `--pin tool=image:tag@sha256:...` still tries a newer one on purpose.
+
+### Changed
+- Scanner pins updated and verified 2026-10-30 (cooldown 7 days, multi-arch index digests): semgrep
+  1.181.0 -> 1.182.1, checkov 3.3.29 -> 3.3.30. Each new image found its planted defect in the smoke
+  test before the pin moved.
+
+### Fixed
+- A crafted line in an audited repository (a long run of backslash escapes inside a string) could
+  make the route map's string-literal regex backtrack for minutes and stall Phase 1. The regex is
+  now linear.
+- `platform_inventory.py` matched the Microsoft registry by prefix, so a host such as
+  `mcr.microsoft.com.<other domain>` was treated as Microsoft's. It now compares the exact host.
+- The AI inventory also catches an OpenAI v3 call written with a space before the parenthesis
+  (`openai.createCompletion (...)`). Thanks to @mikemikimike (pull request #6).
+
 ## [1.15.1] - 2026-10-30
 
 Fixes from real audits: five places where a helper script gave the lanes a wrong or empty starting

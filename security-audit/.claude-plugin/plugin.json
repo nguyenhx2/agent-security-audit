@@ -1,6 +1,6 @@
 {
   "name": "security-audit",
-  "version": "1.15.1",
+  "version": "1.15.2",
   "description": "Read-only security audit of one or more repositories: evidence-anchored findings, Markdown, HTML and Excel reports.",
   "author": {
     "name": "nguyenhx2",

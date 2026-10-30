@@ -27,3 +27,4 @@ desktop.ini
 # webroot .env (non-secret placeholder values) that the platform eval must be able to see.
 /.env
 /.env.*
+benchmark/runs-*/

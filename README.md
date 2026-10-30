@@ -60,16 +60,16 @@ HTML and Excel, in English and Japanese.
 ## Install
 
 **From a release** (offline, no plugin system needed): download
-`security-audit-1.15.1.zip` from the
+`security-audit-1.15.2.zip` from the
 [latest release](https://github.com/nguyenhx2/agent-security-audit/releases/latest) and unzip it
 into your skills folder:
 
 ```bash
-unzip security-audit-1.15.1.zip -d ~/.claude/skills/
+unzip security-audit-1.15.2.zip -d ~/.claude/skills/
 ```
 
 ```powershell
-Expand-Archive security-audit-1.15.1.zip -DestinationPath $HOME\.claude\skills\
+Expand-Archive security-audit-1.15.2.zip -DestinationPath $HOME\.claude\skills\
 ```
 
 **As a Claude Code plugin:**
@@ -90,8 +90,8 @@ Requirements: Claude Code, Python 3.9+ (standard library; `openpyxl` only for Ex
 Podman for the scanners (native installs work too; with neither, the audit runs reading-only and
 states the gap). Windows, macOS and Linux, including WSL.
 
-**Which zip?** The English edition (`security-audit-1.15.1.zip`) is recommended for everyone: it
-writes reports in English, Japanese or both. `security-audit-ja-1.15.1.zip` is the same skill with
+**Which zip?** The English edition (`security-audit-1.15.2.zip`) is recommended for everyone: it
+writes reports in English, Japanese or both. `security-audit-ja-1.15.2.zip` is the same skill with
 Japanese instructions and reference prose, for teams that want to read and maintain the skill
 itself in Japanese. Both install as `security-audit`, so install one or the other, never both.
 

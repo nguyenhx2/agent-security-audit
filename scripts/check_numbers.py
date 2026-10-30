@@ -101,7 +101,7 @@ def bench_numbers(version: str) -> dict:
         return {}
     data = json.loads(BENCH.read_text(encoding="utf-8"))
     groups = data.get("groups", [])
-    tag = "v" + "".join(version.split(".")[:2])  # 1.15.0 -> v115, the bench.py install name
+    tag = "v" + version.replace(".", "")  # 1.15.2 -> v1152, the bench.py install name (sa-v1152)
     by_skill: dict[str, list] = {}
     for g in groups:
         by_skill.setdefault(g.get("skill", ""), []).append(g)

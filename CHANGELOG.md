@@ -7,6 +7,19 @@ what the release contains; the itemised change log of the skill itself lives in
 release body is generated from the skill CHANGELOG by `scripts/release_notes.py`; see
 [`docs/RELEASING.md`](docs/RELEASING.md).
 
+## v1.15.2
+
+The skill gets current scanner pins (semgrep 1.182.1, checkov 3.3.30), a fix that keeps a crafted
+repository from stalling the route map, and `run_scanners.py --check-updates`, which reports newer
+scanner versions without changing a pin.
+
+Around the skill, the repository now keeps its scanners current on a schedule, safely: a weekly
+workflow finds releases that have been public for 7 days, proves each one still finds a planted
+defect, and opens a pull request that a maintainer reviews; a failed run opens an issue. These pins
+are the first to arrive that way. The user guide, in English and Japanese, is published at
+https://nguyenhx2.github.io/agent-security-audit/ and in the Wiki from one source in `docs/guide/`.
+Details in [`security-audit/CHANGELOG.md`](security-audit/CHANGELOG.md).
+
 ## v1.15.1
 
 A fix release of the `security-audit` skill, both editions. Five helper scripts gave the review
