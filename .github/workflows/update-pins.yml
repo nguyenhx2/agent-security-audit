@@ -86,10 +86,14 @@ jobs:
           INPUT_TOOLS: ${{ github.event.inputs.tools }}
         run: |
           cooldown="${INPUT_COOLDOWN:-7}"
-          if ! printf '%s' "$cooldown" | grep -Eq '^[0-9]{1,3}$'; then
+          # bash regex on the whole value: grep would pass an empty value never and a multi-line
+          # value whenever any one line matches
+          num='^[0-9]{1,3}$'
+          names='^[a-z0-9 _-]*$'
+          if ! [[ $cooldown =~ $num ]]; then
             echo "::error::cooldown_days '$cooldown' is not a whole number of days"; exit 1
           fi
-          if ! printf '%s' "$INPUT_TOOLS" | grep -Eq '^[a-z0-9 _-]*$'; then
+          if ! [[ $INPUT_TOOLS =~ $names ]]; then
             echo "::error::tools must be scanner names separated by spaces"; exit 1
           fi
           echo "cooldown=$cooldown" >> "$GITHUB_OUTPUT"
