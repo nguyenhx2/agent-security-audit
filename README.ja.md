@@ -364,6 +364,8 @@ Issue とプルリクエストを歓迎します。基準は「主張したも�
 確かめるゲートは自動化されています：[`CONTRIBUTING.md`](CONTRIBUTING.md)。
 
 このスキルが役に立った場合は、[GitHub Sponsors](https://github.com/sponsors/nguyenhx2) または [Buy Me a Coffee](https://buymeacoffee.com/nguyenhx2) から保守（フィードと基準の
+
+<p><a href="https://buymeacoffee.com/nguyenhx2"><img src="docs/assets/bmc-button.svg" alt="Buy Me a Coffee で支援する" height="44"></a></p>
 再検証、スキャナの更新、ライブベンチマーク）を支援していただけます。
 
 ## ライセンス

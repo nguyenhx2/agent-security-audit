@@ -383,6 +383,8 @@ If this skill saves you time, you can support its upkeep (feed and standards re-
 scanner updates, the live benchmark) through [GitHub Sponsors](https://github.com/sponsors/nguyenhx2) or
 [Buy Me a Coffee](https://buymeacoffee.com/nguyenhx2).
 
+<p><a href="https://buymeacoffee.com/nguyenhx2"><img src="docs/assets/bmc-button.svg" alt="Buy me a coffee" height="44"></a></p>
+
 ## License
 
 **[GNU AGPL-3.0-only](LICENSE.md)**, licensor **Hoàng Xuân Nguyên** (`nguyenhx2`). Free for any use,

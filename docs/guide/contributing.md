@@ -38,6 +38,10 @@ House style: no em-dashes (plain hyphens only), LF line endings, and no invented
 
 If this skill saves you time, you can support it through [GitHub Sponsors](https://github.com/sponsors/nguyenhx2) or [Buy Me a Coffee](https://buymeacoffee.com/nguyenhx2) (also behind the Sponsor button on the repository).
 
+[![Buy me a coffee](../assets/bmc-button.svg)](https://buymeacoffee.com/nguyenhx2)
+
+![Buy Me a Coffee QR code: buymeacoffee.com/nguyenhx2](../assets/bmc-qr.png)
+
 ## See also
 
 - [CONTRIBUTING.md](https://github.com/nguyenhx2/agent-security-audit/blob/main/CONTRIBUTING.md)

@@ -38,6 +38,10 @@ Issue とプルリクエストを歓迎します。基準は「主張したも�
 
 このスキルで時間を節約できたら、[GitHub Sponsors](https://github.com/sponsors/nguyenhx2) または [Buy Me a Coffee](https://buymeacoffee.com/nguyenhx2) で支援できます（リポジトリの Sponsor ボタンからも開けます）。
 
+[![Buy me a coffee](../../assets/bmc-button.svg)](https://buymeacoffee.com/nguyenhx2)
+
+![Buy Me a Coffee の QR コード：buymeacoffee.com/nguyenhx2](../../assets/bmc-qr.png)
+
 ## 関連ページ
 
 - [CONTRIBUTING.md](https://github.com/nguyenhx2/agent-security-audit/blob/main/CONTRIBUTING.md)
