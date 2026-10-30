@@ -17,6 +17,7 @@
   <a href="#ライブ脅威情報"><img src="https://img.shields.io/badge/advisory%20feeds-8%20global%20%2B%20Japan-blue.svg" alt="国内外の 8 つのフィード"></a>
   <a href="#最新に追従するツール"><img src="https://img.shields.io/badge/pinned%20scanners-8-blue.svg" alt="バージョンを固定したスキャナ 8 種"></a>
   <a href="#最新に追従するツール"><img src="https://img.shields.io/badge/scanner%20updates-weekly%2C%20reviewed-blue.svg" alt="スキャナの更新：毎週確認し、レビュー後に取り込む"></a>
+  <a href="https://github.com/sponsors/nguyenhx2"><img src="https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ea4aaa.svg" alt="GitHub Sponsors でこのプロジェクトを支援する"></a>
 </p>
 
 リリース前のセキュリティレビューは、だいたい同じ所でつまずきます。スキャナは依存関係の CVE を 100 件報告しても、
@@ -367,6 +368,9 @@ FIRST、endoflife.date の貢献者、IPA、JPCERT/CC、JVN のチームです�
 
 Issue とプルリクエストを歓迎します。基準は「主張したものを今も見つけるか、そしてそれだけを見つけるか」で、それを
 確かめるゲートは自動化されています：[`CONTRIBUTING.md`](CONTRIBUTING.md)。
+
+このスキルが役に立った場合は、[GitHub Sponsors](https://github.com/sponsors/nguyenhx2) から保守（フィードと基準の
+再検証、スキャナの更新、ライブベンチマーク）を支援していただけます。
 
 ## ライセンス
 

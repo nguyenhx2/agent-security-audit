@@ -17,6 +17,7 @@
   <a href="#live-threat-intelligence"><img src="https://img.shields.io/badge/advisory%20feeds-8%20global%20%2B%20Japan-blue.svg" alt="8 advisory feeds, global and Japanese"></a>
   <a href="#tools-that-keep-up"><img src="https://img.shields.io/badge/pinned%20scanners-8-blue.svg" alt="8 pinned scanners"></a>
   <a href="#tools-that-keep-up"><img src="https://img.shields.io/badge/scanner%20updates-weekly%2C%20reviewed-blue.svg" alt="Scanner updates: weekly, reviewed before merge"></a>
+  <a href="https://github.com/sponsors/nguyenhx2"><img src="https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ea4aaa.svg" alt="Sponsor this project on GitHub Sponsors"></a>
 </p>
 
 A security review before launch tends to fail in the same places. The scanner reports a hundred
@@ -383,6 +384,9 @@ contributors, IPA, JPCERT/CC and the JVN team. None of them endorse this project
 
 Issues and pull requests are welcome. The bar is "does it still find what it claims, and only
 that", and the gates that answer it are automated: [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+If this skill saves you time, you can support its upkeep (feed and standards re-verification,
+scanner updates, the live benchmark) through [GitHub Sponsors](https://github.com/sponsors/nguyenhx2).
 
 ## License
 
