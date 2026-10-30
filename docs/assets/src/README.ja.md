@@ -11,6 +11,7 @@ SVG を直接編集してはいけません。どの図にも英語のソース�
 | `threat-intel-flow.drawio` | リポジトリの指定 -> platform_inventory -> threat_intel <- フィード -> intel.json -> トリアージ -> 報告書 | README「ライブ脅威情報」、ARCHITECTURE |
 | `coverage-map.drawio` | 技術領域と業種、それぞれの基準 | README「確認する範囲」 |
 | `model-allocation.drawio` | 深さとサブエージェントごとのモデルと effort | README「タスクごとのモデル」、ARCHITECTURE |
+| `scanner-update-flow.drawio` | 毎週の起動 -> update_pins --check <- レジストリ -> スモークテスト -> 書き込みとゲート -> PR 1 件 -> 人がマージ -> z リリース。失敗 -> Issue。監査中のピン | README「最新に追従するツール」 |
 
 ## 再生成
 
@@ -19,7 +20,7 @@ SVG を直接編集してはいけません。どの図にも英語のソース�
 `<title>` と `<desc>` もありません。
 
 ```sh
-for f in audit-pipeline threat-intel-flow coverage-map model-allocation; do
+for f in audit-pipeline threat-intel-flow coverage-map model-allocation scanner-update-flow; do
   for v in "" ".ja"; do
     "C:/Program Files/draw.io/draw.io.exe" -x -f svg --svg-theme light -o raw.svg "docs/assets/src/$f$v.drawio"
     python docs/assets/src/drawio_clean.py "docs/assets/src/$f$v.drawio" raw.svg "docs/assets/$f$v.svg"

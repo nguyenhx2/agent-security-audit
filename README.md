@@ -16,6 +16,7 @@
   <a href="#industry-sectors"><img src="https://img.shields.io/badge/industry%20sectors-9%20signals%2C%206%20modules-blue.svg" alt="Industry sectors: 9 sector signals mapped to 6 sector modules"></a>
   <a href="#live-threat-intelligence"><img src="https://img.shields.io/badge/advisory%20feeds-8%20global%20%2B%20Japan-blue.svg" alt="8 advisory feeds, global and Japanese"></a>
   <a href="#tools-that-keep-up"><img src="https://img.shields.io/badge/pinned%20scanners-8-blue.svg" alt="8 pinned scanners"></a>
+  <a href="#tools-that-keep-up"><img src="https://img.shields.io/badge/scanner%20updates-weekly%2C%20reviewed-blue.svg" alt="Scanner updates: weekly, reviewed before merge"></a>
 </p>
 
 A security review before launch tends to fail in the same places. The scanner reports a hundred
@@ -33,12 +34,17 @@ HTML and Excel, in English and Japanese.
 
 **It never edits, builds or runs the code it audits.**
 
-- **Tools that keep up with the news.** Scanners are pinned by image digest and re-verified with
-  every release. `platform_inventory` reads what the repo actually deploys (base images, runtimes,
-  servers, datastores, admin tools), and `threat_intel` matches it against advisories at audit time,
-  so a new incident is covered without anyone naming it.
-- **Live incident sources, global and Japanese.** CISA KEV, NVD, FIRST EPSS, endoflife.date, IPA,
-  JPCERT/CC, JVN and JVN iPedia. A feed that fails is a stated gap in the report, never a pass.
+- **Threat intelligence that is current at audit time.** `platform_inventory` reads what the repo
+  actually deploys (base images, runtimes, servers, datastores, admin tools), and `threat_intel`
+  matches it, at the moment the audit runs, against <!--n:feeds-->8<!--/n--> global and Japanese feeds (CISA KEV, NVD,
+  FIRST EPSS, endoflife.date, IPA, JPCERT/CC, JVN, JVN iPedia). This week's incident is covered
+  without anyone naming it. A feed that fails is a stated gap in the report, never a pass.
+  [How it works](#live-threat-intelligence)
+- **Scanners that update on a schedule, safely.** A weekly workflow finds new scanner releases,
+  waits until they have been public for 7 days, proves each one still catches a planted defect, and
+  opens a pull request for a maintainer to review. Nothing merges or switches on its own, and a
+  failed run opens an issue. Audits always run the digest-pinned images, so a fix is checked by the
+  same rules that found the defect. [How it works](#tools-that-keep-up)
 - **Many domains, many industries.** Web and API, mobile, cloud and IaC, CI/CD and supply chain,
   AI, LLM, agents and MCP (including AI coding-agent configs), sensitive data at rest; plus medical,
   finance and crypto, e-commerce, public sector, education, IoT, OT and vehicles, with Japanese, US,
@@ -140,6 +146,17 @@ deterministic layer current:
   | zizmor 1.31.1 | GitHub Actions workflows |
   | mobsfscan 1.0.1 | Android and iOS source |
   | hadolint 2.15.1 | Dockerfiles |
+
+  New scanner versions arrive by review, never on their own. A weekly workflow finds releases that
+  have been public for at least 7 days, proves each one still finds a planted defect, and opens a
+  pull request for a maintainer to merge; a failed run opens an issue instead. When you run an
+  audit, `run_scanners.py --check-updates` tells you whether newer versions exist without changing
+  any pin, and `--pin tool=image:tag@sha256:...` tries one on purpose. Details:
+  [Scanner pin updates](docs/RELEASING.md#scanner-pin-updates).
+
+  <p align="center">
+    <img src="docs/assets/scanner-update-flow.svg" alt="Scanner pin update flow. Every Monday at 02:17 UTC, or on a manual run, update_pins.py --check asks Docker Hub and GHCR for each scanner's newest stable tag and its index digest, proposing a tag only after a 7-day cooldown and never as a downgrade; when every pin is current the run ends quietly. smoke_scanners.py runs each candidate image on a fixture with one planted defect per scanner, eight scanners, and it must still find it, in a read-only job that never sees the write token. update_pins.py --write then moves the pins and the gates run (both selftests, eval, edition parity, versions). The result is one pull request from bot/scanner-pins, labelled scanner-pins, with release-notes links, a draft CHANGELOG and the smoke-test table, CI on three operating systems; a maintainer reviews and merges it, it is never auto-merged, and a z release ships the pins. Any failure opens one issue update-pins failed that the next success closes. During an audit the pins never move: images are fixed by digest, run_scanners.py --check-updates only reports newer versions, and --pin tries one on purpose." width="100%">
+  </p>
 
 - **What the repo deploys, not only what it imports.** `platform_inventory.py` finds versions where
   lockfile scanners never look: Dockerfile `FROM` and `ARG` defaults (multi-stage builds included),
