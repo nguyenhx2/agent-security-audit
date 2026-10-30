@@ -36,7 +36,7 @@ House style: no em-dashes (plain hyphens only), LF line endings, and no invented
 
 ## Support the project
 
-If this skill saves you time, you can support it through GitHub Sponsors (Sponsor button on the repository).
+If this skill saves you time, you can support it through [GitHub Sponsors](https://github.com/sponsors/nguyenhx2) or [Buy Me a Coffee](https://buymeacoffee.com/nguyenhx2) (also behind the Sponsor button on the repository).
 
 ## See also
 

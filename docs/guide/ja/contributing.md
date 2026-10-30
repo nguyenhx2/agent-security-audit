@@ -36,7 +36,7 @@ Issue とプルリクエストを歓迎します。基準は「主張したも�
 
 ## プロジェクトを支援する
 
-このスキルで時間を節約できたら、GitHub Sponsors で支援できます（リポジトリの Sponsor ボタン）。
+このスキルで時間を節約できたら、[GitHub Sponsors](https://github.com/sponsors/nguyenhx2) または [Buy Me a Coffee](https://buymeacoffee.com/nguyenhx2) で支援できます（リポジトリの Sponsor ボタンからも開けます）。
 
 ## 関連ページ
 
