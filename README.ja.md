@@ -320,40 +320,31 @@ python benchmark/bench.py run --help                  #   実際に監査する�
 
 ## さらに詳しく
 
-**ユーザーガイド：**[nguyenhx2.github.io/agent-security-audit](https://nguyenhx2.github.io/agent-security-audit/guide/ja/)（日本語と英語、インストールからトラブルシューティングまで）。同じ内容は [`docs/guide/ja/`](docs/guide/ja/index.md) と [Wiki](https://github.com/nguyenhx2/agent-security-audit/wiki/JA-Home) にもあります。
+**ユーザーガイド**の全体は [nguyenhx2.github.io/agent-security-audit](https://nguyenhx2.github.io/agent-security-audit/guide/ja/) に
+あります（日本語と英語、インストールからトラブルシューティングまで）。同じ内容は [`docs/guide/ja/`](docs/guide/ja/index.md) と
+[Wiki](https://github.com/nguyenhx2/agent-security-audit/wiki/JA-Home) にもあります。下の図の箱はすべて実在する文書で、
+この README の主張にはそれぞれ裏付けとなる文書があります。
 
-```mermaid
-flowchart TD
-    subgraph U["理解する"]
-        A["ARCHITECTURE<br/>フェーズ、データの流れ、モデル"]
-        S["SKILL.md<br/>手順のすべて"]
-    end
-    subgraph R["参照する"]
-        ST["基準の一覧<br/>版と引用"]
-        TI["threat-intel<br/>フィードと重大度の下限"]
-        OR["orchestration<br/>モデルの割り当て"]
-    end
-    subgraph T["信頼する"]
-        E["eval<br/>オフラインの証拠"]
-        B["benchmark<br/>実際の監査"]
-        C["CHANGELOG<br/>変更内容"]
-    end
+<p align="center">
+  <img src="docs/assets/docs-flow.ja.svg" alt="次に読むもの。実在する文書を 4 つのレーンに、左から右へ読む順に並べた図。使う：インストール（どのエディション、どの OS、コンテナかネイティブか）、初めての監査（始め方、Phase 0 の質問、深さ、出力）、指摘事項と報告書（指摘ファイル、Markdown、HTML、Excel）、Phase 8 の再スキャン（同じスキャナのダイジェストで修正を確かめる）。困ったときはトラブルシューティング。理解する：監査の流れ（ガイドと ARCHITECTURE）、手順のすべてである SKILL.md、そして reference の基準の一覧（版と引用のルール）、脅威情報の手法（フィードと重大度の下限）、オーケストレーション（モデルと effort の割り当て）。信頼する、つまり証拠のチェーン：両エディションの selftest を push と PR のたびに 3 つの OS と 2 つの Python で実行、オフライン評価（検出、エディションの一致、リンタ。push のたび）、ライブベンチマーク（実際のヘッドレス監査で前の版と比べる。手動で実行）、リリースのゲート（バージョン、CHANGELOG、SHA256SUMS）。並行して、push のたびの CodeQL、スモークテスト済みで自動マージしない毎週のスキャナピン PR、監査時に取得するライブ脅威フィードが動く。拡張する：コントリビュート（PR が通すべきゲート）、リリース手順（CHANGELOG 起点のリリース、スキャナピンの更新）、SECURITY（非公開での脆弱性報告）。破線の矢印は、初めての監査から監査の流れへ、指摘事項と報告書から selftest へ、リリース手順からリリースのゲートへつながる。" width="100%">
+</p>
 
-    classDef art fill:#16365C,stroke:#0B1F33,stroke-width:1px,color:#FFFFFF
+**目的別の読み方：**
 
-    class A,S,ST,TI,OR,E,B,C art
-```
+| あなたは | まず読む | 次に読む |
+|---|---|---|
+| 自分のコードを監査する | [インストール](docs/guide/ja/install.md)、[初めての監査](docs/guide/ja/first-audit.md) | [指摘事項と報告書](docs/guide/ja/reports.md)、[再スキャン](docs/guide/ja/rescan.md)、[トラブルシューティング](docs/guide/ja/troubleshooting.md) |
+| チームで採用できるか判断する | [監査の流れ](docs/guide/ja/how-it-works.md)、[セキュリティとプライバシー](docs/guide/ja/security-and-privacy.md) | [ライブ脅威情報](docs/guide/ja/threat-intelligence.md)、[スキャナ](docs/guide/ja/scanners.md)、[基準と業種](docs/guide/ja/standards-and-sectors.md)、証拠として [eval](eval/README.ja.md) と [ベンチマーク結果](benchmark/RESULTS.ja.md) |
+| スキルを変更・拡張する | [`CONTRIBUTING.md`](CONTRIBUTING.md)、[`docs/ARCHITECTURE.ja.md`](docs/ARCHITECTURE.ja.md) | [`SKILL.md`](editions/ja/security-audit/SKILL.md)、[reference](editions/ja/security-audit/reference/) のファイル、[`docs/RELEASING.ja.md`](docs/RELEASING.ja.md) |
+
+**調べもの：**
 
 | 知りたいこと | 読むもの |
 |---|---|
-| 監査の流れ：フェーズ、データの流れ、モデルの割り当て、監査する側の安全 | [`docs/ARCHITECTURE.ja.md`](docs/ARCHITECTURE.ja.md) |
-| スキルが従う手順のすべて | [`editions/ja/security-audit/SKILL.md`](editions/ja/security-audit/SKILL.md)（英語版：[`security-audit/SKILL.md`](security-audit/SKILL.md)） |
 | すべての基準、その版と引用の仕方 | [`reference/standards/index.md`](editions/ja/security-audit/reference/standards/index.md) |
 | フィード、バージョンの精度、重大度の下限 | [`reference/method/threat-intel.md`](editions/ja/security-audit/reference/method/threat-intel.md) |
 | モデルと effort の割り当て表とプロンプト | [`reference/method/orchestration.md`](editions/ja/security-audit/reference/method/orchestration.md) |
 | リリースごとの変更 | [`security-audit/CHANGELOG.md`](security-audit/CHANGELOG.md)、[`CHANGELOG.md`](CHANGELOG.md) |
-| 主張の測り方 | [`eval/README.ja.md`](eval/README.ja.md)、[`benchmark/README.md`](benchmark/README.md) |
-| リリースの手順 | [`docs/RELEASING.ja.md`](docs/RELEASING.ja.md) |
 | このリポジトリの脆弱性の報告 | [`SECURITY.md`](SECURITY.md) |
 
 この監査の前後で使うハーネスを整える：[agent-harness-bootstrap](https://github.com/nguyenhx2/agent-harness-bootstrap)。

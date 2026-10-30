@@ -13,6 +13,7 @@ change the other.
 | `coverage-map.drawio` | Technical domains and industry sectors with their standards | README "What it checks" |
 | `model-allocation.drawio` | Model and effort per depth and subagent | README "Models per task", ARCHITECTURE |
 | `scanner-update-flow.drawio` | Weekly trigger -> update_pins --check <- registries -> smoke test -> write + gates -> one PR -> human merge -> z release; failures -> issue; pins during an audit | README "Tools that keep up" |
+| `docs-flow.drawio` | Where to go next: four lanes (use it, understand it, trust it, extend it) of real documents in reading order, with cross-lane links | README "Go deeper" |
 
 ## Regenerate
 
@@ -21,7 +22,7 @@ DOCTYPE that `scripts/check_svg.py` refuses, theme styles that flip the card on 
 theme, and no `<title>` or `<desc>`.
 
 ```sh
-for f in audit-pipeline threat-intel-flow coverage-map model-allocation scanner-update-flow; do
+for f in audit-pipeline threat-intel-flow coverage-map model-allocation scanner-update-flow docs-flow; do
   for v in "" ".ja"; do
     "C:/Program Files/draw.io/draw.io.exe" -x -f svg --svg-theme light -o raw.svg "docs/assets/src/$f$v.drawio"
     python docs/assets/src/drawio_clean.py "docs/assets/src/$f$v.drawio" raw.svg "docs/assets/$f$v.svg"

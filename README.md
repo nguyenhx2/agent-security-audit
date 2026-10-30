@@ -335,40 +335,31 @@ a pass, and that hostile feed text is sanitised. Cases: [`eval/README.md`](eval/
 
 ## Go deeper
 
-**User guide:** [nguyenhx2.github.io/agent-security-audit](https://nguyenhx2.github.io/agent-security-audit/), in English and Japanese, from install to troubleshooting. The same pages are in [`docs/guide/`](docs/guide/index.md) and the [Wiki](https://github.com/nguyenhx2/agent-security-audit/wiki).
+The full **user guide** is at [nguyenhx2.github.io/agent-security-audit](https://nguyenhx2.github.io/agent-security-audit/),
+in English and Japanese, from install to troubleshooting; the same pages live in
+[`docs/guide/`](docs/guide/index.md) and the [Wiki](https://github.com/nguyenhx2/agent-security-audit/wiki).
+Everything below is a real document, and every claim in this README has one behind it:
 
-```mermaid
-flowchart TD
-    subgraph U["Understand"]
-        A["ARCHITECTURE<br/>phases, data flow, models"]
-        S["SKILL.md<br/>the full procedure"]
-    end
-    subgraph R["Reference"]
-        ST["standards index<br/>versions, citation"]
-        TI["threat-intel<br/>feeds, severity floors"]
-        OR["orchestration<br/>model matrix"]
-    end
-    subgraph T["Trust"]
-        E["eval<br/>offline proof"]
-        B["benchmark<br/>live audits"]
-        C["CHANGELOG<br/>what changed"]
-    end
+<p align="center">
+  <img src="docs/assets/docs-flow.svg" alt="Where to go next, in four lanes of real documents read left to right. Use it: Install (which edition, which OS, container or native), Your first audit (how to start it, the Phase 0 questions, depths, output), Findings and reports (finding files, Markdown, HTML and Excel), Re-scan in Phase 8 (verify fixes with the same scanner digests), and Troubleshooting when something fails. Understand it: How an audit runs (the guide page and ARCHITECTURE), then SKILL.md, the full procedure, then the reference: the standards index (versions, citation rule), the threat-intel method (feeds, severity floors) and orchestration (model and effort matrix). Trust it, the evidence chain: selftest of both editions on every push and pull request on three operating systems and two Python versions, the offline eval (detection, parity, linter, every push), the live benchmark (real headless audits against the previous version, run by hand), and the release gates (versions, CHANGELOGs, SHA256SUMS); alongside run CodeQL on every push, a weekly scanner pins pull request that is smoke-tested and never auto-merged, and live threat feeds fetched at audit time. Extend it: CONTRIBUTING (the gates a pull request must pass), RELEASING (CHANGELOG-driven releases, scanner pin updates) and SECURITY (private vulnerability reporting). Dashed arrows link Your first audit to How an audit runs, Findings and reports to the selftest, and RELEASING to the release gates." width="100%">
+</p>
 
-    classDef art fill:#16365C,stroke:#0B1F33,stroke-width:1px,color:#FFFFFF
+**Pick your path:**
 
-    class A,S,ST,TI,OR,E,B,C art
-```
+| You are | Start with | Then |
+|---|---|---|
+| Running audits on your own code | [Install](docs/guide/install.md), [Your first audit](docs/guide/first-audit.md) | [Findings and reports](docs/guide/reports.md), [Re-scan](docs/guide/rescan.md), [Troubleshooting](docs/guide/troubleshooting.md) |
+| Deciding whether your team can rely on it | [How an audit runs](docs/guide/how-it-works.md), [Security and privacy](docs/guide/security-and-privacy.md) | [Live threat intelligence](docs/guide/threat-intelligence.md), [Scanners](docs/guide/scanners.md), [Standards and sectors](docs/guide/standards-and-sectors.md), the evidence: [eval](eval/README.md) and [benchmark results](benchmark/RESULTS.md) |
+| Changing or extending the skill | [`CONTRIBUTING.md`](CONTRIBUTING.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | [`security-audit/SKILL.md`](security-audit/SKILL.md), the [reference](security-audit/reference/) files, [`docs/RELEASING.md`](docs/RELEASING.md) |
+
+**Look something up:**
 
 | To learn | Read |
 |---|---|
-| How an audit runs: phases, data flow, model allocation, auditor safety | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
-| The full procedure the skill follows | [`security-audit/SKILL.md`](security-audit/SKILL.md) |
 | Every standard, its version and how to cite it | [`reference/standards/index.md`](security-audit/reference/standards/index.md) |
 | Feeds, version precision and severity floors | [`reference/method/threat-intel.md`](security-audit/reference/method/threat-intel.md) |
 | The model and effort matrix and prompts | [`reference/method/orchestration.md`](security-audit/reference/method/orchestration.md) |
 | What each release changed | [`security-audit/CHANGELOG.md`](security-audit/CHANGELOG.md), [`CHANGELOG.md`](CHANGELOG.md) |
-| How the claims are measured | [`eval/README.md`](eval/README.md), [`benchmark/README.md`](benchmark/README.md) |
-| How a release is cut | [`docs/RELEASING.md`](docs/RELEASING.md) |
 | Reporting a vulnerability in this repository | [`SECURITY.md`](SECURITY.md) |
 
 Set up the harness this audit runs before and after: [agent-harness-bootstrap](https://github.com/nguyenhx2/agent-harness-bootstrap).
