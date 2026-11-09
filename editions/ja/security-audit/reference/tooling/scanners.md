@@ -5,7 +5,7 @@
 
 ## 目次
 - 実行する：`scripts/run_scanners.py`
-- ツール一覧（ピン留めは 2026-10-30 に検証）
+- ツール一覧（ピン留めは 2026-11-09 に検証）
 - モードの決定とフォールバック
 - ランナーが強制するルール（とその理由）
 - 出力の読み方：`scripts/normalize_findings.py`
@@ -30,13 +30,13 @@
 | ツール | イメージ（固定(ピン留め)済み） | 役割 | 実行条件 |
 |------|----------------|------|----------|
 | gitleaks | `ghcr.io/gitleaks/gitleaks:v8.30.1` | シークレット：`git` モード（全履歴、`--log-opts=--all`）+ `dir` モード（未追跡を含む作業ツリー） | 常に |
-| semgrep | `semgrep/semgrep:1.182.1` | SAST、`--config p/default --metrics off`（ログインなし、テレメトリなし） | 対応言語がある場合 |
+| semgrep | `semgrep/semgrep:1.183.0` | SAST、`--config p/default --metrics off`（ログインなし、テレメトリなし） | 対応言語がある場合 |
 | trivy | `aquasec/trivy:0.76.1` | 依存関係の CVE、IaC/Dockerfile の設定不備（ライセンススキャンは無効。ライセンスポリシーがある場合のみ有効化） | ロックファイルまたはコンテナ |
 | osv-scanner | `ghcr.io/google/osv-scanner:v2.7.0` | ロックファイルに正確な CVE + 悪意あるパッケージ（`MAL-*`）のアドバイザリ | ロックファイル |
-| checkov | `bridgecrew/checkov:3.3.30` | IaC：Terraform、CFN、K8s、Helm、Dockerfile、GH Actions | IaC またはコンテナ |
+| checkov | `bridgecrew/checkov:3.4.0` | IaC：Terraform、CFN、K8s、Helm、Dockerfile、GH Actions | IaC またはコンテナ |
 | hadolint | `hadolint/hadolint:v2.15.1` | Dockerfile の lint + ShellCheck | Dockerfile |
 | zizmor | `ghcr.io/zizmorcore/zizmor:1.31.1` | GitHub Actions のセキュリティ（オフライン監査） | `.github/workflows` |
-| mobsfscan | `opensecurity/mobsfscan:1.0.1` | Android/iOS のソースコード SAST | モバイル |
+| mobsfscan | `opensecurity/mobsfscan:1.1.0` | Android/iOS のソースコード SAST | モバイル |
 
 ピンは `image:tag@sha256:digest` の形式である。タグは人間のため、ダイジェストは再現性のため（タグが付け替えられても
 実行内容は変わらない）。`python run_scanners.py --list` で一覧を表示する。`PINS_VERIFIED` が約 90 日より古い場合は、

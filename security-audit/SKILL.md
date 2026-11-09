@@ -30,13 +30,13 @@ metadata:
   version: "1.15.2"
   updated: "2026-10-30"
   standards-verified: "2026-10-26"
-  scanner-pins-verified: "2026-10-30"
+  scanner-pins-verified: "2026-11-09"
   changelog: CHANGELOG.md
 ---
 
 # Security audit
 
-**Skill v1.15.2 · standards verified 2026-10-26 · scanner pins verified 2026-10-30** (history:
+**Skill v1.15.2 · standards verified 2026-10-26 · scanner pins verified 2026-11-09** (history:
 `CHANGELOG.md`). Use these values for the report's version field and the Phase 0 freshness check.
 
 **Platform (first step of Phase 0):** run `py -3 "${CLAUDE_SKILL_DIR}/scripts/env_check.py"` on Windows,
