@@ -43,12 +43,12 @@
 | ツール | Windows | macOS | Linux |
 |---|---|---|---|
 | gitleaks | `winget install Gitleaks.Gitleaks` / scoop / choco | `brew install gitleaks` | pacman、brew、`go install github.com/zricethezav/gitleaks/v8@v8.30.1`、リリースバイナリ |
-| semgrep | コンテナまたは WSL（ネイティブはベータ版：`pipx install semgrep==1.182.1`） | `brew install semgrep` / pipx | `pipx install semgrep==1.182.1` |
+| semgrep | コンテナまたは WSL（ネイティブはベータ版：`pipx install semgrep==1.183.0`） | `brew install semgrep` / pipx | `pipx install semgrep==1.183.0` |
 | trivy | `winget install AquaSecurity.Trivy` / scoop / choco | `brew install trivy` | aquasecurity の apt / rpm リポジトリ、pacman、リリースバイナリ |
 | osv-scanner | `winget install Google.OSVScanner` / scoop | `brew install osv-scanner` | `go install github.com/google/osv-scanner/v2/cmd/osv-scanner@v2.7.0`、リリースバイナリ |
-| checkov | `pipx install checkov==3.3.30` | brew / pipx | pipx |
+| checkov | `pipx install checkov==3.4.0` | brew / pipx | pipx |
 | zizmor | `pipx install zizmor==1.31.1` | brew / pipx | pipx、pacman、cargo |
-| mobsfscan | `pipx install mobsfscan==1.0.1` | pipx | pipx |
+| mobsfscan | `pipx install mobsfscan==1.1.0` | pipx | pipx |
 | hadolint | scoop / リリースバイナリ | `brew install hadolint` | リリースバイナリ、brew |
 
 pipx 自体：`py -m pip install --user pipx`（Windows）、`brew install pipx`、`apt install pipx` /

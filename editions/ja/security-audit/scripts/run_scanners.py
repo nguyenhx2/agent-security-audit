@@ -59,17 +59,17 @@ ENGINE = "docker"   # 呼び出すバイナリ（docker / podman / podman の do
 RUN_OPTS: list[str] = []   # エンジン全体の run オプション（SELinux ラベル、userns）
 USER_OPTS: list[str] = []  # スキャン用コンテナの非 root の実行 ID（POSIX ホストのみ）
 
-PINS_VERIFIED = "2026-10-30"  # この日付が古くなったらタグを再確認する。--pin で上書き可能
+PINS_VERIFIED = "2026-11-09"  # この日付が古くなったらタグを再確認する。--pin で上書き可能
 # tool -> docker image:tag。:latest は決して使わない（Trivy の 2026 年 3 月の侵害はタグ経由で配布された）。
 IMAGES = {  # 人が読むためのタグ + 再現性のためのダイジェスト（最初の検証済み pull で記録）
     "gitleaks": "ghcr.io/gitleaks/gitleaks:v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f",
-    "semgrep": "semgrep/semgrep:1.182.1@sha256:451b3d875c00dac7ed5db5293e584a07de11449a409c10b3c2d2652f429630b6",
+    "semgrep": "semgrep/semgrep:1.183.0@sha256:2e45517a85e13a9cca14a2a00df6bb48affd66b8ebfae1b0991cd57578362fb0",
     "trivy": "aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c",
     "osv-scanner": "ghcr.io/google/osv-scanner:v2.7.0@sha256:4f3b7e2c64b9d38a5febc5a7e4a3dfef1d1362f726dea7a2ef4762b46469fcd0",
-    "checkov": "bridgecrew/checkov:3.3.30@sha256:4b65e89f1fde292249fc0aa0d0db43302c036dfe39f7370b2d3517571082b894",
+    "checkov": "bridgecrew/checkov:3.4.0@sha256:ece5efac4443084ca273072909985dce988a81e8cc94faa305aeda0df27c68f9",
     "hadolint": "hadolint/hadolint:v2.15.1@sha256:32dac94127fd60b7b7e3fbfc65e1383b9b5e25c9bfd7b8536de7a539fe68a12d",
     "zizmor": "ghcr.io/zizmorcore/zizmor:1.31.1@sha256:42d409dbb851d4c5d35a058cf042b828bea1e3f2884378c526eb0974780e18d9",
-    "mobsfscan": "opensecurity/mobsfscan:1.0.1@sha256:2e613d872b8199b092f96676e8525464d8319ef588541e8b5b2a2efff7cd8d39",
+    "mobsfscan": "opensecurity/mobsfscan:1.1.0@sha256:4c7c162a3721b34055c4209402f13d2ac514d290a1e38bcf46d70fed5c287b77",
 }
 DEFAULT_TOOLS = ["gitleaks", "semgrep", "trivy", "osv-scanner"]
 EXPECTED = {
